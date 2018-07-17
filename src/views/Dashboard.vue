@@ -1,15 +1,14 @@
 <template>
-  <div class="sidebar"></div>
+  <div class="dashboard">
+    Index Page
+  </div>
 </template>
 
 <script>
  export default {
-   name: 'Sidebar',
+   name: 'Dashboard',
    data () {
      return {};
    }
  };
 </script>
-
-<style>
-</style>

@@ -1,15 +1,13 @@
 <template>
-  <div class="sidebar"></div>
+  <div class="tagsview"></div>
 </template>
 
 <script>
  export default {
-   name: 'Sidebar',
+   name: 'Tagsview',
    data () {
      return {};
-   }
+   },
+   methods: {}
  };
 </script>
-
-<style>
-</style>
