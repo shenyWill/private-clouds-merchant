@@ -7,6 +7,7 @@ module.exports = {
   },
   env: {
     browser: true,
+    mocha: true
   },
   extends: [
     // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
@@ -24,6 +25,15 @@ module.exports = {
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'indent': 0,
+    'no-undef': 2,
+    'no-console': 2,
+    'semi': [2, 'always'],
+    'no-irregular-whitespace': 0
+  },
+  globals: {
+    expect: true,
+    sinon: true
   }
 }
