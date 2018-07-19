@@ -25,6 +25,7 @@
 
 <style>
  .app-main {
-   min-height: 100%;
+   margin-left: 180px;
+   height: 100%;
  }
 </style>

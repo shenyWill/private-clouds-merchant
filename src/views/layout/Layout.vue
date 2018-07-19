@@ -1,10 +1,9 @@
 <template>
   <div class="app-wrapper">
-    <div class="app-container">
-      <Navbar/>
-      <Sidebar/>
-      <AppMain/>
-    </div>
+    <Navbar/>
+    <Sidebar/>
+    <TagsView/>
+    <AppMain/>
   </div>
 </template>
 
@@ -12,12 +11,14 @@
  import Navbar from './components/Navbar';
  import Sidebar from './components/Sidebar';
  import AppMain from './components/AppMain';
+ import TagsView from './components/TagsView';
  export default {
    name: 'Layout',
    components: {
      Navbar,
      Sidebar,
-     AppMain
+     AppMain,
+     TagsView
    },
    data () {
      return {
@@ -29,4 +30,7 @@
 </script>
 
 <style>
+ .app-wrapper {
+   height: 100%;
+ }
 </style>
