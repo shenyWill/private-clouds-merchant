@@ -1,9 +1,10 @@
 <template>
-  <div class="sidebar">
+  <div :class="['sidebar', isCollapse ? 'sidebar__collapse' : '']">
     <el-menu
       class="sidebar__menu"
       mode="vertical"
       :default-active="$route.path"
+      :collapse="isCollapse"
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b">
@@ -13,6 +14,7 @@
 </template>
 
 <script>
+ import { mapGetters } from 'vuex';
  import SidebarItem from './SidebarItem';
  import menu from '@/config/menu';
  export default {
@@ -21,9 +23,13 @@
      SidebarItem
    },
    data () {
-     return {};
+     return {
+     };
    },
    computed: {
+     ...mapGetters([
+       'isCollapse'
+     ]),
      routes () {
        return menu;
      }
@@ -40,6 +46,7 @@
    width: 180px;
    height: 100%;
    z-index: 999;
+   transition: all .2s;
    a {
      display: inline-block;
      width: 100%;
@@ -55,5 +62,8 @@
        min-width: 100% !important;
      }
    }
+ }
+ .sidebar__collapse {
+   width: 65px;
  }
 </style>

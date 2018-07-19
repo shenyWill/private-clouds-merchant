@@ -1,5 +1,5 @@
 <template>
-  <div class="tagsview">
+  <div :class="['tagsview', isCollapse ? 'tagsview__collapse' : '']">
     <router-link
       :key="tag.path"
       :to="tag.path"
@@ -14,6 +14,7 @@
 </template>
 
 <script>
+ import { mapGetters } from 'vuex';
  export default {
    // TODO: Add Scroll Bar
    name: 'Tagsview',
@@ -22,6 +23,9 @@
      };
    },
    computed: {
+     ...mapGetters([
+       'isCollapse'
+     ]),
      visitedViews () {
        return this.$store.state.tagsView.visitedViews;
      }
@@ -77,6 +81,13 @@
    line-height: 30px;
    text-align: left;
    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+   transition: all .2s;
+
+   .tagsview__icon-close:hover {
+     background-color: lightgray;
+     border-radius: 5px;
+     color: black;
+   }
 
    .tagsview__item {
      font-size: 14px;
@@ -84,6 +95,7 @@
      padding: 5px;
      color: black;
      border: 1px solid gray;
+     border-top: none;
      text-decoration: none;
    }
 
@@ -91,5 +103,8 @@
      color: white;
      background-color: #409eff;
    }
+ }
+ .tagsview__collapse {
+   margin-left: 65px;
  }
 </style>

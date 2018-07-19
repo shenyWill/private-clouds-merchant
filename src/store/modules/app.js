@@ -3,8 +3,14 @@ const app = {
     sidebarToggle: false
   },
   mutations: {
+    TOGGLE_MENU (state) {
+      state.sidebarToggle = !state.sidebarToggle;
+    }
   },
   actions: {
+    toggleMenu ({ commit }) {
+      commit('TOGGLE_MENU');
+    }
   }
 };
 

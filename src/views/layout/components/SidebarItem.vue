@@ -14,7 +14,7 @@
       <el-submenu v-else :index="route.path" :key="route.name">
         <template slot="title">
           <i :class="['iconfont', 'sidebar-item__icon', route.icon]"></i>
-          <span slot="title" v-if="route.name">{{ route.name }}</span>
+          <span slot="title" v-if="route.name && !isCollapse">{{ route.name }}</span>
         </template>
         <template v-for="child in route.children">
           <router-link class="sidebar-item__container" :to="child.path" :key="child.name">
@@ -29,12 +29,18 @@
 </template>
 
 <script>
+ import { mapGetters } from 'vuex';
  export default {
    name: 'SidebarItem',
    props: {
      routes: {
        type: Array
      }
+   },
+   computed: {
+     ...mapGetters([
+       'isCollapse'
+     ])
    },
    data () {
      return {
@@ -46,4 +52,11 @@
 </script>
 
 <style>
+ .sidebar-item__icon {
+   font-size: 28px;
+   color: black;
+ }
+ .sidebar-item__container {
+   text-decoration: none;
+ }
 </style>

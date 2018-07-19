@@ -20,6 +20,7 @@
        var file = $file.files[0];
        this.url = URL.createObjectURL(file);
        this.video.src = this.url;
+       alert(this.video.size / 1024 / 1024);
        this.video.load();
        if (this.video.readyState > 0) {
          alert(this.video.duration);

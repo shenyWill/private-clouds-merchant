@@ -26,7 +26,7 @@ export default new Router({
         path: '/index',
         component: Dashboard,
         name: 'Dashboard',
-        meta: { title: '首页', icon: '', cache: true }
+        meta: { title: '系统首页', icon: '', cache: true }
       }]
     }, {
       path: '/merchant',

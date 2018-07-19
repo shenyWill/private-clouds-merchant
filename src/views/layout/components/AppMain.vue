@@ -1,5 +1,5 @@
 <template>
-  <div class="app-main">
+  <div :class="['app-main', isCollapse ? 'app-main__collapse' : '']">
     <transition name="fade" mode="out-in">
       <keep-alive :include="cachedViews">
         <router-view></router-view>
@@ -9,6 +9,7 @@
 </template>
 
 <script>
+ import { mapGetters } from 'vuex';
  export default {
    name: 'AppMain',
    data () {
@@ -16,6 +17,9 @@
      };
    },
    computed: {
+     ...mapGetters([
+       'isCollapse'
+     ]),
      cachedViews () {
        return this.$store.state.tagsView.cachedViews;
      }
@@ -26,6 +30,9 @@
 <style>
  .app-main {
    margin-left: 180px;
-   height: 100%;
+   transition: all .2s;
+ }
+ .app-main__collapse {
+   margin-left: 65px;
  }
 </style>
