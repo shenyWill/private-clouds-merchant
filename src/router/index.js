@@ -8,7 +8,7 @@ import Login from '@/views/Login';
 import Merchant from '@/views/merchant/Merchant';
 import Products from '@/views/products/Products';
 
-import Test from '@/views/Test';
+import TestExample from '@/views/TestExample';
 
 Vue.use(Router);
 
@@ -49,7 +49,7 @@ export default new Router({
         meta: { title: '产品信息', icon: '', cache: true }
       }, {
         path: '/products/test',
-        component: Test,
+        component: TestExample,
         name: 'Test',
         meta: { title: '产品测试', icon: '', cache: true }
       }]
