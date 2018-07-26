@@ -1,6 +1,6 @@
 const user = {
   state: {
-    user: '',
+    user: null,
     token: ''
   },
   mutations: {
@@ -9,6 +9,9 @@ const user = {
     },
     LOGIN: (state, user) => {
       state.user = user;
+    },
+    LOGOUT: (state) => {
+      state.user = null;
     }
   },
   actions: {}

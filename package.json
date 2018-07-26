@@ -20,6 +20,7 @@
     "element-ui": "^2.4.4",
     "es6-promise": "^4.2.4",
     "node-sass": "^4.9.2",
+    "nprogress": "^0.2.0",
     "phantomjs-prebuilt": "^2.1.16",
     "sass-loader": "^7.0.3",
     "vue": "^2.5.2",

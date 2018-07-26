@@ -28,4 +28,29 @@ export default [{
     icon: 'el-icon-view',
     children: []
   }]
+}, {
+  name: '系统管理',
+  path: '/System',
+  icon: 'el-icon-tickets',
+  children: [{
+    name: '系统设置',
+    path: '/system/index',
+    icon: 'el-icon-tickets',
+    children: []
+  }, {
+    name: '组织管理',
+    path: '/system/organization',
+    icon: 'el-icon-tickets',
+    children: []
+  }, {
+    name: '账号管理',
+    path: '/system/accounts',
+    icon: 'el-icon-tickets',
+    children: []
+  }, {
+    name: '角色管理',
+    path: '/system/role',
+    icon: 'el-icon-tickets',
+    children: []
+  }]
 }];

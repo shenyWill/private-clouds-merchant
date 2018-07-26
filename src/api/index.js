@@ -1,5 +1,6 @@
 import axios from 'axios';
 import router from '@/router';
+import NProgress from 'nprogress';
 
 const service = axios.create({
   // axios config
@@ -10,8 +11,10 @@ const service = axios.create({
  *
  **/
 service.interceptors.request.use(config => {
+  NProgress.start();
   return config;
 }, error => {
+  NProgress.start();
   return Promise.reject(error);
 });
 
@@ -23,8 +26,10 @@ service.interceptors.response.use(response => {
   if (response.data.resCode === '1004') {
     router.push('/login');
   }
+  NProgress.done();
   return response;
 }, error => {
+  NProgress.done();
   return Promise.reject(error);
 });
 

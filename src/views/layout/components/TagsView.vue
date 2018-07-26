@@ -76,6 +76,7 @@
 
 <style lang="scss">
  .tagsview {
+   padding: 2px;
    margin-left: 180px;
    height: 30px;
    line-height: 30px;
@@ -95,7 +96,6 @@
      padding: 5px;
      color: black;
      border: 1px solid gray;
-     border-top: none;
      text-decoration: none;
    }
 

@@ -1,6 +1,7 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils';
-import chai from 'chai';
 import Vuex from 'vuex';
+import chai from 'chai';
+import sinon from 'sinon';
 import Navbar from '@/views/layout/components/Navbar.vue';
 
 const expect = chai.expect;
@@ -14,17 +15,22 @@ describe('Navbar.vue', () => {
   let actions;
 
   beforeEach(() => {
-    getters = {
-      isCollapse: () => { return true; }
+    actions = {
+      toggleMenu: sinon.spy()
     };
 
-    actions = {
-      toggleMenu: () => {}
+    getters = {
+      isCollapse: () => true
     };
 
     store = new Vuex.Store({
-      actions,
-      getters
+      modules: {
+        app: {
+          state: {},
+          actions,
+          getters
+        }
+      }
     });
   });
 

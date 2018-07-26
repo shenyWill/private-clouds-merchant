@@ -2,9 +2,8 @@
   <div :class="['navbar', isCollapse ? 'navbar__collapse' : '']">
     <el-menu mode="horizontal">
       <el-button class="navbar__btn" icon="el-icon-menu" @click="toggleMenu"></el-button>
-      <button @click="toggleMenu()"></button>
       <div class="navbar__userpane">
-        userpane
+        用户
       </div>
     </el-menu>
   </div>
