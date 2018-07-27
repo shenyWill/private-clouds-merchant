@@ -68,6 +68,10 @@ const tagsView = {
         resolve([...state.visitedViews]);
       });
     }
+  },
+  getters: {
+    visitedViews: state => state.visitedViews,
+    cachedViews: state => state.cachedViews
   }
 };
 

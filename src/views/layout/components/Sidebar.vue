@@ -5,9 +5,9 @@
       mode="vertical"
       :default-active="$route.path"
       :collapse="isCollapse"
-      background-color="#545c64"
-      text-color="#fff"
-      active-text-color="#ffd04b">
+      :background-color="backgroundColor"
+      :text-color="textColor"
+      :active-text-color="activeTextColor">
       <sidebar-item :routes="routes"></sidebar-item>
     </el-menu>
   </div>
@@ -24,6 +24,9 @@
    },
    data () {
      return {
+       backgroundColor: '#545c64',
+       textColor: '#fff',
+       activeTextColor: '#ffd046'
      };
    },
    computed: {

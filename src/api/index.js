@@ -3,7 +3,7 @@ import router from '@/router';
 import NProgress from 'nprogress';
 
 const service = axios.create({
-  // axios config
+  // global axios config
 });
 
 /*

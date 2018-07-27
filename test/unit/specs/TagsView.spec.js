@@ -61,6 +61,12 @@ describe('Tagsview', () => {
     expect(item.classes()).to.include('active');
   });
 
+  it('dispatch "addVisitedViews" when $route change', () => {
+    const wrapper = mount(TagsView, { store, localVue, router });
+    wrapper.vm.$router.push('/index');
+    expect(actions.addVisitedViews.called).to.equal(true);
+  });
+
   it('dispatch "closeSelectedtag" when close tag button is clicked', () => {
     const wrapper = mount(TagsView, { store, localVue, router });
     wrapper.find('.tagsview__icon-close').trigger('click');

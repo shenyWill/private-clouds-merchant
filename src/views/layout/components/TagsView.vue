@@ -1,26 +1,31 @@
 <template>
   <div :class="['tagsview', isCollapse ? 'tagsview__collapse' : '']">
-    <router-link
-      :key="tag.path"
-      :to="tag.path"
-      v-for="tag in visitedViews"
-      class="tagsview__item"
-      ref="tag"
-      :class="isActive(tag) ? 'active' : ''">
-      {{ tag.title }}
-      <span class="tagsview__icon-close el-icon-close" @click.prevent.stop="closeSelectedTag(tag)"></span>
-    </router-link>
+    <scroll-pane ref="scrollPane" class="tagsview__wrapper">
+      <router-link
+        :key="tag.path"
+        :to="tag.path"
+        v-for="tag in visitedViews"
+        class="tagsview__item"
+        ref="tag"
+        :class="isActive(tag) ? 'active' : ''">
+        {{ tag.title }}
+        <span class="tagsview__icon-close el-icon-close" @click.prevent.stop="closeSelectedTag(tag)"></span>
+      </router-link>
+    </scroll-pane>
   </div>
 </template>
 
 <script>
  import { mapGetters } from 'vuex';
+ import ScrollPane from '@/views/components/ScrollPane';
  export default {
-   // TODO: Add Scroll Bar
    name: 'Tagsview',
    data () {
      return {
      };
+   },
+   components: {
+     ScrollPane
    },
    computed: {
      ...mapGetters([
@@ -31,6 +36,7 @@
    watch: {
      $route () {
        this.addViewTags();
+       this.moveToCurrentTarget();
      }
    },
    methods: {
@@ -61,6 +67,17 @@
          return false;
        }
        this.$store.dispatch('addVisitedViews', route);
+     },
+     moveToCurrentTarget () {
+       const tags = this.$refs.tag;
+       this.$nextTick(() => {
+         for (const tag of tags) {
+           if (tag.to === this.$route.path) {
+             this.$refs.scrollPane.moveToTarget(tag.$el);
+             break;
+           }
+         }
+       });
      }
    },
    mounted () {
@@ -88,9 +105,12 @@
    }
 
    .tagsview__item {
-     font-size: 14px;
-     margin: 0 5px;
-     padding: 5px;
+     display: inline-block;
+     position: relative;
+     font-size: 12px;
+     margin: 2px 5px;
+     padding: 0 8px;
+     height: 26px;
      color: black;
      border: 1px solid gray;
      text-decoration: none;
@@ -98,14 +118,16 @@
        background-color: $hover;
        color: white;
      }
-   }
-
-   .active {
-     color: white;
-     background-color: $selected;
+     &.active {
+       color: white;
+       background-color: $selected;
+     }
    }
  }
  .tagsview__collapse {
    margin-left: 65px;
+ }
+ .tagsview__wrapper {
+   height: 100%;
  }
 </style>

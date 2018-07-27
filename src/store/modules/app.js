@@ -11,6 +11,9 @@ const app = {
     toggleMenu ({ commit }) {
       commit('TOGGLE_MENU');
     }
+  },
+  getters: {
+    isCollapse: state => state.sidebarToggle
   }
 };
 

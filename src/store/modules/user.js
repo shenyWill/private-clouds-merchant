@@ -24,6 +24,10 @@ const user = {
     logout ({ commit }) {
       commit('LOGOUT');
     }
+  },
+  getters: {
+    token: state => state.token,
+    user: state => state.user
   }
 };
 
