@@ -14,7 +14,17 @@ const user = {
       state.user = null;
     }
   },
-  actions: {}
+  actions: {
+    setToken ({ commit }, token) {
+      commit('SET_TOKEN', token);
+    },
+    login ({ commit }, user) {
+      commit('LOGIN', user);
+    },
+    logout ({ commit }) {
+      commit('LOGOUT');
+    }
+  }
 };
 
 export default user;

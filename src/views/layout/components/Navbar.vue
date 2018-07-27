@@ -3,16 +3,20 @@
     <el-menu mode="horizontal">
       <el-button class="navbar__btn" icon="el-icon-menu" @click="toggleMenu"></el-button>
       <div class="navbar__userpane">
-        用户
+        <Userpane></Userpane>
       </div>
     </el-menu>
   </div>
 </template>
 
 <script>
+ import Userpane from './Userpane';
  import { mapActions, mapGetters } from 'vuex';
  export default {
    name: 'Navbar',
+   components: {
+     Userpane
+   },
    data () {
      return {};
    },
@@ -33,6 +37,7 @@
  .navbar {
    position: relative;
    height: 62px;
+   max-height: 62px;
    line-height: 62px;
    margin-left: 180px;
    text-align: left;

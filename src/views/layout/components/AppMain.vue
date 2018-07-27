@@ -18,11 +18,9 @@
    },
    computed: {
      ...mapGetters([
-       'isCollapse'
-     ]),
-     cachedViews () {
-       return this.$store.state.tagsView.cachedViews;
-     }
+       'isCollapse',
+       'cachedViews'
+     ])
    }
  };
 </script>

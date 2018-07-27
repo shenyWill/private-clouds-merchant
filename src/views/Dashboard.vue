@@ -12,3 +12,8 @@
    }
  };
 </script>
+
+<style>
+ .dashboard {
+ }
+</style>

@@ -3,7 +3,7 @@
     <router-link
       :key="tag.path"
       :to="tag.path"
-      v-for="tag in Array.from(visitedViews)"
+      v-for="tag in visitedViews"
       class="tagsview__item"
       ref="tag"
       :class="isActive(tag) ? 'active' : ''">
@@ -24,16 +24,13 @@
    },
    computed: {
      ...mapGetters([
-       'isCollapse'
-     ]),
-     visitedViews () {
-       return this.$store.state.tagsView.visitedViews;
-     }
+       'isCollapse',
+       'visitedViews'
+     ])
    },
    watch: {
      $route () {
        this.addViewTags();
-       this.moveToCurrentTag();
      }
    },
    methods: {
@@ -64,8 +61,6 @@
          return false;
        }
        this.$store.dispatch('addVisitedViews', route);
-     },
-     moveToCurrentTag () {
      }
    },
    mounted () {
@@ -75,6 +70,8 @@
 </script>
 
 <style lang="scss">
+ $selected: #409eff;
+ $hover: #409eff;
  .tagsview {
    padding: 2px;
    margin-left: 180px;
@@ -97,11 +94,15 @@
      color: black;
      border: 1px solid gray;
      text-decoration: none;
+     &:hover {
+       background-color: $hover;
+       color: white;
+     }
    }
 
    .active {
      color: white;
-     background-color: #409eff;
+     background-color: $selected;
    }
  }
  .tagsview__collapse {

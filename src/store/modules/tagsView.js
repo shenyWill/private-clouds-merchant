@@ -57,8 +57,16 @@ const tagsView = {
       });
     },
     delOtherViews ({ commit, state }, view) {
+      return new Promise(resolve => {
+        commit('DEL_OTHER_VIEWS', view);
+        resolve([...state.visitedViews]);
+      });
     },
     delAllViews ({ commit, state }) {
+      return new Promise(resolve => {
+        commit('DEL_ALL');
+        resolve([...state.visitedViews]);
+      });
     }
   }
 };
