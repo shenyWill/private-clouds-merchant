@@ -1,6 +1,12 @@
 <template>
   <div class="stream">
-    <video></video>
+    <video
+      controls
+      src=""
+      width="600"
+      height="400"
+    >
+    </video>
   </div>
 </template>
 

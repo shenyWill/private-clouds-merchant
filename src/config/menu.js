@@ -27,6 +27,11 @@ export default [{
     path: '/products/test',
     icon: 'el-icon-view',
     children: []
+  }, {
+    name: '视频直播',
+    path: '/products/stream',
+    icon: 'el-icon-view',
+    children: []
   }]
 }, {
   name: '系统管理',

@@ -19,6 +19,7 @@
     "echarts": "^4.1.0",
     "element-ui": "^2.4.4",
     "es6-promise": "^4.2.4",
+    "mockjs": "^1.0.1-beta3",
     "node-sass": "^4.9.2",
     "nprogress": "^0.2.0",
     "phantomjs-prebuilt": "^2.1.16",

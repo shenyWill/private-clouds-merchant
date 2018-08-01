@@ -7,7 +7,7 @@
     <div class="login__title"></div>
 
     <div class="login__content">
-      <el-form :model="form" ref="loginForm" :rules="rules" class="login__form" label-width="100px">
+      <el-form :model="form" ref="form" :rules="rules" class="login__form" label-width="100px">
         <el-form-item props="username" label="账号">
           <el-input
             clearable
@@ -23,10 +23,10 @@
             placeholder="请输入密码"
             type="password"
             v-model="form.password"
-            @keyup.enter.native="onSumbit">
+            @keyup.enter.native="onSubmit">
           </el-input>
         </el-form-item>
-        <el-button type="primary" @click="onSumbit" :disabled="disabled">登录</el-button>
+        <el-button type="primary" @click="onSubmit" :disabled="disabled">登录</el-button>
       </el-form>
     </div>
   </div>

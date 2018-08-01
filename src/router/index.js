@@ -10,6 +10,7 @@ import Login from '@/views/Login';
 
 import Merchant from '@/views/merchant/Merchant';
 import Products from '@/views/products/Products';
+import Stream from '@/views/stream/Stream';
 
 // System Modules
 import System from '@/views/system/System';
@@ -59,6 +60,11 @@ export default new Router({
         component: TestExample,
         name: 'Test',
         meta: { title: '产品测试', icon: '', cache: true }
+      }, {
+        path: '/products/stream',
+        component: Stream,
+        name: 'Stream',
+        meta: { title: '视频直播', icon: '', cache: true }
       }]
     }, {
       path: '/system',
