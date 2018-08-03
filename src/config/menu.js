@@ -4,12 +4,12 @@ export default [{
   icon: 'el-icon-goods',
   children: []
 }, {
-  name: '商户管理',
-  path: '/merchant',
+  name: '人员管理',
+  path: '/person',
   icon: 'el-icon-sold-out',
   children: [{
-    name: '商户信息',
-    path: '/merchant/index',
+    name: '人员信息',
+    path: '/person/index',
     icon: 'el-icon-menu',
     children: []
   }]
@@ -33,6 +33,16 @@ export default [{
     icon: 'el-icon-view',
     children: []
   }]
+}, {
+  name: '设备管理',
+  path: '/device/index',
+  icon: 'el-icon-time',
+  children: []
+}, {
+  name: '识别记录',
+  path: '/recognize/index',
+  icon: 'el-icon-picture',
+  children: []
 }, {
   name: '系统管理',
   path: '/System',

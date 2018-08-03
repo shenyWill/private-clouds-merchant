@@ -1,5 +1,7 @@
 <template>
-  <div class="accounts">账号管理</div>
+  <div class="accounts">
+    账号管理
+  </div>
 </template>
 
 <script>

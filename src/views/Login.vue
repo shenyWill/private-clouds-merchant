@@ -10,6 +10,7 @@
       <el-form :model="form" ref="form" :rules="rules" class="login__form" label-width="100px">
         <el-form-item props="username" label="账号">
           <el-input
+            class="login__form-name"
             clearable
             placeholder="请输入账号"
             type="text"
@@ -19,6 +20,7 @@
         </el-form-item>
         <el-form-item props="password" label="密码">
           <el-input
+            class="login__form-pwd"
             clearable
             placeholder="请输入密码"
             type="password"

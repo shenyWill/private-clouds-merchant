@@ -1,12 +1,12 @@
 <template>
-  <div class="system">
-    系统管理
+  <div class="recognition">
+    识别记录
   </div>
 </template>
 
 <script>
  export default {
-   name: 'System',
+   name: 'Recognition',
    data () {
      return {
      };

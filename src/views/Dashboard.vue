@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard">
-    Index Page
+    系统首页
   </div>
 </template>
 

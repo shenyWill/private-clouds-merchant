@@ -1,5 +1,6 @@
 <template>
   <div class="stream">
+    视频直播
     <video
       controls
       src=""

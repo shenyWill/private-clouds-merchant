@@ -1,12 +1,12 @@
 <template>
-  <div class="system">
-    系统管理
+  <div class="person">
+    Person
   </div>
 </template>
 
 <script>
  export default {
-   name: 'System',
+   name: 'Person',
    data () {
      return {
      };

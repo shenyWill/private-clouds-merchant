@@ -1,12 +1,12 @@
 <template>
-  <div class="merchant">
-    Merchant
+  <div class="database">
+    人员库管理
   </div>
 </template>
 
 <script>
  export default {
-   name: 'Merchant',
+   name: 'Database',
    data () {
      return {
      };

@@ -5,10 +5,10 @@ import TestExample from '@/views/TestExample';
 
 import Layout from '@/views/layout/Layout';
 
+// Index Page
 import Dashboard from '@/views/Dashboard';
 import Login from '@/views/Login';
 
-import Merchant from '@/views/merchant/Merchant';
 import Products from '@/views/products/Products';
 import Stream from '@/views/stream/Stream';
 
@@ -17,6 +17,15 @@ import System from '@/views/system/System';
 import Organization from '@/views/system/Organization';
 import Accounts from '@/views/system/Accounts';
 import Role from '@/views/system/Role';
+
+// Device Modules
+import Device from '@/views/device/Device';
+
+// Person Modules
+import Person from '@/views/person/Person';
+
+// Recognition Modules
+import Recognition from '@/views/recognition/Recognition';
 
 Vue.use(Router);
 
@@ -37,16 +46,6 @@ export default new Router({
         meta: { title: '系统首页', icon: '', cache: true }
       }]
     }, {
-      path: '/merchant',
-      component: Layout,
-      redirect: '/merchant/index',
-      children: [{
-        path: '/merchant/index',
-        component: Merchant,
-        name: 'Merchant',
-        meta: { title: '商户信息', icon: '', cache: true }
-      }]
-    }, {
       path: '/products',
       component: Layout,
       redirect: '/products/index',
@@ -65,6 +64,36 @@ export default new Router({
         component: Stream,
         name: 'Stream',
         meta: { title: '视频直播', icon: '', cache: true }
+      }]
+    }, {
+      path: '/device',
+      component: Layout,
+      redirect: '/device/index',
+      children: [{
+        path: '/device/index',
+        component: Device,
+        name: 'Device',
+        meta: { title: '设备管理', icon: '', cache: true }
+      }]
+    }, {
+      path: '/person',
+      component: Layout,
+      redirect: '/person/index',
+      children: [{
+        path: '/person/index',
+        component: Person,
+        name: 'Person',
+        meta: { title: '人员管理', icon: '', cache: true }
+      }]
+    }, {
+      path: '/recognize',
+      component: Layout,
+      redirect: '/recognize/index',
+      children: [{
+        path: '/recognize/index',
+        component: Recognition,
+        name: 'Recognition',
+        meta: { title: '识别记录', icon: '', cache: true }
       }]
     }, {
       path: '/system',

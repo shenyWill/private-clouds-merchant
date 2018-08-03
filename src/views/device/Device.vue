@@ -1,15 +1,14 @@
 <template>
-  <div class="system">
-    系统管理
+  <div class="device">
+    设备管理
   </div>
 </template>
 
 <script>
  export default {
-   name: 'System',
+   name: 'Device',
    data () {
-     return {
-     };
+     return {};
    }
  };
 </script>
