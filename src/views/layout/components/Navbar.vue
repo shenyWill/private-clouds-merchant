@@ -39,7 +39,7 @@
    height: 62px;
    max-height: 62px;
    line-height: 62px;
-   margin-left: 180px;
+   margin-left: 250px;
    text-align: left;
 
    background-color: #3b3b3b;
@@ -56,6 +56,6 @@
    }
  }
  .navbar__collapse {
-   margin-left: 65px;
+   margin-left: 100px;
  }
 </style>

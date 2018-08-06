@@ -27,10 +27,10 @@
 
 <style>
  .app-main {
-   margin-left: 180px;
+   margin-left: 250px;
    transition: all .2s;
  }
  .app-main__collapse {
-   margin-left: 65px;
+   margin-left: 100px;
  }
 </style>

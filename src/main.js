@@ -7,6 +7,7 @@ import store from './store';
 import ElementUI from 'element-ui';
 import NProgress from 'nprogress';
 import './mock';
+import './utils/rem';
 
 import 'element-ui/lib/theme-chalk/index.css';
 import 'nprogress/nprogress.css';

@@ -1,11 +1,7 @@
 <template>
   <div class="sidebar-item">
     <template v-for="route in routes">
-      <router-link
-        :key="route.name"
-        class="sidebar-item__container"
-        :to="route.path"
-        v-if="route.children && route.children.length === 0">
+      <router-link :key="route.name" class="sidebar-item__container" :to="route.path" v-if="route.children && route.children.length === 0">
         <el-menu-item :index="route.path">
           <i :class="['iconfont', 'sidebar-item__icon', route.icon]"></i>
           <span slot="title" class="sidebar-item__name">{{ route.name }}</span>
@@ -29,34 +25,33 @@
 </template>
 
 <script>
- import { mapGetters } from 'vuex';
- export default {
-   name: 'SidebarItem',
-   props: {
-     routes: {
-       type: Array
-     }
-   },
-   computed: {
-     ...mapGetters([
-       'isCollapse'
-     ])
-   },
-   data () {
-     return {
-     };
-   },
-   mounted () {
-   }
- };
+import { mapGetters } from 'vuex';
+export default {
+  name: 'SidebarItem',
+  props: {
+    routes: {
+      type: Array
+    }
+  },
+  computed: {
+    ...mapGetters(['isCollapse'])
+  },
+  data () {
+    return {};
+  },
+  mounted () {}
+};
 </script>
 
 <style>
- .sidebar-item__icon {
-   font-size: 28px;
-   color: black;
- }
- .sidebar-item__container {
-   text-decoration: none;
- }
+.sidebar-item {
+  font-size: 0;
+}
+.sidebar-item__icon {
+  font-size: 28px;
+  color: black;
+}
+.sidebar-item__container {
+  text-decoration: none;
+}
 </style>

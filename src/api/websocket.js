@@ -7,12 +7,12 @@ websocket.onopen = (evt) => {
 };
 
 websocket.onmessage = (event) => {
-  console.log('message: ', event.data);
+  // console.log('message: ', event.data);
   websocket.close();
 };
 
 websocket.onclose = () => {
-  console.log('socket close');
+  // console.log('socket close');
 };
 
 export default websocket;

@@ -46,7 +46,7 @@
    top: 0;
    bottom: 0;
    left: 0;
-   width: 180px;
+   width: 250px;
    height: 100%;
    z-index: 999;
    transition: all .2s;
@@ -67,6 +67,6 @@
    }
  }
  .sidebar__collapse {
-   width: 65px;
+   width: 100px;
  }
 </style>

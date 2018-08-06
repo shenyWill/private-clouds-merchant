@@ -91,7 +91,7 @@
  $hover: #409eff;
  .tagsview {
    padding: 2px;
-   margin-left: 180px;
+   margin-left: 250px;
    height: 30px;
    line-height: 30px;
    text-align: left;
@@ -125,7 +125,7 @@
    }
  }
  .tagsview__collapse {
-   margin-left: 65px;
+   margin-left: 100px;
  }
  .tagsview__wrapper {
    height: 100%;
