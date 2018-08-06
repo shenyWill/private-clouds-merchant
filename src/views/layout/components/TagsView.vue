@@ -9,7 +9,7 @@
         ref="tag"
         :class="isActive(tag) ? 'active' : ''">
         {{ tag.title }}
-        <span class="tagsview__icon-close el-icon-close" @click.prevent.stop="closeSelectedTag(tag)"></span>
+        <span class="tagsview__icon-close el-icon-error" @click.prevent.stop="closeSelectedTag(tag)"></span>
       </router-link>
     </scroll-pane>
   </div>
@@ -92,35 +92,61 @@
  .tagsview {
    padding: 2px;
    margin-left: 250px;
-   height: 30px;
+   height: 40px;
    line-height: 30px;
    text-align: left;
    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
    transition: all .2s;
-
-   .tagsview__icon-close:hover {
-     background-color: lightgray;
-     border-radius: 5px;
-     color: black;
+   .tagsview__icon-close {
+     width: 16px;
+     height: 16px;
+     border-radius: 50%;
+     text-align: center;
+     overflow: hidden;
+     text-indent: 0;
+     position: absolute;
+     right: 10px;
+     top: 7px;
    }
 
    .tagsview__item {
      display: inline-block;
      position: relative;
-     font-size: 12px;
-     margin: 2px 5px;
-     padding: 0 8px;
-     height: 26px;
-     color: black;
-     border: 1px solid gray;
+     width: 120px;
+     height: 30px;
+     line-height: 30px;
+     font-size: 14px;
+     color: #999;
+     background-color: #e0e0e0;
+     border: 1px solid #999;
+     margin-right: 10px;
      text-decoration: none;
+     text-indent: 10px;
+     border-radius: 8px;
+     &:first-child {
+       margin-left: 10px;
+     }
      &:hover {
        background-color: $hover;
        color: white;
+       border-color: $hover;
      }
      &.active {
        color: white;
+       border-color: $hover;
        background-color: $selected;
+       text-indent: 25px;
+       &::before {
+         content: "";
+         display: inline-block;
+         position: absolute;
+         width: 10px;
+         height: 10px;
+         top: 10px;
+         left: 10px;
+         background-color: #fff;
+         border-radius: 50%;
+       }
      }
    }
  }
