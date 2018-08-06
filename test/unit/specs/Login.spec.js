@@ -37,7 +37,7 @@ describe('Login Component', () => {
   });
 
   it('dispatch "login" actions when login button clicked', async () => {
-    const form = { username: 'admin', password: 'admin123456' };
+    const form = { username: 'admin', password: '123456' };
     const wrapper = mount(Login, {
       store,
       localVue,

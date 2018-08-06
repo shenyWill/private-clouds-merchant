@@ -3,21 +3,21 @@ const accounts = {
     roles: ['admin'],
     token: 'admin',
     username: 'admin',
-    password: 'admin123456',
+    password: '123456',
     desc: '管理账号'
   },
   user: {
     roles: ['user'],
     token: 'user',
     username: 'user',
-    password: 'user123456',
+    password: '123456',
     desc: '操作账号'
   },
   guest: {
     roles: ['guest'],
     token: 'guest',
     username: 'guest',
-    password: 'guest123456',
+    password: '123456',
     desc: '查看账号'
   }
 };
