@@ -69,7 +69,10 @@
        'login'
      ]),
      request (url, data, cb) {
-       return cb(url, data);
+       const headers = {
+         'Content-Type': 'application/x-www-form-urlencoded'
+       };
+       return cb(url, data, headers);
      },
      onSubmit () {
        this.$refs['form'].validate(async valid => {

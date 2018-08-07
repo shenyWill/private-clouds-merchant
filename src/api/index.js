@@ -41,7 +41,12 @@ export default {
     });
   },
   post (url, payload = null, config = {}) {
-    return service.post(url, payload, config);
+    return service({
+      method: 'POST',
+      url: url,
+      data: payload,
+      ...config
+    });
   },
   websocket
 };

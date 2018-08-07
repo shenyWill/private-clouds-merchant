@@ -18,6 +18,7 @@ Vue.use(ElementUI);
 
 router.beforeEach((to, from, next) => {
   NProgress.start();
+  // TODO Check Login Auth
   next();
   NProgress.done();
 });

@@ -36,6 +36,6 @@ export default {
     }
   },
   logout: option => {
-    return { resCode: 200, resMsg: 'success' };
+    return { resCode: '200', resMsg: 'success' };
   }
 };
