@@ -36,9 +36,9 @@
 <style lang="scss" scoped>
  .navbar {
    position: relative;
-   height: 62px;
-   max-height: 62px;
-   line-height: 62px;
+   height: 60px;
+   max-height: 60px;
+   line-height: 60px;
    margin-left: 250px;
    text-align: left;
 

@@ -96,6 +96,7 @@
    line-height: 30px;
    text-align: left;
    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+   background-color: #fff;
    transition: all .2s;
    .tagsview__icon-close {
      width: 16px;

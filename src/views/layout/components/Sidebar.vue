@@ -1,5 +1,6 @@
 <template>
   <div :class="['sidebar', isCollapse ? 'sidebar__collapse' : '']">
+    <div class="logo-icon"></div>
     <el-menu
       class="sidebar__menu"
       mode="vertical"
@@ -24,7 +25,7 @@
    },
    data () {
      return {
-       backgroundColor: '#545c64',
+       backgroundColor: '#304156',
        textColor: '#fff',
        activeTextColor: '#ffd046'
      };
@@ -50,6 +51,16 @@
    height: 100%;
    z-index: 999;
    transition: all .2s;
+   .logo-icon {
+     position: fixed;
+     top: 20px;
+     left: 31px;
+     height: 43px;
+     width: 188px;
+     background: url(../../../assets/image/logo-white.png) no-repeat;
+     background-size: 188px 43px;
+     z-index: 999;
+   }
    a {
      display: inline-block;
      width: 100%;
@@ -57,10 +68,9 @@
      text-decoration: none;
    }
    .sidebar__menu {
-     padding-top: 62px;
+     padding-top: 83px;
      overflow: hidden;
      height: 100%;
-
      .el-menu .el-submenu-item {
        min-width: 100% !important;
      }
@@ -68,5 +78,8 @@
  }
  .sidebar__collapse {
    width: 100px;
+   .logo-icon {
+     display: none;
+   }
  }
 </style>
