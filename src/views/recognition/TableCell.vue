@@ -19,4 +19,6 @@
 </script>
 
 <style>
+ .cell__content {
+ }
 </style>
