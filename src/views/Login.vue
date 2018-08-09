@@ -39,6 +39,7 @@
 
 <script>
  import api from '@/api';
+ import Qs from 'qs';
  import config from '@/config';
  import { mapActions } from 'vuex';
  export default {
@@ -69,10 +70,12 @@
        'login'
      ]),
      request (url, data, cb) {
-       const headers = {
-         'Content-Type': 'application/x-www-form-urlencoded'
+       const config = {
+         headers: {
+           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+         }
        };
-       return cb(url, data, headers);
+       return cb(url, Qs.stringify(data), config);
      },
      onSubmit () {
        this.$refs['form'].validate(async valid => {
@@ -82,7 +85,7 @@
              // Crypto TODO
              const response = await this.request(config.loginAPI, this.form, api.post);
              this.disabled = false;
-             if (response.data.resCode === '200') {
+             if (response.data.code === 0) {
                this.login(response.data.data);
                this.$router.push('/index');
              } else {

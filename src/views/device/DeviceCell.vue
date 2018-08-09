@@ -18,34 +18,10 @@
       <div class="device-cell__orga">组织：{{ device.organization }}</div>
     </div>
     <div class="device-cell__action">
-      <i @click="showDialog('detailDialog')" class="device-cell__button el-icon-view"></i>
-      <i @click="showDialog('editDialog')" class="device-cell__button el-icon-edit"></i>
-      <i @click="showDialog('deleteDialog')" class="device-cell__button el-icon-delete"></i>
+      <i @click="showDeviceDetail" class="device-cell__button el-icon-view"></i>
+      <i @click="editDevice" class="device-cell__button el-icon-edit"></i>
+      <i @click="deleteDevice" class="device-cell__button el-icon-delete"></i>
     </div>
-
-    <el-dialog
-      title="提示"
-      width="20%"
-      :visible.sync="deleteDialog">
-      <span class="dialog__content">你确认要删除该设备吗？</span>
-      <span slot="footer">
-        <el-button @click="deleteDialog = false" type="primary">取消删除</el-button>
-        <el-button @click="deleteDevice">确认删除</el-button>
-      </span>
-    </el-dialog>
-
-    <el-dialog
-      title="设备详情"
-      class="device-cell__detail"
-      width="30%"
-      :visible.sync="detailDialog">
-      <div class="dialog__content">
-        <div class="dialog__content-item" v-for="(value, key) in detailData()" :key="key">
-          <span class="dialog__content-key">{{ key }}:</span>
-          <span class="dialog__content-value">{{ value }}</span>
-        </div>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -54,9 +30,6 @@
    name: 'DeviceCell',
    data () {
      return {
-       deleteDialog: false,
-       detailDialog: false,
-       editDialog: false
      };
    },
    props: {
@@ -68,23 +41,36 @@
      }
    },
    methods: {
-     showDialog (type) {
-       this[type] = true;
-     },
      deleteDevice () {
-       this.deleteDialog = false;
        this.$emit('delete', this.device);
      },
+     showDeviceDetail () {
+       this.$emit('detail', this.detailData());
+     },
+     editDevice () {
+       this.$emit('edit', this.device);
+     },
      detailData () {
-       return {
-         '设备名称': this.device.title,
-         '设备种类': this.device.type,
-         '所属组织': this.device.organization,
-         '所属区域': this.device.area,
-         'IP地址': this.device.ip,
-         '端口号': this.device.host,
-         '设备状态': this.device.status ? '启用' : '禁用'
-       };
+       if (this.device.ip) {
+         return {
+           '设备名称': this.device.title,
+           '设备种类': this.device.type,
+           '所属组织': this.device.organization,
+           '所属区域': this.device.area,
+           'IP地址': this.device.ip,
+           '端口号': this.device.port,
+           '设备状态': this.device.status ? '启用' : '禁用'
+         };
+       } else {
+         return {
+           '设备名称': this.device.title,
+           '设备种类': this.device.type,
+           '所属组织': this.device.organization,
+           '所属区域': this.device.area,
+           '设备URL': this.device.url,
+           '设备状态': this.device.status ? '启用' : '禁用'
+         };
+       }
      }
    },
    mounted () {
@@ -142,6 +128,7 @@
    font-size: 30px;
    font-weight: bold;
    margin-left: 30px;
+   color: #008aff;
    &:hover {
      cursor: pointer;
    }
@@ -160,24 +147,5 @@
  }
  .device-cell .el-dialog__footer {
    text-align: center;
- }
- .device-cell .device-cell__detail .el-dialog__body {
-   margin: 0 auto;
-   text-align: left;
-   overflow: hidden;
- }
- .device-cell .device-cell__detail .dialog__content-item {
-   position: relative;
-   margin-left: 30px;
-   margin-bottom: 20px;
- }
- .device-cell .device-cell__detail .dialog__content-value {
-   position: absolute;
-   font-weight: normal;
-   left: 100px;
-   right: 20px;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   white-space: nowrap;
  }
 </style>
