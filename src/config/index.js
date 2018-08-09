@@ -7,5 +7,9 @@ export default {
     add: '/device/add',
     update: '/device/update',
     delete: '/device/delete'
+  },
+  person: {
+    list: '/person/index',
+    detail: '/person/detail'
   }
 };

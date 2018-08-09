@@ -17,7 +17,7 @@ import Vue from 'vue';
 export default {
   data () {
     return {
-      visibleSearch: true // 搜索框显示与否标识
+      visibleSearch: false // 搜索框显示与否标识
     };
   },
   methods: {
@@ -90,6 +90,7 @@ export default {
     transition: all 1s;
     overflow: hidden;
     max-height: 600px;
+    width: 1600px;
     border-radius: 0 0 7px 7px;
   }
   .hide-search-form {
