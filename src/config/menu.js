@@ -12,6 +12,11 @@ export default [{
     path: '/person/index',
     icon: 'el-icon-menu',
     children: []
+  }, {
+    name: '人员管理',
+    path: '/person/database',
+    icon: 'el-icon-menu',
+    children: []
   }]
 }, {
   name: '产品管理',

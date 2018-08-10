@@ -130,7 +130,8 @@ export default {
       dialogPersonDetail: false, // 详情框是否显示
       deleteAllOperationTag: false, // 进入删除全部标识
       deletePeopleList: [], //  删除人员集合
-      dialogPersonAdd: false // 添加人员框是否显示
+      dialogPersonAdd: false, // 添加人员框是否显示
+      currentPage: 1 // 当前页
     };
   },
   components: {
@@ -153,6 +154,7 @@ export default {
     },
     // 点击分页
     async handleCurrentChange (val) {
+      this.currentPage = val;
       this.responseAPI({pageSize: 19, page: val});
       scollTop(80);
     },
@@ -209,7 +211,7 @@ export default {
     // 确认删除全部
     async deleteAllSure () {
       await api.post(config.person.deleteAll, this.deletePeopleList);
-      await this.responseAPI();
+      await this.responseAPI({pageSize: 19, page: this.currentPage});
       this.deletePeopleList = [];
       this.deleteAllOperationTag = false;
     },

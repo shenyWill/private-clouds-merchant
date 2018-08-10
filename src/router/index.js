@@ -23,6 +23,7 @@ import Device from '@/views/device/Device';
 
 // Person Modules
 import Person from '@/views/person/Person';
+import Database from '@/views/person/Database';
 
 // Recognition Modules
 import Recognition from '@/views/recognition/Recognition';
@@ -87,6 +88,11 @@ export default new Router({
         component: Person,
         name: 'Person',
         meta: { title: '人员管理', icon: '', cache: true }
+      }, {
+        path: '/person/database',
+        component: Database,
+        name: 'Database',
+        meta: { title: '库管理', icon: '', cache: true }
       }]
     }, {
       path: '/recognize',
