@@ -44,8 +44,13 @@ export default [{
   icon: 'el-icon-picture',
   children: []
 }, {
+  name: '区域管理',
+  path: '/region/index',
+  icon: 'el-icon-location',
+  children: []
+}, {
   name: '系统管理',
-  path: '/System',
+  path: '/system',
   icon: 'el-icon-tickets',
   children: [{
     name: '系统设置',

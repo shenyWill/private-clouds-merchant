@@ -1,10 +1,10 @@
 <template>
   <div class="device-cell">
     <div class="device-cell__info">
-      <div class="device-cell__title">{{ device.title }}</div>
-      <div class="device-cell__content">
+      <div class="device-cell__title">
+        {{ device.equipmentName }}
         <span class="device-cell__tag">
-          <el-tag type="warning">{{ device.type }}</el-tag>
+          <el-tag type="warning">{{ device.equipmentType }}</el-tag>
         </span>
       </div>
       <div class="device-cell__status">
@@ -51,20 +51,20 @@
        this.$emit('edit', this.device);
      },
      detailData () {
-       if (this.device.ip) {
+       if (this.device.ipAddress) {
          return {
-           '设备名称': this.device.title,
-           '设备种类': this.device.type,
+           '设备名称': this.device.equipmentName,
+           '设备种类': this.device.equipmentType,
            '所属组织': this.device.organization,
            '所属区域': this.device.area,
-           'IP地址': this.device.ip,
+           'IP地址': this.device.ipAddress,
            '端口号': this.device.port,
            '设备状态': this.device.status ? '启用' : '禁用'
          };
        } else {
          return {
-           '设备名称': this.device.title,
-           '设备种类': this.device.type,
+           '设备名称': this.device.equipmentName,
+           '设备种类': this.device.equipmentType,
            '所属组织': this.device.organization,
            '所属区域': this.device.area,
            '设备URL': this.device.url,
@@ -89,7 +89,7 @@
  }
  .device-cell__info {
    min-width: 300px;
-   margin-top: 20px;
+   margin-top: 35px;
    text-align: left;
  }
  .device-cell__title {

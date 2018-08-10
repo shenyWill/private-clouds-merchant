@@ -3,6 +3,7 @@ import config from '@/config';
 import login from './login';
 import device from './device';
 import person from './person';
+import region from './region';
 
 Mock.mock(config.loginAPI, 'post', login.login);
 Mock.mock(config.logoutAPI, 'post', login.logout);
@@ -11,6 +12,8 @@ Mock.mock(/\/device\/list/, 'get', device.list);
 Mock.mock(config.device.add, 'post', device.add);
 Mock.mock(config.device.update, 'post', device.update);
 Mock.mock(/\/device\/delete/, 'post', device.delete);
+
+Mock.mock(/\/region\/list/, 'get', region.list);
 
 Mock.mock(/\/person\/index/, 'post', person.list);
 Mock.mock(/\/person\/detail/, 'post', person.detail);

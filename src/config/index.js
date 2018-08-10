@@ -8,6 +8,12 @@ export default {
     update: '/device/update',
     delete: '/device/delete'
   },
+  region: {
+    list: '/region/list',
+    add: '/region/add',
+    update: '/region/update',
+    delete: '/region/delete'
+  },
   person: {
     list: '/person/index',
     detail: '/person/detail'
