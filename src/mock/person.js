@@ -1,5 +1,5 @@
 import Mock from 'mockjs';
-const list = [];
+var list = [];
 const count = 500;
 
 for (let i = 0; i < count; i++) {
@@ -20,7 +20,7 @@ for (let i = 0; i < count; i++) {
 
 export default {
   list: config => {
-    let { page = 1, pageSize = 10 } = JSON.parse(config.body);
+    let { page = 1, pageSize = 19 } = JSON.parse(config.body);
     let searchList = list.filter((item, index) => index < page * pageSize && index >= (page - 1) * pageSize);
     return {
       resCode: '200',
@@ -35,5 +35,40 @@ export default {
           resCode: '200',
           data: searchList
       };
+  },
+  delete: config => {
+    let { id } = JSON.parse(config.body);
+    let searchList = list = list.filter(item => item.id !== id);
+    return {
+      resCode: '200',
+      data: searchList
+    };
+  },
+  deleteAll: config => {
+    let idList = JSON.parse(config.body);
+    let searchList = list = list.filter(item => {
+      for (let id of idList) {
+        if (id === item.id) {
+          return false;
+        }
+      }
+      return true;
+    });
+    return {
+      resCode: '200',
+      data: searchList
+    };
+  },
+  add: config => {
+    let obj = JSON.parse(config.body);
+    obj = Object.assign(obj, Mock.mock({
+      id: '@id',
+      'company|1': ['深圳市华付信息技术有限公司', '腾讯科技股份有限公司', '阿里巴巴集团', '百度咨询有限公司', '龙腾集团', '碧桂园房产咨询有限公司', '恒大集团', '暴走漫画有限公司', '荣传天下科技股份有限公司']
+    }));
+    list.unshift(obj);
+    return {
+      resCode: '200',
+      data: obj
+    };
   }
 };

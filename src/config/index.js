@@ -10,6 +10,14 @@ export default {
   },
   person: {
     list: '/person/index',
-    detail: '/person/detail'
+    detail: '/person/detail',
+    delete: '/person/delete',
+    deleteAll: '/person/deleteAll',
+    add: '/person/add'
+  },
+  recognition: {
+    list: '/recognition/index',
+    detail: '/recognition/detail',
+    compareDetail: '/recognition/compareDetail'
   }
 };
