@@ -10,27 +10,27 @@ for (let i = 0; i < count; i++) {
   if (ipOrURL > 5) {
     data = Mock.mock({
       id: '@id',
-      title: '@ctitle(5, 10)',
-      area: '@county(true)',
-      'type|1': ['人证机', '摄像头', '人脸门禁'],
+      equipmentName: '@ctitle(5, 10)',
+      areaName: '@county(true)',
+      'equipmentType|1': ['人证机', '摄像头', '人脸识别门禁平板', '闸机', '门'],
       organization: '@ctitle(5, 10)',
       status: '@boolean',
-      ip: '@ip',
+      ipAddress: '@ip',
       port: '@integer(0, 65535)',
-      account: '@word(5, 10)',
-      password: '@string'
+      loginName: '@word(5, 10)',
+      loginPsw: '@string'
     });
   } else {
     data = Mock.mock({
       id: '@id',
-      title: '@ctitle(5, 10)',
-      area: '@county(true)',
-      'type|1': ['人证机', '摄像头', '人脸门禁'],
+      equipmentName: '@ctitle(5, 10)',
+      areaName: '@county(true)',
+      'equipmentType|1': ['人证机', '摄像头', '人脸识别门禁平板', '闸机', '门'],
       organization: '@ctitle(5, 10)',
       status: '@boolean',
       url: '@url',
-      account: '@word(5, 10)',
-      password: '@string'
+      loginName: '@word(5, 10)',
+      loginPsw: '@string'
     });
   }
   list.push(data);

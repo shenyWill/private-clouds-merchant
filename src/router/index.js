@@ -27,6 +27,9 @@ import Person from '@/views/person/Person';
 // Recognition Modules
 import Recognition from '@/views/recognition/Recognition';
 
+// Region Modules
+import Region from '@/views/region/Region';
+
 Vue.use(Router);
 
 export default new Router({
@@ -119,6 +122,16 @@ export default new Router({
         component: Role,
         name: 'Role',
         meta: { title: '角色管理', icon: '', cache: true }
+      }]
+    }, {
+      path: '/region',
+      component: Layout,
+      redirect: '/region/index',
+      children: [{
+        path: '/region/index',
+        component: Region,
+        name: 'Region',
+        meta: { title: '区域管理', icon: '', cache: true }
       }]
     }
   ]

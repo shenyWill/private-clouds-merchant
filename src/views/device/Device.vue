@@ -1,7 +1,18 @@
 <template>
   <div class="device">
     <div class="device__list">
-      <el-button @click="showDialog('addDialog')" type="primary" circle class="device__button-add" icon="el-icon-plus"></el-button>
+      <div
+        @mouseover="hoverAddButton()"
+        @mouseout="leaveAddButton()"
+        :class="['device__button-hover', showAddButton ? addButtonStyle : '']">
+        <el-button
+          @click="showDialog('addDialog')"
+          circle>
+          添加
+          <br/>
+          设备
+        </el-button>
+      </div>
       <div class="device__list-header">
         查看设备
       </div>
@@ -35,20 +46,20 @@
         :model="addForm"
         :rules="addRules"
         class="device__form-add">
-        <el-form-item label="设备名称" prop="title">
-          <el-input v-model="addForm.title" placeholder="请填写设备名称"></el-input>
+        <el-form-item label="设备名称" prop="equipmentName">
+          <el-input v-model="addForm.equipmentName" placeholder="请填写设备名称"></el-input>
         </el-form-item>
-        <el-form-item label="设备种类" prop="type">
-          <el-select v-model="addForm.type" placeholder="请选择设备种类"></el-select>
+        <el-form-item label="设备种类" prop="equipmentType">
+          <el-select v-model="addForm.equipmentType" placeholder="请选择设备种类"></el-select>
         </el-form-item>
-        <el-form-item label="所属区域" prop="area">
-          <el-select v-model="addForm.area" placeholder="请选择所属区域"></el-select>
+        <el-form-item label="所属区域" prop="areaName">
+          <el-select v-model="addForm.areaName" placeholder="请选择所属区域"></el-select>
         </el-form-item>
-        <el-form-item label="设备账号" prop="account">
-          <el-input v-model="addForm.account" placeholder="请输入账号"></el-input>
+        <el-form-item label="设备账号" prop="loginName">
+          <el-input v-model="addForm.loginName" placeholder="请输入账号"></el-input>
         </el-form-item>
-        <el-form-item label="设备密码" prop="password">
-          <el-input v-model="addForm.password" placeholder="请输入密码" type="password"></el-input>
+        <el-form-item label="设备密码" prop="loginPwd">
+          <el-input v-model="addForm.loginPwd" placeholder="请输入密码" type="password"></el-input>
         </el-form-item>
         <el-form-item label="设备地址" prop="address">
           <el-select v-model="deviceAddress" placeholder="请选择">
@@ -58,8 +69,8 @@
         <el-form-item label="设备URL地址" prop="url" v-if="deviceAddress === 'url'">
           <el-input v-model="addForm.url" placeholder="请输入设备URL地址"></el-input>
         </el-form-item>
-        <el-form-item label="设备IP地址" prop="ip" v-if="deviceAddress === 'ip'">
-          <el-input v-model="addForm.ip" placeholder="请输入IP地址"></el-input>
+        <el-form-item label="设备IP地址" prop="ipAddress" v-if="deviceAddress === 'ip'">
+          <el-input v-model="addForm.ipAddress" placeholder="请输入IP地址"></el-input>
         </el-form-item>
         <el-form-item label="端口号" prop="port" v-if="deviceAddress === 'ip'">
           <el-input v-model="addForm.port" placeholder="请输入设备端口号"></el-input>
@@ -78,14 +89,14 @@
       width="25%"
       title="修改设备">
       <el-form ref="editForm" :model="editForm" label-position="top" :rules="editRules" class="device__form-add">
-        <el-form-item label="设备名称" prop="title">
-          <el-input v-model="editForm.title" placeholder="请填写设备名称"></el-input>
+        <el-form-item label="设备名称" prop="equipmentName">
+          <el-input v-model="editForm.equipmentName" placeholder="请填写设备名称"></el-input>
         </el-form-item>
-        <el-form-item label="设备种类" prop="type">
-          <el-select v-model="editForm.type" placeholder="请选择设备类型"></el-select>
+        <el-form-item label="设备种类" prop="equipmentType">
+          <el-select v-model="editForm.equipmentType" placeholder="请选择设备类型"></el-select>
         </el-form-item>
-        <el-form-item label="所属区域" prop="area">
-          <el-select v-model="editForm.area" placeholder="请选择所属区域"></el-select>
+        <el-form-item label="所属区域" prop="areaName">
+          <el-select v-model="editForm.areaName" placeholder="请选择所属区域"></el-select>
         </el-form-item>
         <el-form-item label="设备地址" prop="address">
           <el-select v-model="deviceAddress" placeholder="请选择">
@@ -95,8 +106,8 @@
         <el-form-item label="设备URL地址" prop="url" v-if="deviceAddress === 'url'">
           <el-input v-model="editForm.url" placeholder="请输入设备URL地址"></el-input>
         </el-form-item>
-        <el-form-item label="设备IP地址" prop="ip" v-if="deviceAddress === 'ip'">
-          <el-input v-model="editForm.ip" placeholder="请输入IP地址"></el-input>
+        <el-form-item label="设备IP地址" prop="ipAddress" v-if="deviceAddress === 'ip'">
+          <el-input v-model="editForm.ipAddress" placeholder="请输入IP地址"></el-input>
         </el-form-item>
         <el-form-item label="端口号" prop="port" v-if="deviceAddress === 'ip'">
           <el-input v-model="editForm.port" placeholder="请填写设备端口号"></el-input>
@@ -125,6 +136,7 @@
     <el-dialog
       title="提示"
       width="25%"
+      class="device__dialog-delete"
       :visible.sync="deleteDialog">
       <span class="dialog__content">你确认要删除该设备吗？</span>
       <span slot="footer">
@@ -166,13 +178,13 @@
        addForm: {},
        editForm: {},
        addRules: {
-         title: [
+         equipmentName: [
            { required: true, message: '请输入设备名称', trigger: 'blur' }
          ],
-         type: [
+         equipmentType: [
            { required: true, message: '请选择设备种类', trigger: 'change' }
          ],
-         area: [
+         areaName: [
            { required: true, message: '请选择所属区域', trigger: 'change' }
          ],
          address: [
@@ -181,18 +193,18 @@
          port: [
            { required: true, message: '请填写端口号', trigger: 'blur' }
          ],
-         account: [
+         loginName: [
          ],
-         password: []
+         loginPsw: []
        },
        editRules: {
-         title: [
+         equipmentName: [
            { required: true, message: '请输入设备名称', trigger: 'blur' }
          ],
-         type: [
+         equipmentType: [
            { required: true, message: '请选择设备种类', trigger: 'change' }
          ],
-         area: [
+         areaName: [
            { required: true, message: '请选择所属区域', trigger: 'change' }
          ],
          address: [
@@ -201,9 +213,13 @@
          port: [
            { required: true, message: '请填写端口号', trigger: 'blur' }
          ],
-         account: [
+         loginName: [
          ],
-         password: []
+         loginPsw: []
+       },
+       showAddButton: false,
+       addButtonStyle: {
+         'device__button-show': true
        }
      };
    },
@@ -213,12 +229,18 @@
        if (!this.$refs[name]) return;
        this.$refs[name].resetFields();
      },
+     hoverAddButton () {
+       this.showAddButton = true;
+     },
+     leaveAddButton () {
+       this.showAddButton = false;
+     },
      showDialog (name) {
        this[name] = true;
      },
      showEditDialog (data) {
        this.deviceDetail = data;
-       if (data.ip) this.deviceAddress = 'ip';
+       if (data.ipAddress) this.deviceAddress = 'ip';
        else this.deviceAddress = 'url';
        this.editForm = {
          ...data,
@@ -247,10 +269,16 @@
        this.fetchData({ page: val });
      },
      editDevice (data) {
-       this.$refs['editForm'].validate(valid => {
+       this.$refs['editForm'].validate(async valid => {
          if (valid) {
            try {
-             // TODO request
+             const response = await api.post(config.device.update, this.editForm);
+             if (response.data.code === 0) {
+               this.$message({ type: 'success', message: '添加成功' });
+               this.fetchData({ page: this.currentPage });
+             } else {
+               this.$message({ type: 'error', message: response.data.msg });
+             }
            } catch (e) {
            }
          } else {
@@ -260,10 +288,17 @@
      },
      // add device form submit button clicked
      addDevice () {
-       this.$refs['addForm'].validate(valid => {
+       this.$refs['addForm'].validate(async valid => {
          if (valid) {
            try {
-             // TODO request
+             const response = await api.post(config.device.add, this.addForm);
+             this.addDialog = false;
+             if (response.data.code === 0) {
+               this.$message({ type: 'success', message: '添加成功' });
+               this.fetchData({ page: this.currentPage });
+             } else {
+               this.$message({ type: 'error', message: response.data.msg });
+             }
            } catch (e) {
            }
          } else {
@@ -330,21 +365,22 @@
    text-align: left;
    border-bottom: 1px solid lightgray;
  }
- .device .el-dialog__body {
-   margin: 0 auto;
-   font-weight: bold;
-   text-align: center;
- }
- .device .el-dialog__footer {
-   text-align: center;
- }
- .device .device__button-add {
+ .device .device__button-hover {
    position: fixed;
    width: 70px;
    height: 70px;
+   border-radius: 35px;
    right: -35px;
    bottom: 100px;
    z-index: 1;
+ }
+ .device .device__button-show {
+   right: 0;
+ }
+ .device .device__button-hover .el-button {
+   width: 100%;
+   height: 100%;
+   padding: 0;
  }
  .device .device__form-add {
    font-weight: bold;
@@ -358,16 +394,22 @@
  .device__form-add .el-select {
    width: 100%;
  }
- .device__dialog-add .el-dialog__footer {
+ .device .el-dialog .el-dialog__body {
+   margin: 0 auto;
+   font-weight: bold;
+   text-align: left;
+   overflow: hidden;
+ }
+ .device .el-dialog .el-dialog__footer {
+   padding-top: 0;
+   padding-bottom: 50px;
+   text-align: center;
+ }
+ .device .device__dialog-delete .el-dialog__body {
    text-align: center;
  }
  .device__dialog-add .el-dialog__footer .el-button {
    width: 50%;
- }
- .device .device__dialog-detail .el-dialog__body {
-   margin: 0 auto;
-   text-align: left;
-   overflow: hidden;
  }
  .device .device__dialog-detail .dialog__content-item {
    position: relative;
