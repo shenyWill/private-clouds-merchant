@@ -25,8 +25,10 @@ export default {
 
     return {
       code: 0,
-      data: pageList,
-      size: count
+      data: {
+        rows: pageList,
+        total: count
+      }
     };
   }
 };

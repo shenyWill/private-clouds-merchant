@@ -77,7 +77,7 @@ export default new Router({
         path: '/device/index',
         component: Device,
         name: 'Device',
-        meta: { title: '设备管理', icon: '', cache: true }
+        meta: { title: '设备管理', icon: '', cache: false }
       }]
     }, {
       path: '/person',

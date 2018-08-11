@@ -3,16 +3,17 @@ export default {
   loginAPI: '/login',
   logoutAPI: '/logout',
   device: {
-    list: '/device/list',
-    add: '/device/add',
-    update: '/device/update',
-    delete: '/device/delete'
+    list: '/equipment/info/list',
+    add: '/equipment/info/save',
+    update: '/equipment/info/save',
+    delete: '/equipment/info/remove'
   },
   region: {
-    list: '/region/list',
-    add: '/region/add',
-    update: '/region/update',
-    delete: '/region/delete'
+    list: '/area/info/list',
+    add: '/area/info/save',
+    update: '/area/info/save',
+    delete: '/area/info/remove',
+    devices: '/areaEquipment/info/list'
   },
   person: {
     list: '/person/index',
@@ -25,5 +26,28 @@ export default {
     list: '/recognition/index',
     detail: '/recognition/detail',
     compareDetail: '/recognition/compareDetail'
-  }
+  },
+  deviceType: [{
+    value: 1,
+    label: '人证比对机'
+  }, {
+    value: 2,
+    label: '摄像头'
+  }, {
+    value: 3,
+    label: '人脸识别门禁平板'
+  }, {
+    value: 4,
+    label: '闸机'
+  }, {
+    value: 5,
+    label: '门'
+  }],
+  deviceAddressType: [{
+    key: 'IP地址',
+    value: 'ip'
+  }, {
+    key: 'URL地址',
+    value: 'url'
+  }]
 };

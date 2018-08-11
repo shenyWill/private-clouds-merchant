@@ -1,37 +1,57 @@
 <template>
   <div class="region">
-    <el-row :gutter="20" class="region__row">
-      <el-col :span="12">
-        <div class="region__add" @click="showDialog('addDialog')">
-          <div class="region__add-button">
-            <i class="el-icon-plus"></i>
+    <Search :searchResult="searchResult">
+      <el-form
+        class="region__search"
+        slot="search-form"
+        ref="searchForm"
+        :rules="searchFormRules"
+        label-width="80px"
+        :model="searchForm">
+        <el-form-item label="区域名称" prop="areaName">
+          <el-input v-model="searchForm.areaName" placeholder="请输入区域名称"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSearch">搜索</el-button>
+        </el-form-item>
+      </el-form>
+    </Search>
+    <div class="region__list">
+      <el-row :gutter="20" class="region__row">
+        <el-col :span="12">
+          <div class="region__add" @click="showDialog('addRegionDialog', 'addForm')">
+            <div class="region__add-button">
+              <i class="el-icon-plus"></i>
+            </div>
+            <div class="region__add-info">
+              <div class="region__add-title">区域</div>
+              <div class="region__add-subtitle">添加新的区域</div>
+            </div>
           </div>
-          <div class="region__add-info">
-            <div class="region__add-title">区域</div>
-            <div class="region__add-subtitle">添加新的区域</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="12" v-for="(item, index) in list" :key="index" class="region__list">
-        <RegionCell
-          :region="item"
-          @edit="showEditDialog">
-        </RegionCell>
-      </el-col>
-    </el-row>
-    <el-pagination
-      background
-      :current-page="currentPage"
-      @current-change="handleCurrentChange"
-      layout="prev, pager, next"
-      :total="size">
-    </el-pagination>
+        </el-col>
+        <el-col :span="12" v-for="(item, index) in list" :key="index" class="region__list">
+          <RegionCell
+            :region="item"
+            @view="viewRegionDetail"
+            @delete="showDeleteDialog"
+            @device="showAddDeviceDialog"
+            @edit="showEditDialog">
+          </RegionCell>
+        </el-col>
+      </el-row>
+      <el-pagination
+        background
+        :current-page="currentPage"
+        @current-change="handleCurrentChange"
+        layout="prev, pager, next"
+        :total="size">
+      </el-pagination>
+    </div>
 
     <!-- Add Region Dialog -->
     <el-dialog
       class="region__dialog"
-      :visible.sync="addDialog"
-      :before-close="resetForm('addForm')"
+      :visible.sync="addRegionDialog"
       width="25%"
       title="添加区域">
       <el-form
@@ -68,6 +88,84 @@
         <el-button type="primary" @click="editRegion">确定</el-button>
       </span>
     </el-dialog>
+
+    <!-- Add Device Dialog -->
+    <el-dialog
+      class="region__dialog"
+      title="添加设备"
+      :visible.sync="addDeviceDialog"
+      width="25%">
+      <el-form ref="deviceForm" label-position="top" :model="deviceForm" :rules="deviceRules">
+        <el-form-item label="设备名称" prop="equipmentName">
+          <el-input v-model="deviceForm.equipmentName" placeholder="请输入设备名称"></el-input>
+        </el-form-item>
+        <el-form-item label="设备种类" prop="model">
+          <el-select v-model="deviceForm.model" placeholder="请选择">
+            <el-option
+              v-for="item in config.deviceType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所属区域" prop="areaName">
+          <el-input v-model="deviceForm.areaName" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="设备账号" prop="loginName">
+          <el-input v-model="deviceForm.loginName" placeholder="请输入设备账号"></el-input>
+        </el-form-item>
+        <el-form-item label="设备密码" prop="loginPsw">
+          <el-input v-model="deviceForm.loginPsw" placeholder="请输入与设备密码" type="password"></el-input>
+        </el-form-item>
+        <el-form-item label="设备地址" prop="deviceAddress">
+          <el-select v-model="deviceForm.deviceAddress" placeholder="请选择">
+            <el-option
+              v-for="item in config.deviceAddressType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="deviceForm.deviceAddress === 'ip'" label="设备IP地址">
+          <el-input v-model="deviceForm.ipAddress" placeholder="请输入设备IP地址"></el-input>
+        </el-form-item>
+        <el-form-item v-if="deviceForm.deviceAddress === 'ip'" label="设备端口号">
+          <el-input v-model="deviceForm.port" placeholder="请填写设备端口号"></el-input>
+        </el-form-item>
+        <el-form-item v-if="deviceForm.deviceAddress === 'url'" label="设备URL地址">
+          <el-input v-model="deviceForm.url" placeholder="请输入设备URL地址"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="addDevice">确定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- Delete No Device Region Dialog -->
+    <el-dialog
+      class="region__dialog"
+      title="提示"
+      :visible.sync="deviceRegionDialog"
+      width="25%">
+      <span>你确定要删除该区域吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="deleteRegion">确定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- Delete Region With Devices Dialog -->
+    <el-dialog
+      class="region__dialog"
+      title="提示"
+      :visible.sync="noDeviceRegionDialog"
+      width="25%">
+      <span>请删除区域中的设备，否则无法删除该区域</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="noDeviceRegionDialog = false;">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -75,21 +173,57 @@
  import api from '@/api';
  import config from '@/config';
  import RegionCell from './RegionCell';
+ import Search from '@/views/search/Search';
  export default {
    name: 'Region',
    data () {
      return {
-       list: [],
-       size: 0,
-       currentPage: 1,
+       list: [], // region list data
+       size: 0, // list total size
+       offset: 0, // list offset
+       limit: 11, // list count per page
+       currentPage: 1, // page pagination current page
        selectedRegion: null,
-       addDialog: false,
+       addRegionDialog: false,
+       addDeviceDialog: false,
        editDialog: false,
-       addForm: {},
-       editForm: {},
+       noDeviceRegionDialog: false,
+       deviceRegionDialog: false,
+       searchForm: {},
+       addForm: {
+         areaName: ''
+       }, // add region form
+       editForm: {}, // edit device form
+       deviceForm: {}, // add device form
+       searchResult: {}, // search form result
+       searchFormRules: {},
        editRules: {
          areaName: [
            { required: true, message: '请填写区域名称', trigger: 'blur' }
+         ]
+       },
+       // add device form rules
+       deviceRules: {
+         equipmentName: [
+           { required: true, message: '请输入设备名称', trigger: 'blur' }
+         ],
+         equipmentType: [
+           { required: true, message: '请选择设备种类', trigger: 'change' }
+         ],
+         areaName: [
+           { required: true, message: '请选择所属区域', trigger: 'change' }
+         ],
+         deviceAddress: [
+           { required: true, message: '请选择设备地址', trigger: 'change' }
+         ],
+         port: [
+           { required: true, message: '请填写端口号', trigger: 'blur' }
+         ],
+         loginName: [
+           { required: true, message: '请填写设备账号', trigger: 'blur' }
+         ],
+         loginPsw: [
+           { required: true, message: '请填写设备密码', trigger: 'blur' }
          ]
        },
        addRules: {
@@ -99,36 +233,120 @@
        }
      };
    },
+   computed: {
+     config: () => {
+       return config;
+     }
+   },
+   watch: {
+     searchResult: {
+       handler (newVal, oldVal) {
+         this.searchForm = {...newVal};
+         this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
+       },
+       deep: true
+     }
+   },
    components: {
-     RegionCell
+     RegionCell,
+     Search
    },
    methods: {
      handleCurrentChange (val) {
        this.currentPage = val;
-       this.fetchData({ page: val, pageSize: 11 });
+       this.offset = (val - 1) * this.limit;
+       this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
      },
-     showDialog (name) {
-       this[name] = true;
+     // to device component
+     viewRegionDetail (data) {
+       const id = data.id;
+       this.$router.push({ name: 'Device', params: {id} });
      },
-     showEditDialog (data) {
-       this.resetForm('editForm');
-       this.selectedRegion = data;
-       this.editForm = {
-         title: data.areaName
-       };
-       this.showDialog('editDialog');
-     },
-     beforeEditClose (done) {
-       this.selectedRegion = null;
-       this.resetForm('editForm');
-       this.editForm = {};
-       done();
+     showDialog (dialog, form) {
+       this.resetForm(form);
+       this[dialog] = true;
      },
      resetForm (name) {
        if (!name) return;
        if (!this.$refs[name]) return;
        this.$refs[name].resetFields();
      },
+     showEditDialog (data) {
+       this.selectedRegion = data;
+       this.editForm = {
+         id: data.id,
+         areaName: data.areaName
+       };
+       this.showDialog('editDialog', 'editForm');
+     },
+     showAddDeviceDialog (data) {
+       this.selectedRegion = data;
+       this.deviceForm = {
+         areaName: data.areaName,
+         areaId: data.id
+       };
+       this.showDialog('addDeviceDialog', 'deviceForm');
+     },
+     async showDeleteDialog (data) {
+       this.selectedRegion = data;
+       const canDelete = await this.canDeleteRegion(data.id);
+       if (!canDelete) {
+         this.noDeviceRegionDialog = true;
+       } else {
+         this.deviceRegionDialog = true;
+       }
+     },
+     async canDeleteRegion (areaId) {
+       const response = await api.post(config.region.devices, {areaId});
+       if (response.data.code === 0) {
+         const total = response.data.data.total;
+         if (total > 0) {
+           return false;
+         } else {
+           return true;
+         }
+       } else {
+         this.$message({ type: 'error', message: response.data.msg });
+         return false;
+       }
+     },
+     // before edit dialog close
+     beforeEditClose (done) {
+       this.selectedRegion = null;
+       this.editForm = {};
+       done();
+     },
+     async deleteRegion () {
+       const id = this.selectedRegion.id;
+       const response = await api.post(config.region.delete, {id});
+       if (response.data.code === 0) {
+         this.$message({ type: 'success', message: '删除区域成功' });
+         this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
+       } else {
+         this.$message({ type: 'error', message: response.data.msg });
+       }
+     },
+     // add device request
+     addDevice () {
+       this.$refs['deviceForm'].validate(async valid => {
+         if (valid) {
+           try {
+             const response = await api.post(config.device.add, this.deviceForm);
+             this.addDeviceDialog = false;
+             if (response.data.code === 0) {
+               this.$message({ type: 'success', message: '添加设备成功' });
+               this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
+             } else {
+               this.$message({ type: 'error', message: response.data.msg });
+             }
+           } catch (e) {
+           }
+         } else {
+           return false;
+         }
+       });
+     },
+     // edit region request
      editRegion () {
        this.$refs['editForm'].validate(async valid => {
          if (valid) {
@@ -137,7 +355,7 @@
              this.editDialog = false;
              if (response.data.code === 0) {
                this.$message({ type: 'success', message: '修改成功' });
-               this.fetchData({ page: this.currentPage });
+               this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
              } else {
                this.$message({ type: 'error', message: response.data.msg });
              }
@@ -148,15 +366,16 @@
          }
        });
      },
+     // add region request
      addRegion () {
        this.$refs['addForm'].validate(async valid => {
          if (valid) {
            try {
-             const response = await api.post(config.region.add, this.editForm);
-             this.addDialog = false;
+             const response = await api.post(config.region.add, this.addForm);
+             this.addRegionDialog = false;
              if (response.data.code === 0) {
-               this.$message({ type: 'success', message: '修改成功' });
-               this.fetchData({ page: this.currentPage });
+               this.$message({ type: 'success', message: '添加成功' });
+               this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
              } else {
                this.$message({ type: 'error', message: response.data.msg });
              }
@@ -167,12 +386,17 @@
          }
        });
      },
+     // search request
+     onSearch () {
+       this.searchResult = {...this.searchForm};
+       this.fetchData({ limit: this.limit, offset: this.offset, ...this.searchForm });
+     },
      async fetchData (payload) {
        try {
-         const response = await api.get(config.region.list, payload);
+         const response = await api.post(config.region.list, payload);
          if (response.data.code === 0) {
-           this.list = response.data.data;
-           this.size = response.data.size;
+           this.list = response.data.data.rows;
+           this.size = response.data.data.total;
          } else {
            this.$message({ type: 'error', message: response.data.msg });
          }
@@ -181,7 +405,7 @@
        }
      },
      init () {
-       this.fetchData({pageSize: 11});
+       this.fetchData({ limit: this.limit, offset: this.offset });
      }
    },
    mounted () {
@@ -193,7 +417,14 @@
 <style lang="scss">
  .region {
    transition: all 1s;
-   margin: 30px 20px 20px 40px;
+   margin: 30px 20px 20px 0;
+   .region__search {
+     margin: 30px;
+     text-align: right;
+   }
+   .region__list {
+     padding-left: 35px;
+   }
    .region__add {
      position: relative;
      height: 120px;

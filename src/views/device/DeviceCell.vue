@@ -13,9 +13,9 @@
       </div>
       <div class="device-cell__area">
         <i class="el-icon-location"></i>
-        <span>区域： {{ device.area }}</span>
+        <span>区域： {{ device.areaName }}</span>
       </div>
-      <div class="device-cell__orga">组织：{{ device.organization }}</div>
+      <div class="device-cell__orga">组织：{{ device.group }}</div>
     </div>
     <div class="device-cell__action">
       <i @click="showDeviceDetail" class="device-cell__button el-icon-view"></i>
@@ -55,8 +55,8 @@
          return {
            '设备名称': this.device.equipmentName,
            '设备种类': this.device.equipmentType,
-           '所属组织': this.device.organization,
-           '所属区域': this.device.area,
+           '所属组织': this.device.group,
+           '所属区域': this.device.areaName,
            'IP地址': this.device.ipAddress,
            '端口号': this.device.port,
            '设备状态': this.device.status ? '启用' : '禁用'
@@ -65,8 +65,8 @@
          return {
            '设备名称': this.device.equipmentName,
            '设备种类': this.device.equipmentType,
-           '所属组织': this.device.organization,
-           '所属区域': this.device.area,
+           '所属组织': this.device.group,
+           '所属区域': this.device.areaName,
            '设备URL': this.device.url,
            '设备状态': this.device.status ? '启用' : '禁用'
          };

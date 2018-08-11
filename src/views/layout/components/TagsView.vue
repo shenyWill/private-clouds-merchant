@@ -50,6 +50,7 @@
        return route.path === this.$route.path || route.name === this.$route.name;
      },
      closeSelectedTag (view) {
+       console.log(view);
        this.$store.dispatch('delVisitedViews', view).then(views => {
          if (this.isActive(view)) {
            const lastView = views.slice(-1)[0];

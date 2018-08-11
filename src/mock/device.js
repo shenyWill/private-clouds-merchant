@@ -13,7 +13,7 @@ for (let i = 0; i < count; i++) {
       equipmentName: '@ctitle(5, 10)',
       areaName: '@county(true)',
       'equipmentType|1': ['人证机', '摄像头', '人脸识别门禁平板', '闸机', '门'],
-      organization: '@ctitle(5, 10)',
+      group: '@ctitle(5, 10)',
       status: '@boolean',
       ipAddress: '@ip',
       port: '@integer(0, 65535)',
@@ -26,7 +26,7 @@ for (let i = 0; i < count; i++) {
       equipmentName: '@ctitle(5, 10)',
       areaName: '@county(true)',
       'equipmentType|1': ['人证机', '摄像头', '人脸识别门禁平板', '闸机', '门'],
-      organization: '@ctitle(5, 10)',
+      group: '@ctitle(5, 10)',
       status: '@boolean',
       url: '@url',
       loginName: '@word(5, 10)',
@@ -50,8 +50,10 @@ export default {
 
     return {
       code: 0,
-      data: pageList,
-      size: count
+      data: {
+        rows: pageList,
+        total: count
+      }
     };
   },
   add: config => {

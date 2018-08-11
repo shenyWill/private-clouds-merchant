@@ -1,12 +1,44 @@
 <template>
   <div class="device">
+    <Search :searchResult="searchResult">
+      <el-form
+        class="device__search"
+        slot="search-form"
+        ref="searchForm"
+        :model="searchForm"
+        :rule="searchFormRules">
+        <el-form-item label="设备名称" prop="equipmentName">
+          <el-input v-model="searchForm.equipmentName" placeholder="请填写设备名称"></el-input>
+        </el-form-item>
+        <el-form-item label="设备类型" prop="model">
+          <el-select v-model="searchForm.model" placeholder="请选择">
+            <el-option
+              v-for="item in config.deviceType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="设备区域" prop="areaId"></el-form-item>
+        <el-form-item label="设备IP" prop="ipAddress">
+          <el-input v-model="searchForm.ipAddress" placeholder="请填写设备IP地址"></el-input>
+        </el-form-item>
+        <el-form-item label="设备URL" prop="url">
+          <el-input v-model="searchForm.url" placeholder="请填写设备URL地址"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSearch">搜索</el-button>
+        </el-form-item>
+      </el-form>
+    </Search>
     <div class="device__list">
       <div
         @mouseover="hoverAddButton()"
         @mouseout="leaveAddButton()"
         :class="['device__button-hover', showAddButton ? addButtonStyle : '']">
         <el-button
-          @click="showDialog('addDialog')"
+          @click="showDialog('addDialog', 'addForm')"
           circle>
           添加
           <br/>
@@ -36,7 +68,6 @@
     <!-- Add Device Dialog -->
     <el-dialog
       class="device__dialog-add"
-      :before-close="resetForm('addForm')"
       title="添加设备"
       :visible.sync="addDialog"
       width="25%">
@@ -93,10 +124,23 @@
           <el-input v-model="editForm.equipmentName" placeholder="请填写设备名称"></el-input>
         </el-form-item>
         <el-form-item label="设备种类" prop="equipmentType">
-          <el-select v-model="editForm.equipmentType" placeholder="请选择设备类型"></el-select>
+          <el-select v-model="editForm.model" placeholder="请选择">
+            <el-option
+              v-for="item in config.deviceType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="所属区域" prop="areaName">
           <el-select v-model="editForm.areaName" placeholder="请选择所属区域"></el-select>
+        </el-form-item>
+        <el-form-item label="设备账号" prop="loginName">
+          <el-input v-model="editForm.loginName" placeholder="请填写设备账号"></el-input>
+        </el-form-item>
+        <el-form-item label="设备密码" prop="loginPsw">
+          <el-input v-model="editForm.loginPsw" placeholder="请填写设备密码" type="password"></el-input>
         </el-form-item>
         <el-form-item label="设备地址" prop="address">
           <el-select v-model="deviceAddress" placeholder="请选择">
@@ -151,17 +195,28 @@
  import api from '@/api';
  import config from '@/config';
  import DeviceCell from './DeviceCell';
+ import Search from '@/views/search/Search';
 
  export default {
    name: 'Device',
    components: {
-     DeviceCell
+     DeviceCell,
+     Search
+   },
+   computed: {
+     config: () => {
+       return config;
+     }
    },
    data () {
      return {
+       regionID: '',
+       searchResult: {},
        list: null, // deivce list
        deviceDetail: null, // detail dialog info
        size: 0, // device list count
+       limit: 10, // list count per page
+       offset: 0, // list offset
        currentPage: 1, // device list page
        deviceAddress: '', // device ip or url address
        addressType: [{
@@ -175,8 +230,11 @@
        editDialog: false,
        detailDialog: false,
        deleteDialog: false,
+       searchForm: {},
        addForm: {},
        editForm: {},
+       searchFormRules: {
+       },
        addRules: {
          equipmentName: [
            { required: true, message: '请输入设备名称', trigger: 'blur' }
@@ -194,8 +252,11 @@
            { required: true, message: '请填写端口号', trigger: 'blur' }
          ],
          loginName: [
+           { required: true, message: '请填写登陆账号', trigger: 'blur' }
          ],
-         loginPsw: []
+         loginPsw: [
+           { required: true, message: '请填写登陆密码', trigger: 'blur' }
+         ]
        },
        editRules: {
          equipmentName: [
@@ -214,14 +275,26 @@
            { required: true, message: '请填写端口号', trigger: 'blur' }
          ],
          loginName: [
+           { required: true, message: '请填写登陆账号', trigger: 'blur' }
          ],
-         loginPsw: []
+         loginPsw: [
+           { required: true, message: '请填写登陆密码', trigger: 'blur' }
+         ]
        },
        showAddButton: false,
        addButtonStyle: {
          'device__button-show': true
        }
      };
+   },
+   watch: {
+     searchResult: {
+       handler (newVal, oldVal) {
+         this.searchForm = {...newVal};
+         this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
+       },
+       deep: true
+     }
    },
    methods: {
      resetForm (name) {
@@ -235,8 +308,9 @@
      leaveAddButton () {
        this.showAddButton = false;
      },
-     showDialog (name) {
-       this[name] = true;
+     showDialog (dialog, form) {
+       this.resetForm(form);
+       this[dialog] = true;
      },
      showEditDialog (data) {
        this.deviceDetail = data;
@@ -246,7 +320,7 @@
          ...data,
          address: this.deviceAddress
        };
-       this.showDialog('editDialog');
+       this.showDialog('editDialog', 'editForm');
      },
      showDeleteDialog (data) {
        this.deviceDetail = data;
@@ -254,7 +328,7 @@
      },
      showDetailDialog (data) {
        this.deviceDetail = data;
-       this.showDialog('detailDialog');
+       this.showDialog('detailDialog', 'detailForm');
      },
      beforeEditClose (done) {
        this.resetForm('editForm');
@@ -266,7 +340,8 @@
      // page pagination change
      handleCurrentChange (val) {
        this.currentPage = val;
-       this.fetchData({ page: val });
+       this.offset = (val - 1) * this.limit;
+       this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
      },
      editDevice (data) {
        this.$refs['editForm'].validate(async valid => {
@@ -275,7 +350,7 @@
              const response = await api.post(config.device.update, this.editForm);
              if (response.data.code === 0) {
                this.$message({ type: 'success', message: '添加成功' });
-               this.fetchData({ page: this.currentPage });
+               this.fetchData({ offset: this.offset, limt: this.limit, ...this.searchForm });
              } else {
                this.$message({ type: 'error', message: response.data.msg });
              }
@@ -295,7 +370,7 @@
              this.addDialog = false;
              if (response.data.code === 0) {
                this.$message({ type: 'success', message: '添加成功' });
-               this.fetchData({ page: this.currentPage });
+               this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
              } else {
                this.$message({ type: 'error', message: response.data.msg });
              }
@@ -306,6 +381,10 @@
          }
        });
      },
+     onSearch () {
+       this.searchResult = {...this.searchForm};
+       this.fetchData({...this.searchForm});
+     },
      // submit delete device action
      async deleteDevice () {
        const id = this.deviceDetail.id;
@@ -313,7 +392,7 @@
        this.deleteDialog = false;
        if (response.data.code === 0) {
          this.$message({ type: 'success', message: response.data.msg });
-         this.fetchData({ page: this.currentPage });
+         this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
        } else {
          this.$message({ type: 'error', message: response.data.msg });
        }
@@ -321,18 +400,19 @@
      async fetchData (payload) {
        const response = await api.get(config.device.list, payload);
        if (response.data.code === 0) {
-         this.list = response.data.data;
-         this.size = response.data.size;
+         this.list = response.data.data.rows;
+         this.size = response.data.total;
        } else {
          this.$message({ type: 'error', message: response.data.msg });
        }
      },
-     async init () {
-       await this.fetchData({});
+     async init (data = {}) {
+       await this.fetchData(data);
      }
    },
    mounted () {
-     this.init();
+     const regionID = this.$route.params.id;
+     this.init({areaId: regionID, limit: this.limit, offset: this.offset});
    }
  };
 </script>
@@ -340,10 +420,18 @@
 <style lang="scss">
  .device {
    transition: all 1s;
+   .device__search {
+     margin: 30px;
+     text-align: right;
+
+     .el-select {
+       text-align: left;
+     }
+   }
  }
  .device__list {
    position: relative;
-   margin: 20px 20px 20px 40px;
+   margin: 20px 35px 20px 35px;
    border: 1px solid lightgray;
    border-radius: 10px;
    background-color: white;

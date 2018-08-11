@@ -1,9 +1,9 @@
 <template>
   <div class="region-cell" @mouseover.capture="showActionPane" @mouseout.capture="hideActionPane">
-    <img class="region-cell__cover" :src="region.cover" alt="cover" />
+    <img class="region-cell__cover" :src="cover" alt="cover" />
     <div class="region-cell__info">
       <div class="region-cell__title">{{ region.areaName }}</div>
-      <div class="region-cell__orga">{{ region.group }}</div>
+      <div class="region-cell__orga">{{ region.groupName }}</div>
     </div>
     <div class="region-cell__action" v-if="showAction" @mouseover="showActionPane">
       <i @click="viewRegion" class="el-icon-view region-cell__action-icon"></i>
@@ -27,7 +27,8 @@
    },
    data () {
      return {
-       showAction: false
+       showAction: false,
+       cover: require('@/assets/image/avatar.png')
      };
    },
    methods: {
@@ -38,7 +39,7 @@
        this.showAction = false;
      },
      viewRegion () {
-       this.$emit('detail', this.region);
+       this.$emit('view', this.region);
      },
      addDevice () {
        this.$emit('device', this.region);

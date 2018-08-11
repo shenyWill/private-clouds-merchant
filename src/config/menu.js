@@ -19,26 +19,6 @@ export default [{
     children: []
   }]
 }, {
-  name: '产品管理',
-  path: '/products',
-  icon: 'el-icon-news',
-  children: [{
-    name: '产品信息',
-    path: '/products/index',
-    icon: 'el-icon-message',
-    children: []
-  }, {
-    name: '产品测试',
-    path: '/products/test',
-    icon: 'el-icon-view',
-    children: []
-  }, {
-    name: '视频直播',
-    path: '/products/stream',
-    icon: 'el-icon-view',
-    children: []
-  }]
-}, {
   name: '设备管理',
   path: '/device/index',
   icon: 'el-icon-time',

@@ -89,7 +89,7 @@
                this.login(response.data.data);
                this.$router.push('/index');
              } else {
-               this.$message({ type: 'error', message: response.data.resMsg });
+               this.$message({ type: 'error', message: response.data.msg });
              }
            } catch (error) {
              this.disabled = false;
