@@ -9,19 +9,19 @@ for (let i = 0; i < count; i++) {
     id: '@id',
     areaName: '@ctitle(5, 10)',
     cover: '@image',
-    group: '@ctitle(5, 10)'
+    groupName: '@ctitle(5, 10)'
   }));
 }
 
 export default {
   list: config => {
-    const { title, page = 1, pageSize = 10 } = param2Obj(config.url);
+    const { title, offset = 0, limit = 11 } = param2Obj(config.url);
     let mockList = list.filter(item => {
       if (title && item.title !== title) return false;
       return true;
     });
 
-    const pageList = mockList.filter((item, index) => index < pageSize * page && index >= pageSize * (page - 1));
+    const pageList = mockList.filter((item, index) => index < (offset + limit) && index >= offset);
 
     return {
       code: 0,

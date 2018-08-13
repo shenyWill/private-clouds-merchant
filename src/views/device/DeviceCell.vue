@@ -4,7 +4,7 @@
       <div class="device-cell__title">
         {{ device.equipmentName }}
         <span class="device-cell__tag">
-          <el-tag type="warning">{{ device.equipmentType }}</el-tag>
+          <el-tag type="warning">{{ config.deviceType2String[device.equipmentType] }}</el-tag>
         </span>
       </div>
       <div class="device-cell__status">
@@ -15,7 +15,7 @@
         <i class="el-icon-location"></i>
         <span>区域： {{ device.areaName }}</span>
       </div>
-      <div class="device-cell__orga">组织：{{ device.group }}</div>
+      <div class="device-cell__orga">组织：{{ device.groupName }}</div>
     </div>
     <div class="device-cell__action">
       <i @click="showDeviceDetail" class="device-cell__button el-icon-view"></i>
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+ import config from '@/config';
  export default {
    name: 'DeviceCell',
    data () {
@@ -38,6 +39,11 @@
        default: () => {
          return {};
        }
+     }
+   },
+   computed: {
+     config: () => {
+       return config;
      }
    },
    methods: {
@@ -54,8 +60,8 @@
        if (this.device.ipAddress) {
          return {
            '设备名称': this.device.equipmentName,
-           '设备种类': this.device.equipmentType,
-           '所属组织': this.device.group,
+           '设备种类': config.deviceType2String[this.device.equipmentType],
+           '所属组织': this.device.groupName,
            '所属区域': this.device.areaName,
            'IP地址': this.device.ipAddress,
            '端口号': this.device.port,
@@ -64,8 +70,8 @@
        } else {
          return {
            '设备名称': this.device.equipmentName,
-           '设备种类': this.device.equipmentType,
-           '所属组织': this.device.group,
+           '设备种类': config.deviceType2String[this.device.equipmentType],
+           '所属组织': this.device.groupName,
            '所属区域': this.device.areaName,
            '设备URL': this.device.url,
            '设备状态': this.device.status ? '启用' : '禁用'

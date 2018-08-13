@@ -10,8 +10,8 @@
         <el-form-item label="设备名称" prop="equipmentName">
           <el-input v-model="searchForm.equipmentName" placeholder="请填写设备名称"></el-input>
         </el-form-item>
-        <el-form-item label="设备类型" prop="model">
-          <el-select v-model="searchForm.model" placeholder="请选择">
+        <el-form-item label="设备类型" prop="equipmentType">
+          <el-select v-model="searchForm.equipmentType" placeholder="请选择">
             <el-option
               v-for="item in config.deviceType"
               :key="item.value"
@@ -20,7 +20,11 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="设备区域" prop="areaId"></el-form-item>
+        <el-form-item label="所属区域" prop="areaId">
+          <el-select v-model="searchForm.areaId" placeholder="请选择所属区域">
+            <el-option v-for="item in areaList" :key="item.id" :value="item.id" :label="item.areaName"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="设备IP" prop="ipAddress">
           <el-input v-model="searchForm.ipAddress" placeholder="请填写设备IP地址"></el-input>
         </el-form-item>
@@ -81,29 +85,38 @@
           <el-input v-model="addForm.equipmentName" placeholder="请填写设备名称"></el-input>
         </el-form-item>
         <el-form-item label="设备种类" prop="equipmentType">
-          <el-select v-model="addForm.equipmentType" placeholder="请选择设备种类"></el-select>
+          <el-select v-model="addForm.equipmentType" placeholder="请选择">
+            <el-option
+              v-for="item in config.deviceType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="所属区域" prop="areaName">
-          <el-select v-model="addForm.areaName" placeholder="请选择所属区域"></el-select>
+        <el-form-item label="所属区域" prop="areaId">
+          <el-select v-model="addForm.areaId" placeholder="请选择所属区域">
+            <el-option v-for="item in areaList" :key="item.id" :value="item.id" :label="item.areaName"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="设备账号" prop="loginName">
           <el-input v-model="addForm.loginName" placeholder="请输入账号"></el-input>
         </el-form-item>
-        <el-form-item label="设备密码" prop="loginPwd">
-          <el-input v-model="addForm.loginPwd" placeholder="请输入密码" type="password"></el-input>
+        <el-form-item label="设备密码" prop="loginPsw">
+          <el-input v-model="addForm.loginPsw" placeholder="请输入密码" type="password"></el-input>
         </el-form-item>
-        <el-form-item label="设备地址" prop="address">
-          <el-select v-model="deviceAddress" placeholder="请选择">
+        <el-form-item label="设备地址" prop="deviceAddress">
+          <el-select v-model="addForm.deviceAddress" placeholder="请选择">
             <el-option v-for="item in addressType" :key="item.key" :value="item.value" :label="item.key"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="设备URL地址" prop="url" v-if="deviceAddress === 'url'">
+        <el-form-item label="设备URL地址" prop="url" v-if="addForm.deviceAddress === 'url'">
           <el-input v-model="addForm.url" placeholder="请输入设备URL地址"></el-input>
         </el-form-item>
-        <el-form-item label="设备IP地址" prop="ipAddress" v-if="deviceAddress === 'ip'">
+        <el-form-item label="设备IP地址" prop="ipAddress" v-if="addForm.deviceAddress === 'ip'">
           <el-input v-model="addForm.ipAddress" placeholder="请输入IP地址"></el-input>
         </el-form-item>
-        <el-form-item label="端口号" prop="port" v-if="deviceAddress === 'ip'">
+        <el-form-item label="端口号" prop="port" v-if="addForm.deviceAddress === 'ip'">
           <el-input v-model="addForm.port" placeholder="请输入设备端口号"></el-input>
         </el-form-item>
       </el-form>
@@ -115,7 +128,6 @@
     <!--  Edit Device Dialog -->
     <el-dialog
       class="device__dialog-add"
-      :before-close="beforeEditClose"
       :visible.sync="editDialog"
       width="25%"
       title="修改设备">
@@ -124,7 +136,7 @@
           <el-input v-model="editForm.equipmentName" placeholder="请填写设备名称"></el-input>
         </el-form-item>
         <el-form-item label="设备种类" prop="equipmentType">
-          <el-select v-model="editForm.model" placeholder="请选择">
+          <el-select v-model="editForm.equipmentType" placeholder="请选择">
             <el-option
               v-for="item in config.deviceType"
               :key="item.value"
@@ -133,8 +145,10 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属区域" prop="areaName">
-          <el-select v-model="editForm.areaName" placeholder="请选择所属区域"></el-select>
+        <el-form-item label="所属区域" prop="areaId">
+          <el-select v-model="editForm.areaId" placeholder="请选择所属区域">
+            <el-option v-for="item in areaList" :key="item.id" :value="item.id" :label="item.areaName"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="设备账号" prop="loginName">
           <el-input v-model="editForm.loginName" placeholder="请填写设备账号"></el-input>
@@ -142,18 +156,18 @@
         <el-form-item label="设备密码" prop="loginPsw">
           <el-input v-model="editForm.loginPsw" placeholder="请填写设备密码" type="password"></el-input>
         </el-form-item>
-        <el-form-item label="设备地址" prop="address">
-          <el-select v-model="deviceAddress" placeholder="请选择">
+        <el-form-item label="设备地址" prop="deviceAddress">
+          <el-select v-model="editForm.deviceAddress" placeholder="请选择">
             <el-option v-for="item in addressType" :key="item.key" :value="item.value" :label="item.key"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="设备URL地址" prop="url" v-if="deviceAddress === 'url'">
+        <el-form-item label="设备URL地址" prop="url" v-if="editForm.deviceAddress === 'url'">
           <el-input v-model="editForm.url" placeholder="请输入设备URL地址"></el-input>
         </el-form-item>
-        <el-form-item label="设备IP地址" prop="ipAddress" v-if="deviceAddress === 'ip'">
+        <el-form-item label="设备IP地址" prop="ipAddress" v-if="editForm.deviceAddress === 'ip'">
           <el-input v-model="editForm.ipAddress" placeholder="请输入IP地址"></el-input>
         </el-form-item>
-        <el-form-item label="端口号" prop="port" v-if="deviceAddress === 'ip'">
+        <el-form-item label="端口号" prop="port" v-if="editForm.deviceAddress === 'ip'">
           <el-input v-model="editForm.port" placeholder="请填写设备端口号"></el-input>
         </el-form-item>
       </el-form>
@@ -196,6 +210,7 @@
  import config from '@/config';
  import DeviceCell from './DeviceCell';
  import Search from '@/views/search/Search';
+ import { mapGetters } from 'vuex';
 
  export default {
    name: 'Device',
@@ -204,6 +219,9 @@
      Search
    },
    computed: {
+     ...mapGetters([
+       'selectedRegion'
+     ]),
      config: () => {
        return config;
      }
@@ -219,6 +237,7 @@
        offset: 0, // list offset
        currentPage: 1, // device list page
        deviceAddress: '', // device ip or url address
+       areaList: [],
        addressType: [{
          key: 'IP地址',
          value: 'ip'
@@ -242,10 +261,10 @@
          equipmentType: [
            { required: true, message: '请选择设备种类', trigger: 'change' }
          ],
-         areaName: [
+         areaId: [
            { required: true, message: '请选择所属区域', trigger: 'change' }
          ],
-         address: [
+         deviceAddress: [
            { required: true, message: '请选择', trigger: 'change' }
          ],
          port: [
@@ -265,10 +284,10 @@
          equipmentType: [
            { required: true, message: '请选择设备种类', trigger: 'change' }
          ],
-         areaName: [
+         areaId: [
            { required: true, message: '请选择所属区域', trigger: 'change' }
          ],
-         address: [
+         deviceAddress: [
            { required: true, message: '请选择', trigger: 'change' }
          ],
          port: [
@@ -291,7 +310,8 @@
      searchResult: {
        handler (newVal, oldVal) {
          this.searchForm = {...newVal};
-         this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
+         const regionID = this.$route.params.id;
+         this.fetchData({ areaId: regionID, offset: this.offset, limit: this.limit, ...this.searchForm });
        },
        deep: true
      }
@@ -313,14 +333,12 @@
        this[dialog] = true;
      },
      showEditDialog (data) {
-       this.deviceDetail = data;
-       if (data.ipAddress) this.deviceAddress = 'ip';
-       else this.deviceAddress = 'url';
+       this.showDialog('editDialog', 'editForm');
        this.editForm = {
          ...data,
-         address: this.deviceAddress
+         deviceAddress: data.ipAddress && data.ipAddress !== '' ? 'ip' : 'url'
        };
-       this.showDialog('editDialog', 'editForm');
+       this.deviceDetail = data;
      },
      showDeleteDialog (data) {
        this.deviceDetail = data;
@@ -330,24 +348,24 @@
        this.deviceDetail = data;
        this.showDialog('detailDialog', 'detailForm');
      },
-     beforeEditClose (done) {
-       this.resetForm('editForm');
-       this.deviceDetail = null;
-       this.deviceAddress = '';
-       this.editForm = {};
-       done();
-     },
      // page pagination change
      handleCurrentChange (val) {
        this.currentPage = val;
        this.offset = (val - 1) * this.limit;
        this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
      },
-     editDevice (data) {
+     editDevice () {
        this.$refs['editForm'].validate(async valid => {
          if (valid) {
            try {
+             if (this.editForm.deviceAddress === 'ip') {
+               this.editForm.url = '';
+             } else {
+               this.editForm.ipAddress = '';
+               this.editForm.port = '';
+             }
              const response = await api.post(config.device.update, this.editForm);
+             this.editDialog = false;
              if (response.data.code === 0) {
                this.$message({ type: 'success', message: '添加成功' });
                this.fetchData({ offset: this.offset, limt: this.limit, ...this.searchForm });
@@ -355,6 +373,7 @@
                this.$message({ type: 'error', message: response.data.msg });
              }
            } catch (e) {
+             return false;
            }
          } else {
            return false;
@@ -398,10 +417,11 @@
        }
      },
      async fetchData (payload) {
-       const response = await api.get(config.device.list, payload);
+       const response = await api.post(config.device.list, payload);
        if (response.data.code === 0) {
          this.list = response.data.data.rows;
-         this.size = response.data.total;
+         this.size = response.data.data.total;
+         this.areaList = response.data.arealist;
        } else {
          this.$message({ type: 'error', message: response.data.msg });
        }
@@ -412,6 +432,7 @@
    },
    mounted () {
      const regionID = this.$route.params.id;
+     // TODO
      this.init({areaId: regionID, limit: this.limit, offset: this.offset});
    }
  };

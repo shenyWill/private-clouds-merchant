@@ -28,21 +28,28 @@ export default {
     compareDetail: '/recognition/compareDetail'
   },
   deviceType: [{
-    value: 1,
+    value: '1',
     label: '人证比对机'
   }, {
-    value: 2,
+    value: '2',
     label: '摄像头'
   }, {
-    value: 3,
+    value: '3',
     label: '人脸识别门禁平板'
   }, {
-    value: 4,
+    value: '4',
     label: '闸机'
   }, {
-    value: 5,
+    value: '5',
     label: '门'
   }],
+  deviceType2String: {
+    '1': '人证比对机',
+    '2': '摄像头',
+    '3': '人脸识别门禁平板',
+    '4': '闸机',
+    '5': '门'
+  },
   deviceAddressType: [{
     key: 'IP地址',
     value: 'ip'

@@ -5,7 +5,6 @@
         class="region__search"
         slot="search-form"
         ref="searchForm"
-        :rules="searchFormRules"
         label-width="80px"
         :model="searchForm">
         <el-form-item label="区域名称" prop="areaName">
@@ -42,6 +41,7 @@
       <el-pagination
         background
         :current-page="currentPage"
+        :page-size="limit"
         @current-change="handleCurrentChange"
         layout="prev, pager, next"
         :total="size">
@@ -60,7 +60,11 @@
         :rules="addRules"
         label-position="top">
         <el-form-item label="区域名称" prop="areaName">
-          <el-input v-model="addForm.areaName" placeholder="请输入区域名称"></el-input>
+          <el-input
+            v-model="addForm.areaName"
+            placeholder="请输入区域名称"
+            @keyup.enter.native="addRegion">
+          </el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -99,8 +103,8 @@
         <el-form-item label="设备名称" prop="equipmentName">
           <el-input v-model="deviceForm.equipmentName" placeholder="请输入设备名称"></el-input>
         </el-form-item>
-        <el-form-item label="设备种类" prop="model">
-          <el-select v-model="deviceForm.model" placeholder="请选择">
+        <el-form-item label="设备种类" prop="equipmentType">
+          <el-select v-model="deviceForm.equipmentType" placeholder="请选择">
             <el-option
               v-for="item in config.deviceType"
               :key="item.value"
@@ -145,19 +149,20 @@
 
     <!-- Delete No Device Region Dialog -->
     <el-dialog
-      class="region__dialog"
+      class="region__dialog region__dialog-delete"
       title="提示"
       :visible.sync="deviceRegionDialog"
       width="25%">
       <span>你确定要删除该区域吗？</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="deleteRegion">确定</el-button>
+      <span slot="footer" class="dialog-footer-row">
+        <el-button type="primary" @click="deviceRegionDialog = false;">取消删除</el-button>
+        <el-button @click="deleteRegion">确定删除</el-button>
       </span>
     </el-dialog>
 
     <!-- Delete Region With Devices Dialog -->
     <el-dialog
-      class="region__dialog"
+      class="region__dialog region__dialog-delete"
       title="提示"
       :visible.sync="noDeviceRegionDialog"
       width="25%">
@@ -183,7 +188,7 @@
        offset: 0, // list offset
        limit: 11, // list count per page
        currentPage: 1, // page pagination current page
-       selectedRegion: null,
+       selectedRegion: null, // current selected region for all actions
        addRegionDialog: false,
        addDeviceDialog: false,
        editDialog: false,
@@ -196,7 +201,6 @@
        editForm: {}, // edit device form
        deviceForm: {}, // add device form
        searchResult: {}, // search form result
-       searchFormRules: {},
        editRules: {
          areaName: [
            { required: true, message: '请填写区域名称', trigger: 'blur' }
@@ -319,6 +323,7 @@
      async deleteRegion () {
        const id = this.selectedRegion.id;
        const response = await api.post(config.region.delete, {id});
+       this.deviceRegionDialog = false;
        if (response.data.code === 0) {
          this.$message({ type: 'success', message: '删除区域成功' });
          this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
@@ -485,6 +490,12 @@
        margin: 0 auto;
        width: 50%;
        font-weight: bold;
+     }
+   }
+   .region__dialog-delete .el-dialog {
+     text-align: center;
+     .dialog-footer-row .el-button {
+       width: 25%;
      }
    }
  }
