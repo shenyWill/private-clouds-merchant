@@ -25,6 +25,7 @@
     "phantomjs-prebuilt": "^2.1.16",
     "px2rem-loader": "^0.1.9",
     "sass-loader": "^7.0.3",
+    "sockjs-client": "^1.1.5",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"

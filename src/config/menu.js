@@ -19,11 +19,6 @@ export default [{
     children: []
   }]
 }, {
-  name: '设备管理',
-  path: '/device/index',
-  icon: 'el-icon-time',
-  children: []
-}, {
   name: '识别记录',
   path: '/recognize/index',
   icon: 'el-icon-picture',

@@ -39,6 +39,7 @@
         </el-col>
       </el-row>
       <el-pagination
+        v-if="size > 0"
         background
         :current-page="currentPage"
         :page-size="limit"
@@ -123,7 +124,7 @@
           <el-input v-model="deviceForm.loginPsw" placeholder="请输入与设备密码" type="password"></el-input>
         </el-form-item>
         <el-form-item label="设备地址" prop="deviceAddress">
-          <el-select v-model="deviceForm.deviceAddress" placeholder="请选择">
+          <el-select v-model="deviceForm.deviceAddress" placeholder="请选择" @change="changeAddDeviceAddress">
             <el-option
               v-for="item in config.deviceAddressType"
               :key="item.value"
@@ -132,13 +133,13 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="deviceForm.deviceAddress === 'ip'" label="设备IP地址">
+        <el-form-item v-if="deviceForm.deviceAddress === 'ip'" label="设备IP地址" prop="ipAddress">
           <el-input v-model="deviceForm.ipAddress" placeholder="请输入设备IP地址"></el-input>
         </el-form-item>
-        <el-form-item v-if="deviceForm.deviceAddress === 'ip'" label="设备端口号">
+        <el-form-item v-if="deviceForm.deviceAddress === 'ip'" label="设备端口号" prop="port">
           <el-input v-model="deviceForm.port" placeholder="请填写设备端口号"></el-input>
         </el-form-item>
-        <el-form-item v-if="deviceForm.deviceAddress === 'url'" label="设备URL地址">
+        <el-form-item v-if="deviceForm.deviceAddress === 'url'" label="设备URL地址" prop="url">
           <el-input v-model="deviceForm.url" placeholder="请输入设备URL地址"></el-input>
         </el-form-item>
       </el-form>
@@ -179,6 +180,7 @@
  import config from '@/config';
  import RegionCell from './RegionCell';
  import Search from '@/views/search/Search';
+ import { isValidIP } from '@/utils';
  export default {
    name: 'Region',
    data () {
@@ -203,13 +205,15 @@
        searchResult: {}, // search form result
        editRules: {
          areaName: [
-           { required: true, message: '请填写区域名称', trigger: 'blur' }
+           { required: true, message: '请填写区域名称', trigger: 'blur' },
+           { min: 2, max: 18, message: '请输入2-18位字符', trigger: 'blur' }
          ]
        },
        // add device form rules
        deviceRules: {
          equipmentName: [
-           { required: true, message: '请输入设备名称', trigger: 'blur' }
+           { required: true, message: '请输入设备名称', trigger: 'blur' },
+           { min: 2, max: 10, message: '请输入2-10位字符', trigger: 'blur' }
          ],
          equipmentType: [
            { required: true, message: '请选择设备种类', trigger: 'change' }
@@ -220,8 +224,17 @@
          deviceAddress: [
            { required: true, message: '请选择设备地址', trigger: 'change' }
          ],
+         ipAddress: [
+           { required: true, message: '请填写设备IP地址', trigger: 'blur' },
+           { validator: this.checkAddDeviceIP, trigger: 'blur' }
+         ],
+         url: [
+           { required: true, message: '请填写设备URL地址', trigger: 'blur' },
+           { validator: this.checkAddDeviceURL, trigger: 'blur' }
+         ],
          port: [
-           { required: true, message: '请填写端口号', trigger: 'blur' }
+           { required: true, message: '请填写端口号', trigger: 'blur' },
+           { min: 1, max: 5, message: '请输入正确的端口号', trigger: 'blur' }
          ],
          loginName: [
            { required: true, message: '请填写设备账号', trigger: 'blur' }
@@ -232,7 +245,8 @@
        },
        addRules: {
          areaName: [
-           { required: true, message: '请填写区域名称', trigger: 'blur' }
+           { required: true, message: '请填写区域名称', trigger: 'blur' },
+           { min: 2, max: 18, message: '请输入2-18位字符', trigger: 'blur' }
          ]
        }
      };
@@ -261,7 +275,23 @@
        this.offset = (val - 1) * this.limit;
        this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
      },
-     // to device component
+     checkAddDeviceIP (rule, value, callback) {
+       if (this.deviceForm.deviceAddress === 'ip' && (!value || value === '')) {
+         callback(new Error('请输入设备IP地址'));
+       } else if (this.deviceForm.deviceAddress === 'ip' && !isValidIP(value)) {
+         callback(new Error('请填写正确格式的IP地址'));
+       } else {
+         callback();
+       }
+     },
+     checkAddDeviceURL (rule, value, callback) {
+       if (this.deviceForm.deviceAddress === 'url' && (!value || value === '')) {
+         callback(new Error('请输入设备URL地址'));
+       } else {
+         callback();
+       }
+     },
+     // router to device component
      viewRegionDetail (data) {
        const id = data.id;
        this.$router.push({ name: 'Device', params: {id} });
@@ -291,6 +321,9 @@
        };
        this.showDialog('addDeviceDialog', 'deviceForm');
      },
+     changeAddDeviceAddress (val) {
+       this.$refs['deviceForm'].clearValidate(['ipAddress', 'url', 'port']);
+     },
      async showDeleteDialog (data) {
        this.selectedRegion = data;
        const canDelete = await this.canDeleteRegion(data.id);
@@ -300,6 +333,11 @@
          this.deviceRegionDialog = true;
        }
      },
+     /*
+      * can delete region
+      * @params {String} region ID
+      * true for yes, false for no
+      * */
      async canDeleteRegion (areaId) {
        const response = await api.post(config.region.devices, {areaId});
        if (response.data.code === 0) {
@@ -393,7 +431,12 @@
      },
      // search request
      onSearch () {
-       this.searchResult = {...this.searchForm};
+       const areaName = this.searchForm.areaName;
+       if (areaName && areaName !== '') {
+         this.searchResult = { '区域名称': this.searchForm.areaName };
+       } else {
+         this.searchResult = {};
+       }
        this.fetchData({ limit: this.limit, offset: this.offset, ...this.searchForm });
      },
      async fetchData (payload) {
@@ -413,7 +456,9 @@
        this.fetchData({ limit: this.limit, offset: this.offset });
      }
    },
-   mounted () {
+   async mounted () {
+     const response = await api.get('/welcome');
+     console.log(response);
      this.init();
    }
  };
@@ -425,7 +470,15 @@
    margin: 30px 20px 20px 0;
    .region__search {
      margin: 30px;
-     text-align: right;
+     text-align: left;
+     font-weight: bold;
+     .el-input {
+       max-width: 500px;
+     }
+     .el-button {
+       float: right;
+       width: 200px;
+     }
    }
    .region__list {
      padding-left: 35px;

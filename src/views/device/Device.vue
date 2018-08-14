@@ -5,48 +5,54 @@
         class="device__search"
         slot="search-form"
         ref="searchForm"
-        :model="searchForm"
-        :rule="searchFormRules">
-        <el-form-item label="设备名称" prop="equipmentName">
-          <el-input v-model="searchForm.equipmentName" placeholder="请填写设备名称"></el-input>
-        </el-form-item>
-        <el-form-item label="设备类型" prop="equipmentType">
-          <el-select v-model="searchForm.equipmentType" placeholder="请选择">
+        :model="searchForm">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="设备名称" prop="equipmentName">
+              <el-input class="device__search-input" v-model="searchForm.equipmentName" placeholder="请填写设备名称"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="设备类型" prop="equipmentType">
+              <el-select v-model="searchForm.equipmentType" placeholder="请选择">
+                <el-option
+                  v-for="item in config.deviceType"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="设备IP/URL">
+          <el-select @change="changeAddressSearchType" v-model="addressSearchType" placeholder="请选择">
             <el-option
-              v-for="item in config.deviceType"
+              v-for="item in addressType"
               :key="item.value"
               :label="item.label"
               :value="item.value">
             </el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="所属区域" prop="areaId">
-          <el-select v-model="searchForm.areaId" placeholder="请选择所属区域">
-            <el-option v-for="item in areaList" :key="item.id" :value="item.id" :label="item.areaName"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="设备IP" prop="ipAddress">
-          <el-input v-model="searchForm.ipAddress" placeholder="请填写设备IP地址"></el-input>
-        </el-form-item>
-        <el-form-item label="设备URL" prop="url">
-          <el-input v-model="searchForm.url" placeholder="请填写设备URL地址"></el-input>
+          <el-input class="device__search-input" v-if="addressSearchType === 'ip'" v-model="searchForm.ipAddress" placeholder="请填写设备IP地址"></el-input>
+          <el-input class="device__search-input" v-if="addressSearchType === 'url'" v-model="searchForm.url" placeholder="请填写设备URL地址"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSearch">搜索</el-button>
         </el-form-item>
       </el-form>
     </Search>
-    <div class="device__list">
+    <div class="device__list" v-if="list && list.length > 0">
       <div
-        @mouseover="hoverAddButton()"
-        @mouseout="leaveAddButton()"
+        @mouseover="toggleAddButton()"
+        @mouseout="toggleAddButton()"
         :class="['device__button-hover', showAddButton ? addButtonStyle : '']">
         <el-button
           @click="showDialog('addDialog', 'addForm')"
           circle>
-          添加
-          <br/>
-          设备
+          <i class="el-icon-arrow-left" v-if="!showAddButton"></i>
+          添加<br/>设备
+          <i class="el-icon-arrow-right" v-if="showAddButton"></i>
         </el-button>
       </div>
       <div class="device__list-header">
@@ -61,7 +67,9 @@
         :key="index">
       </DeviceCell>
     </div>
+    <div v-else>暂无数据</div>
     <el-pagination
+      v-if="size > 0"
       background
       :current-page="currentPage"
       @current-change="handleCurrentChange"
@@ -94,11 +102,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属区域" prop="areaId">
-          <el-select v-model="addForm.areaId" placeholder="请选择所属区域">
-            <el-option v-for="item in areaList" :key="item.id" :value="item.id" :label="item.areaName"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="设备账号" prop="loginName">
           <el-input v-model="addForm.loginName" placeholder="请输入账号"></el-input>
         </el-form-item>
@@ -106,7 +109,7 @@
           <el-input v-model="addForm.loginPsw" placeholder="请输入密码" type="password"></el-input>
         </el-form-item>
         <el-form-item label="设备地址" prop="deviceAddress">
-          <el-select v-model="addForm.deviceAddress" placeholder="请选择">
+          <el-select v-model="addForm.deviceAddress" placeholder="请选择" @change="changeAddressAddType">
             <el-option v-for="item in addressType" :key="item.key" :value="item.value" :label="item.key"></el-option>
           </el-select>
         </el-form-item>
@@ -157,7 +160,7 @@
           <el-input v-model="editForm.loginPsw" placeholder="请填写设备密码" type="password"></el-input>
         </el-form-item>
         <el-form-item label="设备地址" prop="deviceAddress">
-          <el-select v-model="editForm.deviceAddress" placeholder="请选择">
+          <el-select v-model="editForm.deviceAddress" placeholder="请选择" @change="changeAddressEditType">
             <el-option v-for="item in addressType" :key="item.key" :value="item.value" :label="item.key"></el-option>
           </el-select>
         </el-form-item>
@@ -208,6 +211,7 @@
 <script>
  import api from '@/api';
  import config from '@/config';
+ import { isValidIP } from '@/utils';
  import DeviceCell from './DeviceCell';
  import Search from '@/views/search/Search';
  import { mapGetters } from 'vuex';
@@ -229,7 +233,6 @@
    data () {
      return {
        regionID: '',
-       searchResult: {},
        list: null, // deivce list
        deviceDetail: null, // detail dialog info
        size: 0, // device list count
@@ -238,6 +241,7 @@
        currentPage: 1, // device list page
        deviceAddress: '', // device ip or url address
        areaList: [],
+       addressSearchType: 'ip',
        addressType: [{
          key: 'IP地址',
          value: 'ip'
@@ -249,26 +253,36 @@
        editDialog: false,
        detailDialog: false,
        deleteDialog: false,
+       searchResult: {},
        searchForm: {},
-       addForm: {},
-       editForm: {},
-       searchFormRules: {
-       },
+       addForm: {
+         areaId: this.regionID
+       }, // add device form
+       editForm: {
+         areaId: this.regionID
+       }, // edit device form
        addRules: {
          equipmentName: [
-           { required: true, message: '请输入设备名称', trigger: 'blur' }
+           { required: true, message: '请输入设备名称', trigger: 'blur' },
+           { min: 2, max: 10, message: '请输入2-10位字符', trigger: 'blur' }
          ],
          equipmentType: [
            { required: true, message: '请选择设备种类', trigger: 'change' }
          ],
-         areaId: [
-           { required: true, message: '请选择所属区域', trigger: 'change' }
-         ],
          deviceAddress: [
            { required: true, message: '请选择', trigger: 'change' }
          ],
+         ipAddress: [
+           { required: true, message: '请填写设备IP地址', trigger: 'blur' },
+           { validator: this.checkAddDeviceIP, trigger: 'blur' }
+         ],
+         url: [
+           { required: true, message: '请填写设备URL地址', trigger: 'blur' },
+           { validator: this.checkAddDeviceURL, trigger: 'blur' }
+         ],
          port: [
-           { required: true, message: '请填写端口号', trigger: 'blur' }
+           { required: true, message: '请填写端口号', trigger: 'blur' },
+           { min: 1, max: 5, message: '请输入正确的端口号', trigger: 'blur' }
          ],
          loginName: [
            { required: true, message: '请填写登陆账号', trigger: 'blur' }
@@ -279,7 +293,8 @@
        },
        editRules: {
          equipmentName: [
-           { required: true, message: '请输入设备名称', trigger: 'blur' }
+           { required: true, message: '请输入设备名称', trigger: 'blur' },
+           { min: 2, max: 10, message: '请输入2-10位字符', trigger: 'blur' }
          ],
          equipmentType: [
            { required: true, message: '请选择设备种类', trigger: 'change' }
@@ -290,8 +305,17 @@
          deviceAddress: [
            { required: true, message: '请选择', trigger: 'change' }
          ],
+         ipAddress: [
+           { required: true, message: '请填写设备IP地址', trigger: 'blur' },
+           { validator: this.checkEditDeviceIP, trigger: 'blur' }
+         ],
+         url: [
+           { required: true, message: '请填写设备URL地址', trigger: 'blur' },
+           { validator: this.checkEditDeviceURL, trigger: 'url' }
+         ],
          port: [
-           { required: true, message: '请填写端口号', trigger: 'blur' }
+           { required: true, message: '请填写端口号', trigger: 'blur' },
+           { min: 1, max: 5, message: '请输入正确的端口号', trigger: 'blur' }
          ],
          loginName: [
            { required: true, message: '请填写登陆账号', trigger: 'blur' }
@@ -310,8 +334,7 @@
      searchResult: {
        handler (newVal, oldVal) {
          this.searchForm = {...newVal};
-         const regionID = this.$route.params.id;
-         this.fetchData({ areaId: regionID, offset: this.offset, limit: this.limit, ...this.searchForm });
+         this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
        },
        deep: true
      }
@@ -322,15 +345,44 @@
        if (!this.$refs[name]) return;
        this.$refs[name].resetFields();
      },
-     hoverAddButton () {
-       this.showAddButton = true;
-     },
-     leaveAddButton () {
-       this.showAddButton = false;
-     },
      showDialog (dialog, form) {
        this.resetForm(form);
        this[dialog] = true;
+     },
+     toggleAddButton () {
+       this.showAddButton = !this.showAddButton;
+     },
+     checkAddDeviceIP (rule, value, callback) {
+       if (this.addForm.deviceAddress === 'ip' && (!value || value === '')) {
+         callback(new Error('请输入设备IP地址'));
+       } else if (this.addForm.deviceAddress === 'ip' && !isValidIP(value)) {
+         callback(new Error('请填写正确格式的IP地址'));
+       } else {
+         callback();
+       }
+     },
+     checkAddDeviceURL (rule, value, callback) {
+       if (this.addForm.deviceAddress === 'url' && (!value || value === '')) {
+         callback(new Error('请填写设备URL地址'));
+       } else {
+         callback();
+       }
+     },
+     checkEditDeviceIP (rule, value, callback) {
+       if (this.editForm.deviceAddress === 'ip' && (!value || value === '')) {
+         callback(new Error('请输入设备IP地址'));
+       } else if (this.editForm.deviceAddress === 'ip' && !isValidIP(value)) {
+         callback(new Error('请填写正确格式的IP地址'));
+       } else {
+         callback();
+       }
+     },
+     checkEditDeviceURL (rule, value, callback) {
+       if (this.editForm.deviceAddress === 'url' && (!value || value === '')) {
+         callback(new Error('请填写设备URL地址'));
+       } else {
+         callback();
+       }
      },
      showEditDialog (data) {
        this.showDialog('editDialog', 'editForm');
@@ -353,6 +405,28 @@
        this.currentPage = val;
        this.offset = (val - 1) * this.limit;
        this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
+     },
+     // add device form el-select change event
+     changeAddressAddType (val) {
+       this.$refs['addForm'].clearValidate(['ipAddress', 'url', 'port']);
+     },
+     // edit device form el-select change event
+     changeAddressEditType (val) {
+       this.$refs['editForm'].clearValidate(['ipAddress', 'url', 'port']);
+     },
+     // search form el-select change event
+     changeAddressSearchType (val) {
+       if (val === 'ip') {
+         this.searchForm = {
+           ...this.searchForm,
+           url: ''
+         };
+       } else {
+         this.searchForm = {
+           ...this.searchForm,
+           ipAddress: ''
+         };
+       }
      },
      editDevice () {
        this.$refs['editForm'].validate(async valid => {
@@ -401,7 +475,16 @@
        });
      },
      onSearch () {
-       this.searchResult = {...this.searchForm};
+       this.searchResult = {};
+       for (let key in this.searchForm) {
+         if (this.searchForm[key]) {
+           if (key === 'equipmentType') {
+             this.searchResult[key] = config.deviceType2String[this.searchForm.equipmentType];
+           } else {
+             this.searchResult[key] = this.searchForm[key];
+           }
+         }
+       }
        this.fetchData({...this.searchForm});
      },
      // submit delete device action
@@ -417,7 +500,7 @@
        }
      },
      async fetchData (payload) {
-       const response = await api.post(config.device.list, payload);
+       const response = await api.post(config.device.list, {areaId: this.regionID, ...payload});
        if (response.data.code === 0) {
          this.list = response.data.data.rows;
          this.size = response.data.data.total;
@@ -426,112 +509,149 @@
          this.$message({ type: 'error', message: response.data.msg });
        }
      },
-     async init (data = {}) {
-       await this.fetchData(data);
+     checkCanAccess (id) {
+       if (!id || id === '') {
+         const view = {name: 'Device', path: '/device/index', title: '设备管理'};
+         this.$store.dispatch('delVisitedViews', view).then(views => {
+           // push router to region
+           this.$router.push('/region/index');
+         });
+       }
+     },
+     async init () {
+       // get selected region from route.params or store
+       // push router to /region/index if no region id selected
+       this.regionID = this.$route.params.id;
+       if (!this.regionID || this.regionID === '') {
+         this.regionID = this.selectedRegion;
+       }
+       this.$store.dispatch('setSeletedRegion', this.regionID);
+       this.checkCanAccess(this.regionID);
+       await this.fetchData({limit: this.limit, offset: this.offset});
      }
    },
-   mounted () {
-     const regionID = this.$route.params.id;
-     // TODO
-     this.init({areaId: regionID, limit: this.limit, offset: this.offset});
+   async mounted () {
+     await this.init();
    }
  };
 </script>
 
 <style lang="scss">
  .device {
-   transition: all 1s;
+   transition: all 2s;
    .device__search {
      margin: 30px;
-     text-align: right;
+     text-align: left;
+     font-weight: bold;
 
-     .el-select {
-       text-align: left;
+     .device__search-input {
+       max-width: 500px;
+     }
+     .el-button {
+       width: 200px;
+       float: right;
      }
    }
- }
- .device__list {
-   position: relative;
-   margin: 20px 35px 20px 35px;
-   border: 1px solid lightgray;
-   border-radius: 10px;
-   background-color: white;
- }
- .device__list-header {
-   position: relative;
-   padding: 10px;
-   margin-left: 20px;
-   text-align: left;
-   font-size: 20px;
-   font-weight: bold;
-   border-bottom: 1px solid lightgray;
- }
- .device .el-dialog {
-   border-radius: 20px;
- }
- .device .el-dialog__header {
-   font-weight: bold;
-   text-align: left;
-   border-bottom: 1px solid lightgray;
- }
- .device .device__button-hover {
-   position: fixed;
-   width: 70px;
-   height: 70px;
-   border-radius: 35px;
-   right: -35px;
-   bottom: 100px;
-   z-index: 1;
- }
- .device .device__button-show {
-   right: 0;
- }
- .device .device__button-hover .el-button {
-   width: 100%;
-   height: 100%;
-   padding: 0;
- }
- .device .device__form-add {
-   font-weight: bold;
-   margin: 0 auto;
-   width: 50%;
-   text-align: left;
- }
- .device__form-add .el-form-item__label {
-   padding: 0;
- }
- .device__form-add .el-select {
-   width: 100%;
- }
- .device .el-dialog .el-dialog__body {
-   margin: 0 auto;
-   font-weight: bold;
-   text-align: left;
-   overflow: hidden;
- }
- .device .el-dialog .el-dialog__footer {
-   padding-top: 0;
-   padding-bottom: 50px;
-   text-align: center;
- }
- .device .device__dialog-delete .el-dialog__body {
-   text-align: center;
- }
- .device__dialog-add .el-dialog__footer .el-button {
-   width: 50%;
- }
- .device .device__dialog-detail .dialog__content-item {
-   position: relative;
-   margin-left: 30px;
-   margin-bottom: 20px;
- }
- .device .device__dialog-detail .dialog__content-value {
-   position: absolute;
-   font-weight: normal;
-   left: 100px;
-   right: 20px;
-   overflow: hidden;
-   text-overflow: ellipsis;
-   white-space: nowrap;
+   .device__list {
+     position: relative;
+     margin: 20px 35px 20px 35px;
+     border: 1px solid lightgray;
+     border-radius: 10px;
+     background-color: white;
+     .device__list-header {
+       position: relative;
+       padding: 10px;
+       margin-left: 20px;
+       text-align: left;
+       font-size: 20px;
+       font-weight: bold;
+       border-bottom: 1px solid lightgray;
+     }
+     .device__button-hover {
+       position: fixed;
+       width: 70px;
+       height: 70px;
+       border-radius: 35px;
+       right: -35px;
+       bottom: 100px;
+       z-index: 1;
+       .el-button {
+         width: 100%;
+         height: 100%;
+         padding: 0;
+       }
+     }
+     .device__button-show {
+       right: 0;
+     }
+     .el-icon-arrow-left,.el-icon-arrow-right {
+       position: absolute;
+       color: #008aff;
+       top: 30px;
+       font-size: 20px;
+       font-weight: bold;
+     }
+     .el-icon-arrow-left {
+       left: 0;
+     }
+     .el-icon-arrow-right {
+       right: 0;
+     }
+   }
+   .el-dialog {
+     border-radius: 20px;
+     .el-dialog__header {
+       font-weight: bold;
+       text-align: left;
+       border-bottom: 1px solid lightgray;
+     }
+     .el-dialog__body {
+       margin: 0 auto;
+       font-weight: bold;
+       text-align: left;
+       overflow: hidden;
+     }
+     .el-dialog__footer {
+       padding-top: 0;
+       padding-bottom: 50px;
+       text-align: center;
+     }
+   }
+   .device__form-add {
+     font-weight: bold;
+     margin: 0 auto;
+     width: 50%;
+     text-align: left;
+     .el-form-item__label {
+       padding: 0;
+     }
+     .el-select {
+       width: 100%;
+     }
+   }
+   .device__dialog-delete {
+     .el-dialog__body {
+       text-align: center;
+     }
+   }
+   .device__dialog-add .el-dialog__footer .el-button {
+     width: 50%;
+   }
+   .device__dialog-detail {
+     .dialog__content-item {
+       position: relative;
+       margin-left: 30px;
+       margin-bottom: 20px;
+     }
+     .dialog__content-value {
+       position: absolute;
+       font-weight: normal;
+       left: 100px;
+       right: 20px;
+       overflow: hidden;
+       text-overflow: ellipsis;
+       white-space: nowrap;
+     }
+   }
  }
 </style>
