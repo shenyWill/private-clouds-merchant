@@ -4,7 +4,7 @@
         <div :class="['search-title',visibleSearch ? 'hide-search-title' : '']" @click.self="visibleSearch = !visibleSearch">
             <i class="el-icon-search" @click.stop="visibleSearch = !visibleSearch"></i>
             <i class="el-icon-delete" @click.stop="removeTag"></i>
-            <el-tag v-for="(value, key) in searchResult" :key="key" closable class="search-tag" @click.prevent.stop="true" @close.stop="closeTag(key)">{{key}}: {{value}} </el-tag>
+            <el-tag v-for="(value, key) in searchResult" :key="key" closable class="search-tag" @click.prevent.stop="true" @close.stop="closeTag(key)">{{searchTagObj[key]}} : {{key == 'equipmentId' ? equipmentObj[value] : (key == 'libraryTypeId' ? databaseObj[value]: value)}} </el-tag>
         </div>
         <div :class="['search-form',visibleSearch ? '' : 'hide-search-form']">
             <slot name="search-form"></slot>
@@ -14,10 +14,12 @@
 
 <script>
 import Vue from 'vue';
+import SearchTag from '@/config/searchTag.js';
 export default {
   data () {
     return {
-      visibleSearch: false // 搜索框显示与否标识
+      visibleSearch: false, // 搜索框显示与否标识
+      searchTagObj: {...SearchTag}
     };
   },
   methods: {
@@ -41,6 +43,28 @@ export default {
   props: {
     searchResult: {
       type: Object
+    },
+    equipmentArr: {
+      type: Array
+    },
+    databaseArr: {
+      type: Array
+    }
+  },
+  computed: {
+    equipmentObj () {
+      let obj = {};
+      this.equipmentArr.forEach(item => {
+        obj[item.equipmentId] = item.equipmentName;
+      });
+      return obj;
+    },
+    databaseObj () {
+      let obj = {};
+      this.databaseArr.forEach(item => {
+        obj[item.id] = item.libraryTypeName;
+      });
+      return obj;
     }
   }
 };

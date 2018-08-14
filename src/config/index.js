@@ -16,16 +16,23 @@ export default {
     devices: '/areaEquipment/info/list'
   },
   person: {
-    list: '/person/index',
-    detail: '/person/detail',
-    delete: '/person/delete',
-    deleteAll: '/person/deleteAll',
+    list: '/libraryPersonnel/personnelList',
+    detail: '/libraryPersonnel/personnelDetail',
+    delete: '/libraryPersonnel/delPersonnel',
+    deleteAll: '/libraryPersonnel/delPersonnel',
     add: '/person/add'
   },
   recognition: {
-    list: '/recognition/index',
+    list: '/distinguishRecord/info/list',
     detail: '/recognition/detail',
     compareDetail: '/recognition/compareDetail'
+  },
+  database: {
+    list: '/library/searchLibraryList',
+    add: '/library/saveLibrary',
+    typeList: '/library/libraryTypeList',
+    edit: '/library/editLibraryInfo',
+    delete: '/library/delLibraryInfo'
   },
   deviceType: [{
     value: '1',

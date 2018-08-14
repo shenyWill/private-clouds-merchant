@@ -67,20 +67,20 @@
           <div class="delete-all-people-card" v-if="deleteAllOperationTag"></div>
         </el-card>
       <!-- 人员列表 -->
-        <el-card class="person-list" v-for="item in personList" :key="item.id" @click.native="showPersonDetail(item.id)">
+        <el-card class="person-list" v-for="item in personList" :key="item.personnelId" @click.native="showPersonDetail(item.personnelId)">
           <el-tooltip placement="bottom-end" popper-class="person-pop">
             <div slot="content">
-              <i class="el-icon-edit"></i>　<i class="el-icon-delete" @click.self.stop="movePeople(item.id)"></i>
+              <i class="el-icon-edit"></i>　<i class="el-icon-delete" @click.self.stop="movePeople(item.personnelId)"></i>
             </div>
             <i class="el-icon-more"></i>
           </el-tooltip>
           <div class="list-content">
-            <img :src="item.image" class="person-image">
-            <p class="person-name">{{ item.name }}</p>
-            <p class="person-position">{{ item.position }}</p>
-            <p class="person-company">{{ item.company }}</p>
+            <img :src="item.imageUrl" class="person-image">
+            <p class="person-name">{{ item.personnelName }}</p>
+            <p class="person-position">{{ item.personnelDescribe }}</p>
+            <p class="person-company">{{ item.groupName }}</p>
           </div>
-          <div v-if="deleteAllOperationTag" :class="['delete-all-people-card',deletePeopleList.indexOf(item.id) > -1 ? 'delete-all-people-checked' : '']" @click.stop="checkDeletePeople(item.id)">
+          <div v-if="deleteAllOperationTag" :class="['delete-all-people-card',deletePeopleList.indexOf(item.personnelId) > -1 ? 'delete-all-people-checked' : '']" @click.stop="checkDeletePeople(item.personnelId)">
             <i class="el-icon-circle-check"></i>
           </div>
         </el-card>
@@ -146,23 +146,26 @@ export default {
     },
     // 请求
     async responseAPI (data = {}) {
+      !data.libraryId && (data.libraryId = this.$route.query.id);
+      !data.pageSize && (data.pageSize = 10);
+      !data.page && (data.page = 1);
       const response = await api.post(config.person.list, data);
-      if (Number(response.data.resCode) === 200) {
-        this.count = response.data.size;
-        this.personList = response.data.data;
+      if (Number(response.data.code) === 0) {
+        this.count = response.data.data.totalCount;
+        this.personList = response.data.data.dataList;
       }
     },
     // 点击分页
     async handleCurrentChange (val) {
       this.currentPage = val;
-      this.responseAPI({pageSize: 19, page: val});
+      this.responseAPI({page: val});
       scollTop(80);
     },
     // 查看详情
     async showPersonDetail (id) {
-      const response = await api.post(config.person.detail, {id: id});
-      if (Number(response.data.resCode) === 200) {
-        this.personDetail = response.data.data[0];
+      const response = await api.post(config.person.detail, {personnelId: id, libraryId: this.$route.query.id});
+      if (Number(response.data.code) === 0) {
+        this.personDetail = response.data.data;
         this.dialogPersonDetail = true;
       }
     },
@@ -173,8 +176,14 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
-        await api.post(config.person.delete, {id: id});
-        this.responseAPI();
+        let response = await api.post(config.person.delete, {personnelIdList: [{personnelId: id}]});
+        if (Number(response.data.code) === 0) {
+          this.$message({
+            type: 'success',
+            message: response.data.msg
+          });
+          this.responseAPI();
+        }
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -198,7 +207,7 @@ export default {
     deleteAllSelect () {
       if (this.deletePeopleList.length !== this.personList.length) {
         this.deletePeopleList = [];
-        this.personList.forEach(item => this.deletePeopleList.push(item.id));
+        this.personList.forEach(item => this.deletePeopleList.push(item.personnelId));
       } else {
         this.deletePeopleList = [];
       }
@@ -210,8 +219,12 @@ export default {
     },
     // 确认删除全部
     async deleteAllSure () {
-      await api.post(config.person.deleteAll, this.deletePeopleList);
-      await this.responseAPI({pageSize: 19, page: this.currentPage});
+      let requestObj = {personnelIdList: []};
+      this.deletePeopleList.forEach(item => {
+        requestObj.personnelIdList.push({personnelId: item});
+      });
+      await api.post(config.person.deleteAll, requestObj);
+      await this.responseAPI({page: this.currentPage});
       this.deletePeopleList = [];
       this.deleteAllOperationTag = false;
     },
@@ -230,13 +243,13 @@ export default {
       let addObj = {...val};
       addObj.status !== true && (addObj.status = false);
       await api.post(config.person.add, addObj);
-      await this.responseAPI({pageSize: 19, page: 1});
+      await this.responseAPI();
       this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
       this.dialogPersonAdd = false;
     }
   },
-  async mounted () {
-    this.responseAPI({pageSize: 19});
+  mounted () {
+    this.responseAPI();
   },
   watch: {
     searchResult: {

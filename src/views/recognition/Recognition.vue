@@ -1,20 +1,18 @@
 <template>
   <div class="recognition">
-    <Search :searchResult='searchResult'>
+    <Search :searchResult='searchResult' :equipmentArr='equipmentArr' :databaseArr='databaseArr'>
       <el-form ref="search-form" :model="searchForm" slot="search-form" label-width="60px" class="search-form-box">
-
         <el-row>
           <el-col :span="5">
             <el-form-item label="姓名">
-              <el-input v-model="searchForm.name" size="small"></el-input>
+              <el-input v-model="searchForm.personnelName" size="small"></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="5" :offset="3">
             <el-form-item label="库类型">
-              <el-select v-model="searchForm.type" size="small">
-                <el-option label="类型一" value="one"></el-option>
-                <el-option label="类型二" value="two"></el-option>
+              <el-select v-model="searchForm.libraryTypeId" size="small">
+                <el-option v-for="item in databaseArr" :key="item.id" :label="item.libraryTypeName" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -23,20 +21,19 @@
         <el-row>
           <el-col :span="5">
             <el-form-item label="设备">
-              <el-select v-model="searchForm.config" size="small">
-                <el-option label="设备一" value="one"></el-option>
-                <el-option label="设备二" value="two"></el-option>
+              <el-select v-model="searchForm.equipmentId" size="small">
+                <el-option v-for="item in equipmentArr" :key="item.equipmentId" :label="item.equipmentName" :value="item.equipmentId"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="5" :offset="3">
             <el-form-item label="比对时间">
-              <el-date-picker v-model="searchForm.startDate" type="datetime" placeholder="请选择开始时间" size="small"></el-date-picker>
+              <el-date-picker v-model="searchForm.startTime" type="datetime" placeholder="请选择起始时间" size="small"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="5">
             <el-form-item label="至" label-width="40px">
-              <el-date-picker v-model="searchForm.endDate" type="datetime" placeholder="请选择结束时间" size="small"></el-date-picker>
+              <el-date-picker v-model="searchForm.endTime" type="datetime" placeholder="请选择终止时间" size="small"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -44,7 +41,7 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="相似度">
-              <el-slider v-model="searchForm.slider" :min="60" :max="100" class="search-slider"></el-slider>
+              <el-slider v-model="searchForm.confidence" :min="0" :max="100" class="search-slider"></el-slider>
             </el-form-item>
           </el-col>
         </el-row>
@@ -63,27 +60,27 @@
       </div>
       <div v-for="item in recognitionList" :key="item.id" class="recognition-card-info">
         <div class="recognition-card-image">
-          <img :src="item.image" alt="">
-          <img :src="item.image" alt="">
+          <img :src="item.imageUrl1" alt="">
+          <img :src="item.imageUrl2" alt="">
         </div>
         <div class="recognition-card-content">
           <p class="recognition-card-detail">
-            <span class="detail-name">{{ item.name }}</span>
-            <span class="detail-position">{{ item.position }}</span>
+            <span class="detail-name">{{ item.personnelName }}</span>
+            <span class="detail-position">{{ item.describe }}</span>
           </p>
           <p class="recognition-card-tag">
-            <el-tag type="warning">{{ item.type }}</el-tag>
-            <el-tag :type="item.ipStatus=='黑名单' ? 'danger' : 'success'">{{ item.ipStatus }}</el-tag>
+            <el-tag type="warning">{{ equipmentTypeName[item.equipmentType] }}</el-tag>
+            <el-tag :type="item.libraryTypeName=='黑名单' ? 'danger' : 'success'">{{ item.libraryTypeName }}</el-tag>
           </p>
           <p class="recognition-card-equipment">
             <span class="equipment-name">设备名称： {{ item.equipmentName }}</span>
           </p>
         </div>
         <div class="recognition-card-simi">
-          <span><i class="el-icon-refresh"> 相似度：{{ item.simi }}%</i></span>
+          <span><i class="el-icon-refresh"> 相似度：{{ item.confidence }}%</i></span>
         </div>
         <div class="recognition-card-date">
-          <span><i class="el-icon-time"> 比对时间：{{ item.startDate }}</i></span>
+          <span><i class="el-icon-time"> 比对时间：{{ item.createTime }}</i></span>
         </div>
         <div class="recognition-card-operation">
           <i class="el-icon-view" @click="showPersonDetail(item.id)"></i>
@@ -92,7 +89,7 @@
       </div>
     </el-card>
     <!-- 分页 -->
-    <el-pagination background layout="prev,pager,next" :total="count" class="paging" @current-change="handleCurrentChange"></el-pagination>
+    <el-pagination background layout="prev,pager,next" :current-page.sync="currentPage" :total="count" class="paging" @current-change="handleCurrentChange"></el-pagination>
     <!-- 显示详情 -->
     <el-dialog :visible.sync="dialogPersonDetail" width="25%" custom-class="person-detail-show">
       <PersonDetail :personDetail="personDetail"></PersonDetail>
@@ -108,7 +105,7 @@
 import Search from '@/views/search/Search';
 import api from '@/api';
 import config from '@/config';
-import { scollTop } from '@/utils';
+import { scollTop, parseTime } from '@/utils';
 import PersonDetail from '@/views/person/PersonDetail';
 import RecognitionDetail from '@/views/recognition/RecognitionDetail';
 export default {
@@ -122,7 +119,11 @@ export default {
       personDetail: {}, // 个人详情
       dialogPersonDetail: false, // 个人详情框是否显示,
       recognitionDetail: [], // 比对详情
-      dialogRecognitionDetail: false // 比对详情框是否显示
+      dialogRecognitionDetail: false, // 比对详情框是否显示
+      equipmentTypeName: ['人证比对机', '摄像头', '人脸识别门禁平板', '闸机', '门'], // 设备类型名称
+      equipmentArr: [], // 设备集合
+      currentPage: 2, // 当前页码
+      databaseArr: [] // 库集合
     };
   },
   components: {
@@ -133,19 +134,31 @@ export default {
   methods: {
     // 点击搜索
     searchSubmit () {
+      this.searchForm.startTime && (this.searchForm.startTime = parseTime(this.searchForm.startTime));
+      this.searchForm.endTime && (this.searchForm.endTime = parseTime(this.searchForm.endTime));
       this.searchResult = { ...this.searchForm };
     },
     // 请求
     async responseAPI (data = {}) {
       const response = await api.post(config.recognition.list, data);
-      if (Number(response.data.resCode) === 200) {
-        this.count = response.data.size;
-        this.recognitionList = response.data.data;
+      if (Number(response.data.code) === 0) {
+        this.count = response.data.data.total;
+        this.recognitionList = response.data.data.rows;
       }
     },
     // 分页
     handleCurrentChange (val) {
-      this.responseAPI({pageSize: 9, page: val});
+      let Num = (val - 1) * 10;
+      let requestObj = {...this.searchForm};
+      if (requestObj.startTime && !requestObj.endTime) {
+        requestObj.endTime = parseTime(new Date());
+      }
+      if (!requestObj.startTime && requestObj.endTime) {
+        requestObj.startTime = parseTime(new Date(1970));
+      }
+      requestObj.limit = 10;
+      requestObj.offset = Num;
+      this.responseAPI(requestObj);
       scollTop(80);
     },
     // 查看个人详情
@@ -165,14 +178,33 @@ export default {
       }
     }
   },
-  mounted () {
-    this.responseAPI();
+  async mounted () {
+    this.responseAPI({limit: 10, offset: 0});
+    let response = await api.post(config.region.devices, {});
+    if (Number(response.data.code) === 0) {
+      this.equipmentArr = response.data.data.rows;
+    }
+    let databaseRes = await api.post(config.database.typeList, {});
+    if (Number(databaseRes.data.code) === 0) {
+      this.databaseArr = databaseRes.data.data.dataList;
+    }
   },
   watch: {
     searchResult: {
+      // 搜索发送请求
       handler (newVal, oldVal) {
         this.searchForm = { ...newVal };
-        this.responseAPI(this.searchForm);
+        let requestObj = {...newVal};
+        if (requestObj.startTime && !requestObj.endTime) {
+          requestObj.endTime = parseTime(new Date());
+        }
+        if (!requestObj.startTime && requestObj.endTime) {
+          requestObj.startTime = parseTime(new Date(1970));
+        }
+        requestObj.limit = 10;
+        requestObj.offset = 0;
+        this.currentPage = 1;
+        this.responseAPI(requestObj);
       },
       deep: true
     }

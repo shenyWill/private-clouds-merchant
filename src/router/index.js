@@ -87,7 +87,7 @@ export default new Router({
         path: '/person/index',
         component: Person,
         name: 'Person',
-        meta: { title: '人员管理', icon: '', cache: true }
+        meta: { title: '人员管理', icon: '' }
       }, {
         path: '/person/database',
         component: Database,

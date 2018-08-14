@@ -1,38 +1,38 @@
 <template>
     <div class="people-detail">
         <div class="people-detail-image">
-            <img :src="personDetail.image" alt="">
-            <img :src="personDetail.image" alt="">
-            <img :src="personDetail.image" alt="">
-            <img :src="personDetail.image" alt="">
+            <img :src="personDetail.imageUrl" alt="">
+            <img :src="personDetail.imageUrl1" alt="">
+            <img :src="personDetail.imageUrl2" alt="">
+            <img :src="personDetail.imageUrl3" alt="">
         </div>
         <p class="people-detail-introduce">
-            <span class="people-detail-name">{{ personDetail.name }}</span>
-            <span class="people-detail-position">{{ personDetail.position }}</span>
+            <span class="people-detail-name">{{ personDetail.personnelName }}</span>
+            <span class="people-detail-position">{{ personDetail.personnelDescribe }}</span>
         </p>
-        <el-tag size="medium" :type="personDetail.ipStatus=='白名单' ? 'success' : 'danger'">{{ personDetail.ipStatus }}</el-tag>
+        <el-tag size="medium" :type="personDetail.libraryTypeName=='白名单' ? 'success' : 'danger'">{{ personDetail.libraryTypeName }}</el-tag>
         <div class="people-detail-content">
             <p class="people-detail-company">
                 <span class="people-detail-content-key">组　　织：</span>
-                <span class="people-detail-content-value">{{ personDetail.company }}</span>
+                <span class="people-detail-content-value">{{ personDetail.groupName }}</span>
             </p>
             <p class="people-detail-status">
                 <span class="people-detail-content-key">识别开关：</span>
-                <span class="people-detail-content-value">{{ personDetail.status == 'false' ? '关' : '开' }}</span>
+                <span class="people-detail-content-value">{{ personDetail.disSwitch == '0' ? '关' : '开' }}</span>
             </p>
             <p class="people-detail-time">
                 <span class="people-detail-content-key">开始时间：</span>
-                <span class="people-detail-content-value">{{ personDetail.startDate }}</span>
+                <span class="people-detail-content-value">{{ personDetail.disStartTime }}</span>
             </p>
             <p class="people-detail-time">
                 <span class="people-detail-content-key">结束时间：</span>
-                <span class="people-detail-content-value">{{ personDetail.endDate }}</span>
+                <span class="people-detail-content-value">{{ personDetail.disEndTime }}</span>
             </p>
             <p class="people-detail-equipment">
                 <span class="people-detail-content-key">识别设备：</span>
                 <span class="people-detail-content-equipment">
-                    <span v-for="(item,index) in personDetail.equipment" :key="index">
-                        {{item}},
+                    <span v-for="(item,index) in personDetail.equipmentList" :key="index">
+                        {{item.equipmentName}},
                     </span>
                 </span>
             </p>
