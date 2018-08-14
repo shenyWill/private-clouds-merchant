@@ -1,5 +1,5 @@
 export default {
-  socketURL: 'wss://socket.org',
+  socketURL: '/endpointChat',
   loginAPI: '/login',
   logoutAPI: '/logout',
   device: {
