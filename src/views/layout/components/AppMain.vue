@@ -10,6 +10,8 @@
 
 <script>
  import { mapGetters } from 'vuex';
+ import Socket from '@/api/Socket';
+ import config from '@/config';
  export default {
    name: 'AppMain',
    data () {
@@ -21,6 +23,25 @@
        'isCollapse',
        'cachedViews'
      ])
+   },
+   methods: {
+     initSocket (url) {
+       const socket = new Socket(url);
+       socket.connect('guest', 'guest', frame => {
+         socket.subscribe('/topic/getResponse', response => {
+           this.$notify({
+             title: '人员报警',
+             message: JSON.parse(response.body).responseMessage,
+             position: 'bottom-right'
+           });
+         });
+       }, () => {
+         // this.initSocket(url);
+       });
+     }
+   },
+   mounted () {
+     this.initSocket(config.socketURL);
    }
  };
 </script>

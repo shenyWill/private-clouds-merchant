@@ -71,7 +71,7 @@
     <el-pagination
       v-if="size > 0"
       background
-      :current-page="currentPage"
+      :current-page.sync="currentPage"
       @current-change="handleCurrentChange"
       layout="prev, pager, next"
       :total="size">
@@ -82,6 +82,7 @@
       class="device__dialog-add"
       title="添加设备"
       :visible.sync="addDialog"
+      :fullscreen="true"
       width="25%">
       <el-form
         ref="addForm"
@@ -133,6 +134,7 @@
       class="device__dialog-add"
       :visible.sync="editDialog"
       width="25%"
+      :fullscreen="true"
       title="修改设备">
       <el-form ref="editForm" :model="editForm" label-position="top" :rules="editRules" class="device__form-add">
         <el-form-item label="设备名称" prop="equipmentName">
@@ -334,7 +336,8 @@
      searchResult: {
        handler (newVal, oldVal) {
          this.searchForm = {...newVal};
-         this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
+         this.currentPage = 1;
+         this.fetchData({ offset: 0, limit: this.limit, ...this.searchForm });
        },
        deep: true
      }
@@ -485,7 +488,8 @@
            }
          }
        }
-       this.fetchData({...this.searchForm});
+       this.currentPage = 1;
+       this.fetchData({limit: this.limit, offset: 0, ...this.searchForm});
      },
      // submit delete device action
      async deleteDevice () {

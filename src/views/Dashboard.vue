@@ -61,38 +61,40 @@
 </template>
 
 <script>
-import Search from '@/views/search/Search';
-export default {
-  name: 'Dashboard',
-  data () {
-    return {
-      searchForm: {},
-      searchResult: {}
-    };
-  },
-  components: {
-    Search
-  },
-  methods: {
-    // 点击搜索
-    searchSubmit () {
-      this.searchResult = {...this.searchForm};
-    },
-    // 请求
-    responseAPI (data) {
-      // console.log(data);
-    }
-  },
-  watch: {
-    searchResult: {
-      handler (newVal, oldVal) {
-        this.searchForm = {...newVal};
-        this.responseAPI(this.searchForm);
-      },
-      deep: true
-    }
-  }
-};
+ import Search from '@/views/search/Search';
+ export default {
+   name: 'Dashboard',
+   data () {
+     return {
+       searchForm: {},
+       searchResult: {}
+     };
+   },
+   components: {
+     Search
+   },
+   methods: {
+     // 点击搜索
+     searchSubmit () {
+       this.searchResult = {...this.searchForm};
+     },
+     // 请求
+     responseAPI (data) {
+       // console.log(data);
+     }
+   },
+   watch: {
+     searchResult: {
+       handler (newVal, oldVal) {
+         this.searchForm = {...newVal};
+         this.responseAPI(this.searchForm);
+       },
+       deep: true
+     }
+   },
+   mounted () {
+   }
+ };
 </script>
 
 <style lang="scss" scoped>

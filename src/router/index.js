@@ -139,6 +139,16 @@ export default new Router({
         name: 'Region',
         meta: { title: '区域管理', icon: '', cache: true }
       }]
+    }, {
+      path: '/stream',
+      component: Layout,
+      redirect: '/stream/index',
+      children: [{
+        path: '/stream/index',
+        component: Stream,
+        name: 'Stream',
+        meta: { title: '视频管理', icon: '', cache: true }
+      }]
     }
   ]
 });

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import router from '@/router';
 import NProgress from 'nprogress';
-import socket from './websocket';
+import Socket from './Socket';
 
 const service = axios.create({
   // global axios config
@@ -48,5 +48,5 @@ export default {
       ...config
     });
   },
-  socket
+  Socket
 };
