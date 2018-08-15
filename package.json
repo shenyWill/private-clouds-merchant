@@ -28,6 +28,7 @@
     "sockjs-client": "^1.0.0",
     "stompjs": "^2.3.3",
     "streamedian": "git://github.com/Streamedian/html5_rtsp_player.git",
+    "video.js": "^5.20.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",

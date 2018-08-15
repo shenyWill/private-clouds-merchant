@@ -147,7 +147,7 @@ export default new Router({
         path: '/stream/index',
         component: Stream,
         name: 'Stream',
-        meta: { title: '视频管理', icon: '', cache: true }
+        meta: { title: '视频管理', icon: '' }
       }]
     }
   ]

@@ -38,7 +38,7 @@
                     <!-- <el-option-group v-for="group in deviceList" :key="group.areaId" :label="group.areaName">
                         <el-option v-for="item in group.equipmentList" :key="item.id" :label="item.label" :value="item.value"></el-option>
                     </el-option-group> -->
-                    <el-option v-for="item in deviceList" :key="item.equipmentCode" :label="item.equipmentName" :value="item.equipmentCode"></el-option>
+                    <el-option v-for="item in deviceList" :key="item.id" :label="item.equipmentName" :value="item.id"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="">

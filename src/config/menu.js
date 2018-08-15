@@ -28,4 +28,9 @@ export default [{
   path: '/region/index',
   icon: 'el-icon-location',
   children: []
+}, {
+  name: '实时监控',
+  path: '/stream/index',
+  icon: 'el-icon-location',
+  children: []
 }];
