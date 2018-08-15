@@ -106,7 +106,7 @@
     </div>
     <!-- 添加人员 -->
     <el-dialog :visible.sync="dialogPersonAdd" width="25%" custom-class="person-detail-add" title="编辑人员信息" :before-close="removePersonAddForm">
-      <PersonAdd @addSumbit="addSumbit" ref="person-add"></PersonAdd>
+      <PersonAdd :deviceList="deviceList" :personTypeList="personTypeList" @addSumbit="addSumbit" ref="person-add"></PersonAdd>
     </el-dialog>
   </div>
 </template>
@@ -126,6 +126,8 @@ export default {
       searchResult: {},
       personList: [], // 人员列表
       count: 0, // 人员数量
+      personTypeList: [], // 人员类型
+      deviceList: [], // 设备列表
       personDetail: {}, // 个人详情
       dialogPersonDetail: false, // 详情框是否显示
       deleteAllOperationTag: false, // 进入删除全部标识
@@ -241,15 +243,22 @@ export default {
     // 提交添加人员
     async addSumbit (val) {
       let addObj = {...val};
-      addObj.status !== true && (addObj.status = false);
       await api.post(config.person.add, addObj);
       await this.responseAPI();
       this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
       this.dialogPersonAdd = false;
     }
   },
-  mounted () {
+  async mounted () {
     this.responseAPI();
+    let personTypeAPI = await api.post(config.database.typeList, {});
+    if (Number(personTypeAPI.data.code) === 0) {
+      this.personTypeList = personTypeAPI.data.data.dataList;
+    }
+    let deviceListAPI = await api.post(config.device.list, {});
+    if (Number(deviceListAPI.data.code) === 0) {
+      this.deviceList = deviceListAPI.data.data.rows;
+    }
   },
   watch: {
     searchResult: {

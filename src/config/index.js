@@ -20,7 +20,8 @@ export default {
     detail: '/libraryPersonnel/personnelDetail',
     delete: '/libraryPersonnel/delPersonnel',
     deleteAll: '/libraryPersonnel/delPersonnel',
-    add: '/person/add'
+    add: '/libraryPersonnel/savePersonnel',
+    checkImage: '/libraryPersonnel/checkPersonnelImage'
   },
   recognition: {
     list: '/distinguishRecord/info/list',

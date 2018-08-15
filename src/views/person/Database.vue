@@ -62,6 +62,9 @@
         <el-button type="info" class="can-delete-submit" @click="deleteDatabaseSubmit">确认删除</el-button>
       </div>
     </el-dialog>
+
+     <!-- 分页 -->
+    <el-pagination background layout="prev,pager,next" :current-page.sync="currentPage" :total="count" class="paging" @current-change="handleCurrentChange"></el-pagination>
   </div>
 </template>
 
@@ -69,6 +72,7 @@
 import api from '@/api';
 import config from '@/config';
 import icon from '@/config/icon.js';
+import { scollTop } from '@/utils';
  export default {
    name: 'Database',
    data () {
@@ -83,6 +87,8 @@ import icon from '@/config/icon.js';
        dialogDeleteDatabase: false, // 是否打开删除人员库弹窗
        deleteDatabaseCondition: false, // 判断该人员库是否可以删除
        deleteDatabaseId: '', // 删除人员ID
+       currentPage: 1, // 当前页数
+       count: 0, // 总条数
        databaseRule: {
          libraryName: [
             { required: true, message: '请输入库名称', trigger: 'blur' }
@@ -98,6 +104,7 @@ import icon from '@/config/icon.js';
       let response = await api.post(config.database.list, data);
       if (Number(response.data.code) === 0) {
         this.databaseArr = response.data.data.dataList;
+        this.count = response.data.data.totalCount;
       } else {
         this.$message({
           type: 'error',
@@ -150,7 +157,8 @@ import icon from '@/config/icon.js';
           }
           let response = await api.post(apiUrl, {...this.addForm});
           if (Number(response.data.code) === 0) {
-            this.responseAPI({page: 1, pageSize: 10});
+            this.responseAPI({page: 1, pageSize: 9});
+            this.currentPage = 1;
             this.$message({
               type: 'success',
               message: resMsg
@@ -195,16 +203,21 @@ import icon from '@/config/icon.js';
         type: msgType,
         message: response.data.msg
       });
-      await this.responseAPI({page: 1, pageSize: 10});
+      await this.responseAPI({page: this.currentPage, pageSize: 9});
       this.dialogDeleteDatabase = false;
     },
     // 前往人员列表
     goPerson (id) {
       this.$router.push({path: 'index', query: {id: id}});
+    },
+    // 分页
+    handleCurrentChange (val) {
+      this.responseAPI({page: val, pageSize: 9});
+      scollTop(80);
     }
    },
    async mounted () {
-     this.responseAPI({page: 1, pageSize: 10});
+     this.responseAPI({page: 1, pageSize: 9});
      this.responseTypeAPI();
      this.iconObj = icon;
    }
@@ -214,6 +227,7 @@ import icon from '@/config/icon.js';
 <style lang="scss" scoped>
 .database-nav {
   margin: 50px;
+  overflow: hidden;
   .database-add,.database-list {
     width: 740px;
     height: 160px;
@@ -328,6 +342,7 @@ import icon from '@/config/icon.js';
 .can-delete-cancel {
   margin-left: 75px;
 }
+
 </style>
 <style>
 .database .el-dialog {
