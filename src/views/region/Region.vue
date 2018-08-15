@@ -260,7 +260,7 @@
    watch: {
      searchResult: {
        handler (newVal, oldVal) {
-         this.searchForm = { areaName: newVal['区域名称'] };
+         this.searchForm = {...newVal};
          this.currentPage = 1;
          this.fetchData({ offset: 0, limit: this.limit, ...this.searchForm });
        },
@@ -433,12 +433,13 @@
      },
      // search request
      onSearch () {
-       const areaName = this.searchForm.areaName;
-       if (areaName && areaName !== '') {
-         this.searchResult = { '区域名称': this.searchForm.areaName };
-       } else {
-         this.searchResult = {};
-       }
+       this.searchResult = this.searchForm;
+       /* const areaName = this.searchForm.areaName;
+        * if (areaName && areaName !== '') {
+        *   this.searchResult = { '区域名称': this.searchForm.areaName };
+        * } else {
+        *   this.searchResult = {};
+        * }*/
        this.currentPage = 1;
        this.fetchData({ limit: this.limit, offset: 0, ...this.searchForm });
      },

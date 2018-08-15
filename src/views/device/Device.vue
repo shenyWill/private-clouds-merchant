@@ -477,6 +477,7 @@
          }
        });
      },
+     // on search form submit
      onSearch () {
        this.searchResult = {};
        for (let key in this.searchForm) {
@@ -524,7 +525,7 @@
      },
      async init () {
        // get selected region from route.params or store
-       // push router to /region/index if no region id selected
+       // push router to /region/index if no region id
        this.regionID = this.$route.params.id;
        if (!this.regionID || this.regionID === '') {
          this.regionID = this.selectedRegion;

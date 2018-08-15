@@ -5,6 +5,7 @@
         <router-view></router-view>
       </keep-alive>
     </transition>
+    <BlackList v-if="showAlert" :object="alertData" @close="alertClose"></BlackList>
   </div>
 </template>
 
@@ -12,11 +13,18 @@
  import { mapGetters } from 'vuex';
  import Socket from '@/api/Socket';
  import config from '@/config';
+ import BlackList from '@/views/components/BlackList';
  export default {
    name: 'AppMain',
    data () {
      return {
+       showAlert: false,
+       alertData: null,
+       blackList: []
      };
+   },
+   components: {
+     BlackList
    },
    computed: {
      ...mapGetters([
@@ -25,17 +33,19 @@
      ])
    },
    methods: {
+     alertClose () {
+       console.log('-------alert close-------');
+       this.showAlert = false;
+     },
      initSocket (url) {
        const socket = new Socket(url);
        socket.connect('guest', 'guest', frame => {
          socket.subscribe('/topic/getResponse', response => {
-           this.$notify({
-             title: '人员报警',
-             message: JSON.parse(response.body).responseMessage,
-             position: 'bottom-right'
-           });
+           this.showAlert = true;
+           this.alertData = JSON.parse(response.body);
          });
-       }, () => {
+       }, error => {
+         console.log(error);
          // this.initSocket(url);
        });
      }
@@ -46,7 +56,7 @@
  };
 </script>
 
-<style>
+<style lang="scss">
  .app-main {
    margin-left: 250px;
    transition: all .2s;
