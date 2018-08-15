@@ -1,15 +1,15 @@
 <template>
-  <div class="region-cell" @mouseover.capture="showActionPane" @mouseout.capture="hideActionPane">
+  <div class="region-cell" @click="viewRegion" @mouseover.capture="showActionPane" @mouseout.capture="hideActionPane">
     <img class="region-cell__cover" :src="cover" alt="cover" />
     <div class="region-cell__info">
       <div class="region-cell__title">{{ region.areaName }}</div>
       <div class="region-cell__orga">{{ region.groupName }}</div>
     </div>
     <div class="region-cell__action" v-if="showAction" @mouseover="showActionPane">
-      <i @click="viewRegion" class="el-icon-view region-cell__action-icon"></i>
-      <i @click="addDevice" class="el-icon-plus region-cell__action-icon"></i>
-      <i @click="editRegion" class="el-icon-edit region-cell__action-icon"></i>
-      <i @click="deleteRegion" class="el-icon-delete region-cell__action-icon"></i>
+      <i @click.stop="viewRegion" class="el-icon-view region-cell__action-icon"></i>
+      <i @click.stop="addDevice" class="el-icon-plus region-cell__action-icon"></i>
+      <i @click.stop="editRegion" class="el-icon-edit region-cell__action-icon"></i>
+      <i @click.stop="deleteRegion" class="el-icon-delete region-cell__action-icon"></i>
     </div>
   </div>
 </template>
@@ -64,6 +64,9 @@
    border: 1px solid lightgray;
    overflow: hidden;
    background-color: white;
+   &:hover {
+     cursor: pointer;
+   }
    .region-cell__cover {
      margin: 20px;
      width: 80px;

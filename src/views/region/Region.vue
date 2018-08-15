@@ -41,7 +41,7 @@
       <el-pagination
         v-if="size > 0"
         background
-        :current-page="currentPage"
+        :current-page.sync="currentPage"
         :page-size="limit"
         @current-change="handleCurrentChange"
         layout="prev, pager, next"
@@ -99,6 +99,7 @@
       class="region__dialog"
       title="添加设备"
       :visible.sync="addDeviceDialog"
+      :fullscreen="true"
       width="25%">
       <el-form ref="deviceForm" label-position="top" :model="deviceForm" :rules="deviceRules">
         <el-form-item label="设备名称" prop="equipmentName">
@@ -259,8 +260,9 @@
    watch: {
      searchResult: {
        handler (newVal, oldVal) {
-         this.searchForm = {...newVal};
-         this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
+         this.searchForm = { areaName: newVal['区域名称'] };
+         this.currentPage = 1;
+         this.fetchData({ offset: 0, limit: this.limit, ...this.searchForm });
        },
        deep: true
      }
@@ -437,7 +439,8 @@
        } else {
          this.searchResult = {};
        }
-       this.fetchData({ limit: this.limit, offset: this.offset, ...this.searchForm });
+       this.currentPage = 1;
+       this.fetchData({ limit: this.limit, offset: 0, ...this.searchForm });
      },
      async fetchData (payload) {
        try {
@@ -457,8 +460,6 @@
      }
    },
    async mounted () {
-     const response = await api.get('/welcome');
-     console.log(response);
      this.init();
    }
  };

@@ -6,3 +6,6 @@ body {
   background: no-repeat;
   background-size: 100% 100%;
 }
+*:focus {
+  outline: none;
+}

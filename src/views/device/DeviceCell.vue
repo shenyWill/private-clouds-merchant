@@ -9,7 +9,7 @@
       </span>
       <div class="device-cell__area">
         <i class="el-icon-location"></i>
-        <span>IP/URL： {{ device.ipAddress ? device.ipAddress : device.url }}</span>
+        <span>{{ device.ipAddress ? 'IP: ' + device.ipAddress : 'URL:' + device.url }}</span>
       </div>
     </div>
     <div class="device-cell__action">
@@ -87,6 +87,11 @@
      min-width: 300px;
      margin-top: 35px;
      text-align: left;
+     .device-cell__tag .el-tag {
+       color: #f39800;
+       border-color: #f39800;
+       background-color: #fbe0b2;
+     }
      .device-cell__title {
        font-size: 18px;
        font-weight: bold;

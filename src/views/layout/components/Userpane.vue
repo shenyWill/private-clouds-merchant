@@ -1,15 +1,45 @@
 <template>
   <div class="navbar__user">
-    <img class="navbar__avatar" :src="user.avatar" draggable="false" />
-    <span>{{ user.username }}</span>
+    <div @mouseover="toggleMenu()" @mouseout="toggleMenu()">
+      <img class="navbar__avatar" :src="user.avatar" draggable="false" />
+      <span>{{ user.username }}</span>
+    </div>
+    <div class="navbar__menu-arrow" v-if="showMenu" @mouseover="toggleMenu()" @mouseout="toggleMenu()"></div>
+    <div v-if="showMenu" class="navbar__menu" @mouseover="toggleMenu()" @mouseout="toggleMenu()">
+      <div class="navbar__menu-item">
+        <div @click="showSettingDialog">设置</div>
+      </div>
+      <div class="navbar__menu-item">
+        <div @click="logout">退出登录</div>
+      </div>
+    </div>
+    <el-dialog title="设置" :visible.sync="settingDialog" width="25%" :append-to-body="true">
+      <el-form label-width="100px">
+        <el-form-item label="报警弹窗开关">
+          <el-switch v-model="alertDialog" :active-color="activeColor" :inactive-color="inactiveColor"></el-switch>
+        </el-form-item>
+        <el-form-item label="报警声音开关">
+          <el-switch v-model="alertSound" :active-color="activeColor" :inactive-color="inactiveColor"></el-switch>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+ import api from '@/api';
+ import config from '@/config';
+ import { mapActions } from 'vuex';
  export default {
    name: 'Userpane',
    data () {
      return {
+       showMenu: false,
+       settingDialog: false,
+       activeColor: '#13ce66',
+       inactiveColor: '#ff4949',
+       alertDialog: true,
+       alertSound: true
      };
    },
    props: {
@@ -21,14 +51,89 @@
          };
        }
      }
+   },
+   methods: {
+     ...mapActions([
+       'logout'
+     ]),
+     toggleMenu () {
+       this.showMenu = !this.showMenu;
+     },
+     async logout () {
+       const response = await api.post(config.logoutAPI);
+       if (response.data.code === 0) {
+         this.logout();
+         this.$router.push('/login');
+       } else {
+         this.$message({ type: 'error', message: response.data.msg });
+       }
+     },
+     showSettingDialog () {
+       this.settingDialog = true;
+     }
    }
  };
 </script>
 
-<style>
+<style lang="scss">
  .navbar__user {
+   position: relative;
    border: none;
    height: 62px;
+   right: 30px;
+   &:hover {
+     cursor: pointer;
+   }
+   .navbar__menu-arrow {
+     position: relative;
+     top: -26px;
+     right: -18px;
+     width: 0;
+     height: 0;
+     border-bottom: 16px solid #fff;
+     border-right: 16px solid transparent;
+     border-left: 16px solid transparent;
+   }
+   .el-dialog {
+     border-radius: 20px;
+     padding: 0;
+     padding-left: 20px;
+     .el-dialog__header {
+       font-weight: bold;
+       border-bottom: 1px solid lightgray;
+     }
+     .el-form {
+       margin: 0 auto;
+       width: 300px;
+     }
+   }
+   .navbar__menu {
+     position: absolute;
+     top: 65px;
+     right: 10px;
+     text-align: center;
+     background-color: #fff;
+     overflow: hidden;
+     border: 1px solid #ebeef5;
+     border-radius: 10px;
+     border-bottom: none;
+     border-top: none;
+     .navbar__menu-item {
+       font-size: 14px;
+       font-weight: bold;
+       padding-bottom: 20px;
+       width: 160px;
+       height: 40px;
+       border-bottom: 1px solid #ebeef5;
+       &:hover {
+         background-color: lightgray;
+       }
+       .el-button {
+         width: 100%;
+         height: 40px;
+       }
+     }
+   }
  }
  .navbar__avatar {
    margin: 8px 20px;
