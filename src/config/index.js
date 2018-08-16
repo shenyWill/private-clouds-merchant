@@ -36,6 +36,10 @@ export default {
     edit: '/library/editLibraryInfo',
     delete: '/library/delLibraryInfo'
   },
+  system: {
+    list: '/system/configure/list',
+    update: '/system/configure/save'
+  },
   deviceType: [{
     value: '1',
     label: '人证比对机'

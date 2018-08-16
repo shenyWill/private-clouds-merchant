@@ -63,11 +63,6 @@ export default new Router({
         component: TestExample,
         name: 'Test',
         meta: { title: '产品测试', icon: '', cache: true }
-      }, {
-        path: '/products/stream',
-        component: Stream,
-        name: 'Stream',
-        meta: { title: '视频直播', icon: '', cache: true }
       }]
     }, {
       path: '/device',

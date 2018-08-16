@@ -108,15 +108,16 @@
 
 <style lang="scss">
  .blacklist {
-   position: absolute;
+   position: fixed;
    width: 400px;
    height: 500px;
    bottom: 30px;
    right: 50px;
    font-size: 16px;
-   border: 2px solid red;
+   border: 5px solid red;
    border-radius: 20px;
    overflow: hidden;
+   background-color: #fff;
    .blacklist__header {
      position: relative;
      padding: 10px;
@@ -143,7 +144,7 @@
          display: inline-block;
          width: 128px;
          height: 128px;
-         border: 2px solid red;
+         border: 3px solid red;
          margin-left: 20px;
          .blacklist__image-score {
            position: absolute;

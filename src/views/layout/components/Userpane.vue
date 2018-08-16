@@ -16,10 +16,20 @@
     <el-dialog title="设置" :visible.sync="settingDialog" width="25%" :append-to-body="true">
       <el-form label-width="100px">
         <el-form-item label="报警弹窗开关">
-          <el-switch v-model="alertDialog" :active-color="activeColor" :inactive-color="inactiveColor"></el-switch>
+          <el-switch
+            @change="switchDialog"
+            v-model="alertDialog"
+            :active-color="activeColor"
+            :inactive-color="inactiveColor">
+          </el-switch>
         </el-form-item>
         <el-form-item label="报警声音开关">
-          <el-switch v-model="alertSound" :active-color="activeColor" :inactive-color="inactiveColor"></el-switch>
+          <el-switch
+            @change="switchSound"
+            v-model="alertSound"
+            :active-color="activeColor"
+            :inactive-color="inactiveColor">
+          </el-switch>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -38,8 +48,8 @@
        settingDialog: false,
        activeColor: '#13ce66',
        inactiveColor: '#ff4949',
-       alertDialog: true,
-       alertSound: true
+       alertDialog: true, // blacklist show alert dialog
+       alertSound: true // blacklist alert sound
      };
    },
    props: {
@@ -59,6 +69,44 @@
      toggleMenu () {
        this.showMenu = !this.showMenu;
      },
+     async switchSound (newVal) {
+       // parameterValue 1: on 2: off
+       const data = { configureType: '2', parameterValue: newVal ? '1' : '2' };
+       const response = await api.post(config.system.update, data);
+       if (response.data.code === 0) {
+         this.$message({ type: 'success', message: '更新成功' });
+         this.showMenu = false;
+       } else {
+         this.$message({ type: 'error', message: response.data.msg });
+       }
+     },
+     async switchDialog (newVal) {
+       // parameterValue 1: on 2: off
+       const data = { configureType: '3', parameterValue: newVal ? '1' : '2' };
+       const response = await api.post(config.system.update, data);
+       if (response.data.code === 0) {
+         this.$message({ type: 'success', message: '更新成功' });
+         this.showMenu = false;
+       } else {
+         this.$message({ type: 'error', message: response.data.msg });
+       }
+     },
+     async fetchConfig () {
+       const response = await api.post(config.system.list);
+       if (response.data.code === 0) {
+         const data = response.data.configure;
+         data.forEach(item => {
+           // alert sound
+           if (item.configureType === '2') {
+             this.alertSound = item.parameterValue === '1';
+           } else if (item.configureType === '3') { // blacklist dialog 3
+             this.alertDialog = item.parameterValue === '1';
+           }
+         });
+       } else {
+         this.$message({ type: 'error', message: response.data.msg });
+       }
+     },
      async logout () {
        const response = await api.post(config.logoutAPI);
        if (response.data.code === 0) {
@@ -71,6 +119,9 @@
      showSettingDialog () {
        this.settingDialog = true;
      }
+   },
+   mounted () {
+     this.fetchConfig();
    }
  };
 </script>
