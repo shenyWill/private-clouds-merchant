@@ -34,13 +34,12 @@
    },
    methods: {
      alertClose () {
-       console.log('-------alert close-------');
        this.showAlert = false;
      },
      initSocket (url) {
        const socket = new Socket(url);
        socket.connect('guest', 'guest', frame => {
-         socket.subscribe('/topic/getResponse', response => {
+         socket.subscribe('/face/blacklist', response => {
            this.showAlert = true;
            this.alertData = JSON.parse(response.body);
          });

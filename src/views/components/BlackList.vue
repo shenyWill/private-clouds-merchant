@@ -11,10 +11,32 @@
       </div>
     </div>
     <div class="blacklist__body">
-      <div class="blacklist__body-image"></div>
+      <div class="blacklist__body-image">
+        <img class="blacklist__image" :src="object.imageUrl2" />
+        <img class="blacklist__image" :src="object.imageUrl1" />
+      </div>
       <div class="blacklist__body-title">
-        <span>{{ object.personnelName }}</span>
-        <span>{{ object.libraryTypeName }}</span>
+        <span class="blacklist__body-name">{{ object.personnelName }}</span>
+        <span> | </span>
+        <span class="blacklist__body-desc">{{ object.describe }}</span>
+      </div>
+      <div class="blacklist__content">
+        <div class="blacklist__item">
+          <span class="blacklist__key">所在库:</span>
+          <span class="blacklist__value">{{ object.libraryTypeName }}</span>
+        </div>
+        <div class="blacklist__item">
+          <span class="blacklist__key">所属组织:</span>
+          <span class="blacklist__value">{{ object.groupName }}</span>
+        </div>
+        <div class="blacklist__item">
+          <span class="blacklist__key">识别设备:</span>
+          <span class="blacklist__value">{{ object.equipmentName }}</span>
+        </div>
+        <div class="blacklist__item">
+          <span class="blacklist__key">识别时间:</span>
+          <span class="blacklist__value">{{ object.createTime }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -72,8 +94,6 @@
      }
    },
    mounted () {
-     console.log('===========');
-     console.log(this.object);
      this.startTimer();
    }
  };
@@ -83,9 +103,10 @@
  .blacklist {
    position: absolute;
    width: 400px;
-   height: 300px;
+   height: 500px;
    bottom: 30px;
    right: 50px;
+   font-size: 16px;
    border: 2px solid red;
    border-radius: 20px;
    overflow: hidden;
@@ -96,7 +117,7 @@
      height: 20px;
      color: white;
      background-color: red;
-     font-size: 16px;
+     font-size: 18px;
      text-align: left;
      .blacklist__close {
        position: absolute;
@@ -108,6 +129,32 @@
      }
    }
    .blacklist__body {
+     margin-top: 30px;
+     .blacklist__body-image {
+       .blacklist__image {
+         display: inline-block;
+         width: 128px;
+         height: 128px;
+         margin-left: 20px;
+       }
+     }
+     .blacklist__body-title {
+       margin-top: 30px;
+       font-weight: bold;
+     }
+     .blacklist__content {
+       text-align: left;
+       margin-top: 30px;
+       margin-left: 50px;
+       .blacklist__item {
+         margin-top: 10px;
+         .blacklist__key {
+           font-weight: bold;
+         }
+         .blacklist__value {
+         }
+       }
+     }
    }
  }
 </style>

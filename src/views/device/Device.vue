@@ -355,6 +355,7 @@
      toggleAddButton () {
        this.showAddButton = !this.showAddButton;
      },
+     // add form device ip rules
      checkAddDeviceIP (rule, value, callback) {
        if (this.addForm.deviceAddress === 'ip' && (!value || value === '')) {
          callback(new Error('请输入设备IP地址'));
@@ -364,6 +365,7 @@
          callback();
        }
      },
+     // add form device url rules
      checkAddDeviceURL (rule, value, callback) {
        if (this.addForm.deviceAddress === 'url' && (!value || value === '')) {
          callback(new Error('请填写设备URL地址'));
@@ -371,6 +373,7 @@
          callback();
        }
      },
+     // edit form device ip rules
      checkEditDeviceIP (rule, value, callback) {
        if (this.editForm.deviceAddress === 'ip' && (!value || value === '')) {
          callback(new Error('请输入设备IP地址'));
@@ -380,6 +383,7 @@
          callback();
        }
      },
+     // edit form device url rules
      checkEditDeviceURL (rule, value, callback) {
        if (this.editForm.deviceAddress === 'url' && (!value || value === '')) {
          callback(new Error('请填写设备URL地址'));
