@@ -82,7 +82,6 @@
          if (valid) {
            try {
              this.disabled = true;
-             // Crypto TODO
              const response = await this.request(config.loginAPI, this.form, api.post);
              this.disabled = false;
              if (response.data.code === 0) {

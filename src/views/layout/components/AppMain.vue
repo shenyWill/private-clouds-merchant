@@ -18,6 +18,7 @@
    name: 'AppMain',
    data () {
      return {
+       socket: null,
        showAlert: false,
        alertData: null,
        blackList: []
@@ -37,14 +38,14 @@
        this.showAlert = false;
      },
      initSocket (url) {
-       const socket = new Socket(url);
-       socket.connect('guest', 'guest', frame => {
-         socket.subscribe('/face/blacklist', response => {
+       this.socket = new Socket(url);
+       this.socket.connect('guest', 'guest', frame => {
+         this.socket.subscribe('/face/blacklist', response => {
            this.showAlert = true;
            this.alertData = JSON.parse(response.body);
          });
-       }, error => {
-         console.log(error);
+       }, () => {
+         // socket connect error, reconnect
          // this.initSocket(url);
        });
      }

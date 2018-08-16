@@ -2,15 +2,23 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
 class Socket {
+  static created = false;
+  static socket = null;
+  static connected = false;
+
   constructor (socketURL) {
-    const socket = new SockJS(socketURL);
-    const stomp = new Stomp.over(socket);
-    return stomp;
+    if (!Socket.created) {
+      const socket = new SockJS(socketURL);
+      Socket.socket = Stomp.over(socket);
+      Socket.created = true;
+    }
+    return Socket.socket;
   }
 
   connect (login, passcode, callback) {
+    Socket.connected = true;
     this.connect(login, passcode, callback);
-    return this;
+    return Socket.socket;
   }
 
   subscribe (url, callback) {
@@ -18,7 +26,12 @@ class Socket {
   }
 
   disconnect (callback) {
+    Socket.connected = false;
     this.disconnect(callback);
+  }
+
+  isConnected () {
+    return Socket.connected;
   }
 }
 

@@ -12,8 +12,15 @@
     </div>
     <div class="blacklist__body">
       <div class="blacklist__body-image">
-        <img class="blacklist__image" :src="object.imageUrl2" />
-        <img class="blacklist__image" :src="object.imageUrl1" />
+        <span class="blacklist__image-wrapper">
+          <span class="blacklist__image-type">入库头像</span>
+          <img class="blacklist__image" :src="object.imageUrl2" />
+        </span>
+        <span class="blacklist__image-wrapper">
+          <span class="blacklist__image-score">相似度: {{ object.confidence }}%</span>
+          <span class="blacklist__image-type">识别头像</span>
+          <img class="blacklist__image" :src="object.imageUrl1" />
+        </span>
       </div>
       <div class="blacklist__body-title">
         <span class="blacklist__body-name">{{ object.personnelName }}</span>
@@ -131,11 +138,36 @@
    .blacklist__body {
      margin-top: 30px;
      .blacklist__body-image {
-       .blacklist__image {
+       .blacklist__image-wrapper {
+         position: relative;
          display: inline-block;
          width: 128px;
          height: 128px;
+         border: 2px solid red;
          margin-left: 20px;
+         .blacklist__image-score {
+           position: absolute;
+           top: 0;
+           right: 0;
+           font-size: 12px;
+           color: white;
+           text-align: right;
+           background-color: rgba(255, 0, 0, .5);
+         }
+         .blacklist__image-type {
+           position: absolute;
+           left: 0;
+           right: 0;
+           bottom: 0;
+           color: white;
+           text-align: center;
+           background-color: rgba(255, 0, 0, .7);
+         }
+         .blacklist__image {
+           display: inline-block;
+           width: 128px;
+           height: 128px;
+         }
        }
      }
      .blacklist__body-title {

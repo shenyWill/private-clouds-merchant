@@ -124,6 +124,12 @@
         <el-form-item label="设备密码" prop="loginPsw">
           <el-input v-model="deviceForm.loginPsw" placeholder="请输入与设备密码" type="password"></el-input>
         </el-form-item>
+        <el-form-item label="设备品牌名称" prop="brand">
+          <el-input v-model="deviceForm.brand" placeholder="请输入设备类型"></el-input>
+        </el-form-item>
+        <el-form-item label="设备型号系列" prop="brandseries">
+          <el-input v-model="deviceForm.brandseries" placeholder="请输入设备型号系列"></el-input>
+        </el-form-item>
         <el-form-item label="设备地址" prop="deviceAddress">
           <el-select v-model="deviceForm.deviceAddress" placeholder="请选择" @change="changeAddDeviceAddress">
             <el-option
@@ -221,6 +227,12 @@
          ],
          areaName: [
            { required: true, message: '请选择所属区域', trigger: 'change' }
+         ],
+         brand: [
+           { required: true, message: '请输入设备品牌名称', trigger: 'blur' }
+         ],
+         brandseries: [
+           { required: true, message: '请输入设备型号系列', trigger: 'blur' }
          ],
          deviceAddress: [
            { required: true, message: '请选择设备地址', trigger: 'change' }
@@ -434,12 +446,6 @@
      // search request
      onSearch () {
        this.searchResult = this.searchForm;
-       /* const areaName = this.searchForm.areaName;
-        * if (areaName && areaName !== '') {
-        *   this.searchResult = { '区域名称': this.searchForm.areaName };
-        * } else {
-        *   this.searchResult = {};
-        * }*/
        this.currentPage = 1;
        this.fetchData({ limit: this.limit, offset: 0, ...this.searchForm });
      },
