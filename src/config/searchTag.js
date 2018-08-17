@@ -8,5 +8,7 @@ export default {
   confidence: '相似度',
   startTime: '起始时间',
   endTime: '终止时间',
-  libraryTypeId: '库类型'
+  libraryTypeId: '库类型',
+  personnelEquipmentList: '识别设备',
+  personnelDescribe: '人员描述'
 };

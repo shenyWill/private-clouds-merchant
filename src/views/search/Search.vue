@@ -54,14 +54,14 @@ export default {
   computed: {
     equipmentObj () {
       let obj = {};
-      this.equipmentArr.forEach(item => {
-        obj[item.equipmentId] = item.equipmentName;
+      this.equipmentArr && this.equipmentArr.forEach(item => {
+        obj[item.id] = item.equipmentName;
       });
       return obj;
     },
     databaseObj () {
       let obj = {};
-      this.databaseArr.forEach(item => {
+      this.databaseArr && this.databaseArr.forEach(item => {
         obj[item.id] = item.libraryTypeName;
       });
       return obj;

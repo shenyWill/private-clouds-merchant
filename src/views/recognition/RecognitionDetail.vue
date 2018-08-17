@@ -1,14 +1,14 @@
 <template>
     <div class="recognition-detail">
-        <div class="recognition-nav" v-for="obj in recognitionDetail" :key="obj.date">
-            <h3>{{obj.date}}</h3>
+        <div class="recognition-nav" v-for="(obj,key) in recognitionDetail" :key="obj.id">
+            <h3>{{key}}</h3>
             <ul>
-                <li v-for="item in obj.list" :key="item.id" class="recognition-list">
-                    <img :src="item.image" alt="" class="recognition-list-image">
+                <li v-for="item in obj" :key="item.id" class="recognition-list">
+                    <img :src="item.imageUrl1" alt="" class="recognition-list-image">
                     <p class="recognition-list-equipmentName">{{ item.equipmentName }}</p>
                     <p class="recognition-list-content">
-                        <span class="recognition-list-type">{{ item.type }}</span>
-                        <span class="recognition-list-time">{{ item.time }}</span>
+                        <span class="recognition-list-type">{{ item.groupName }}</span>
+                        <span class="recognition-list-time">{{ item.createTime }}</span>
                     </p>
                 </li>
             </ul>
@@ -40,6 +40,9 @@ export default {
     overflow: hidden;
     margin-right: 10px;
     margin-bottom: 10px;
+    &:nth-child(4n) {
+        margin-right: 0;
+    }
     img {
         width: 120px;
         height: 120px;

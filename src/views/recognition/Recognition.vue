@@ -22,7 +22,7 @@
           <el-col :span="5">
             <el-form-item label="设备">
               <el-select v-model="searchForm.equipmentId" size="small">
-                <el-option v-for="item in equipmentArr" :key="item.equipmentId" :label="item.equipmentName" :value="item.equipmentId"></el-option>
+                <el-option v-for="item in equipmentArr" :key="item.id" :label="item.equipmentName" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -83,8 +83,8 @@
           <span><i class="el-icon-time"> 比对时间：{{ item.createTime }}</i></span>
         </div>
         <div class="recognition-card-operation">
-          <i class="el-icon-view" @click="showPersonDetail(item.id)"></i>
-          <i class="el-icon-service" @click="showRecognitionDetail(item.id)"></i>
+          <i class="el-icon-view" @click="showPersonDetail(item.personnelId)"></i>
+          <i class="el-icon-service" @click="showRecognitionDetail(item.personnelId)"></i>
         </div>
       </div>
     </el-card>
@@ -95,7 +95,7 @@
       <PersonDetail :personDetail="personDetail"></PersonDetail>
     </el-dialog>
     <!-- 比对详情 -->
-    <el-dialog :visible.sync="dialogRecognitionDetail" width="30%" custom-class="recognition-detail-show" title="比对详情">
+    <el-dialog :visible.sync="dialogRecognitionDetail" width="31%" custom-class="recognition-detail-show" title="比对详情" :lock-scroll="true">
       <RecognitionDetail :recognitionDetail="recognitionDetail"></RecognitionDetail>
     </el-dialog>
   </div>
@@ -118,7 +118,7 @@ export default {
       count: 0,
       personDetail: {}, // 个人详情
       dialogPersonDetail: false, // 个人详情框是否显示,
-      recognitionDetail: [], // 比对详情
+      recognitionDetail: {}, // 比对详情
       dialogRecognitionDetail: false, // 比对详情框是否显示
       equipmentTypeName: ['人证比对机', '摄像头', '人脸识别门禁平板', '闸机', '门'], // 设备类型名称
       equipmentArr: [], // 设备集合
@@ -163,24 +163,35 @@ export default {
     },
     // 查看个人详情
     async showPersonDetail (id) {
-      const response = await api.post(config.recognition.detail, {id: id});
-      if (Number(response.data.resCode) === 200) {
-        this.personDetail = response.data.data[0];
+      const response = await api.post(config.person.detail, {id: id});
+      if (Number(response.data.code) === 0) {
+        this.personDetail = response.data.data;
         this.dialogPersonDetail = true;
       }
     },
     // 查看比对详情
     async showRecognitionDetail (id) {
       const response = await api.post(config.recognition.compareDetail, {id: id});
-      if (Number(response.data.resCode) === 200) {
-        this.recognitionDetail = response.data.data;
+      if (Number(response.data.code) === 0) {
+        this.recognitionDetail = Object.assign(this.recognitionDetail, response.data.data);
         this.dialogRecognitionDetail = true;
+        console.log(this.recognitionDetail)
       }
+    },
+    // 滚动条再次调用
+    detailScroll () {
+      document.getElementsByClassName('recognition-detail-show')[0].onscroll = () => {
+        let _self = document.getElementsByClassName('recognition-detail-show')[0];
+        let distance = _self.scrollHeight - _self.scrollTop - _self.clientHeight;
+        if (distance < 100) {
+          this.showRecognitionDetail(null);
+        }
+      };
     }
   },
   async mounted () {
     this.responseAPI({limit: 10, offset: 0});
-    let response = await api.post(config.region.devices, {});
+    let response = await api.post(config.device.all, {});
     if (Number(response.data.code) === 0) {
       this.equipmentArr = response.data.data.rows;
     }
@@ -188,6 +199,7 @@ export default {
     if (Number(databaseRes.data.code) === 0) {
       this.databaseArr = databaseRes.data.data.dataList;
     }
+    this.detailScroll();
   },
   watch: {
     searchResult: {
@@ -319,5 +331,10 @@ export default {
 .recognition-detail-show {
   text-align: left;
   border-radius: 15px;
+  height: 700px;
+  overflow-y: scroll;
+}
+.recognition .el-dialog__wrapper {
+  overflow: hidden;
 }
 </style>

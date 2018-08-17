@@ -1,50 +1,25 @@
 <template>
   <div class="person">
-    <Search :searchResult='searchResult'>
+    <Search :searchResult='searchResult' :equipmentArr="deviceList">
       <el-form ref="search-form" :model="searchForm" slot="search-form" label-width="60px" class="search-form-box">
-
         <el-row>
           <el-col :span="5">
             <el-form-item label="姓名">
-              <el-input v-model="searchForm.name" size="small"></el-input>
+              <el-input v-model="searchForm.personnelName" size="small"></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="5" :offset="3">
-            <el-form-item label="库类型">
-              <el-select v-model="searchForm.type" size="small">
-                <el-option label="类型一" value="one"></el-option>
-                <el-option label="类型二" value="two"></el-option>
-              </el-select>
+            <el-form-item label="人员描述">
+              <el-input v-model="searchForm.describe" size="small"></el-input>
             </el-form-item>
           </el-col>
-        </el-row>
 
-        <el-row>
-          <el-col :span="5">
-            <el-form-item label="设备">
-              <el-select v-model="searchForm.config" size="small">
-                <el-option label="设备一" value="one"></el-option>
-                <el-option label="设备二" value="two"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
           <el-col :span="5" :offset="3">
-            <el-form-item label="比对时间">
-              <el-date-picker v-model="searchForm.startDate" type="datetime" placeholder="请选择开始时间" size="small"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="5">
-            <el-form-item label="至" label-width="40px">
-              <el-date-picker v-model="searchForm.endDate" type="datetime" placeholder="请选择结束时间" size="small"></el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="相似度">
-              <el-slider v-model="searchForm.slider" :min="60" :max="100" class="search-slider"></el-slider>
+            <el-form-item label="识别设备">
+              <el-select v-model="searchForm.equipmentId" size="small">
+                <el-option :label="item.equipmentName" :value="item.id" v-for="item in deviceList" :key="item.id"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -75,7 +50,7 @@
             <i class="el-icon-more"></i>
           </el-tooltip>
           <div class="list-content">
-            <img :src="item.personnelImgList[0].imageUrl" class="person-image">
+            <img :src="item.personnelImgList[0] && (item.url + item.personnelImgList[0].imageUrl)" class="person-image">
             <p class="person-name">{{ item.personnelName }}</p>
             <p class="person-position">{{ item.personnelDescribe }}</p>
             <p class="person-company">{{ item.groupName }}</p>
@@ -86,7 +61,7 @@
         </el-card>
     </div>
     <!-- 分页 -->
-    <el-pagination :disabled='deleteAllOperationTag' background layout="prev,pager,next" :total="count" class="paging" @current-change="handleCurrentChange"></el-pagination>
+    <el-pagination :page-size="9" :current-page.sync="currentPage" :disabled='deleteAllOperationTag' background layout="prev,pager,next" :total="count" class="paging" @current-change="handleCurrentChange"></el-pagination>
     <!-- 显示详情 -->
     <el-dialog :visible.sync="dialogPersonDetail" width="25%" custom-class="person-detail-show">
       <PersonDetail :personDetail="personDetail"></PersonDetail>
@@ -151,9 +126,10 @@ export default {
     // 请求
     async responseAPI (data = {}) {
       !data.libraryId && (data.libraryId = this.$route.query.id);
-      !data.pageSize && (data.pageSize = 10);
+      !data.pageSize && (data.pageSize = 9);
       !data.page && (data.page = 1);
-      const response = await api.post(config.person.list, data);
+      let requestObj = {...data, ...this.searchResult};
+      const response = await api.post(config.person.list, requestObj);
       if (Number(response.data.code) === 0) {
         this.count = response.data.data.totalCount;
         this.personList = response.data.data.dataList;
@@ -167,7 +143,7 @@ export default {
     },
     // 查看详情
     async showPersonDetail (id) {
-      const response = await api.post(config.person.detail, {personnelId: id, libraryId: this.$route.query.id});
+      const response = await api.post(config.person.detail, {personnelId: id});
       if (Number(response.data.code) === 0) {
         this.personDetail = response.data.data;
         this.dialogPersonDetail = true;
@@ -255,6 +231,7 @@ export default {
       let subObj = {...val};
       if (this.addOrEdit === 0) {
         subObj.libraryId = this.$route.query.id;
+        this.currentPage = 1;
       }
       await api.post(config.person.add, subObj);
       await this.responseAPI();
@@ -268,7 +245,7 @@ export default {
     if (Number(personTypeAPI.data.code) === 0) {
       this.personTypeList = personTypeAPI.data.data.dataList;
     }
-    let deviceListAPI = await api.post(config.device.list, {});
+    let deviceListAPI = await api.post(config.device.all, {});
     if (Number(deviceListAPI.data.code) === 0) {
       this.deviceList = deviceListAPI.data.data.rows;
     }
@@ -277,7 +254,7 @@ export default {
     searchResult: {
       handler (newVal, oldVal) {
         this.searchForm = { ...newVal };
-        this.responseAPI(this.searchForm);
+        this.responseAPI({...this.searchForm});
       },
       deep: true
     }

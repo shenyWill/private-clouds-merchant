@@ -47,7 +47,7 @@
             </el-form-item>
             <el-form-item>
                 <el-col :span="24" :offset="18">
-                    <el-button type="primary" @click="onSubmit('add-person-form')">确认添加</el-button>
+                    <el-button type="primary" @click="onSubmit('add-person-form')">{{ addOrEdit==0 ? '确认添加' : '确认修改' }}</el-button>
                 </el-col>
             </el-form-item>
         </el-form>
@@ -87,6 +87,7 @@ export default {
       moreFacePosition: '', // 选择多张图片是在第几个框
       personType: {}, // 人员类型
       addPersonForm: {},
+      imagePersonnelId: '', // 修改图片所需人员ID
       equipmentNav: [
         {
           label: '东北',
@@ -161,9 +162,11 @@ export default {
             });
           }
           if (Number(response.data.code) === 1) {
-            this[val] = data;
-            this.addPersonForm[val] = data;
-            this.showImageUrl = data;
+            if (Number(this.addOrEdit) === 1) {
+              await this.editImage(data, val);
+            } else {
+              this[val] = this.addPersonForm[val] = this.showImageUrl = data;
+            }
           }
           if (Number(response.data.code) > 1) {
             this.mainImg = data;
@@ -175,6 +178,25 @@ export default {
         }
         this.fullscreenLoading = false;
       };
+    },
+    // 编辑时修改图片
+    async editImage (imgUrl, imgIndex) {
+      let requerstObj = {};
+      requerstObj[imgIndex] = imgUrl;
+      requerstObj.personnelId = this.imagePersonnelId;
+      let imageResponse = await api.post(config.person.updateImage, requerstObj);
+      if (Number(imageResponse.data.code) === 0) {
+        this[imgIndex] = this.addPersonForm[imgIndex] = this.showImageUrl = imgUrl;
+        this.$message({
+          type: 'success',
+          message: imageResponse.data.msg
+        });
+      } else {
+        this.$message({
+          type: 'error',
+          message: imageResponse.data.msg
+        });
+      }
     },
     handleFirstImageChange (file, fileList) {
       this.handleImageChange(file, fileList, 'image1');
@@ -217,9 +239,13 @@ export default {
       this.addPersonForm = { equipmentList: [] };
     },
     // 选择图片
-    checkImage () {
+    async checkImage () {
+      if (this.addOrEdit === 1) {
+        await this.editImage(('data:image/png;base64,' + this.checkImageUrl), this.moreFacePosition);
+      } else {
         this.showImageUrl = this[this.moreFacePosition] = this.addPersonForm[this.moreFacePosition] = 'data:image/png;base64,' + this.checkImageUrl;
-        this.showForm = true;
+      }
+      this.showForm = true;
     }
   },
   watch: {
@@ -228,12 +254,20 @@ export default {
         if (this.addOrEdit === 1) {
           let equipmentList = [];
           let disSwitch;
+          this.imagePersonnelId = newVal.personnelId;
           newVal.personnelEquipmentList.forEach(item => equipmentList.push(item.equipmentId));
           if (Number(newVal.disSwitch) === 1) {
             disSwitch = true;
           } else {
             disSwitch = false;
           }
+          if (newVal.personnelImgList) {
+            newVal.personnelImgList.forEach((item, index) => {
+              this.$set(this.addPersonForm, `image${index + 1}`, newVal.url + item.imageUrl);
+              this[`image${index + 1}`] = newVal.url + item.imageUrl;
+            });
+            this.showImageUrl = newVal.url + newVal.personnelImgList[0].imageUrl;
+          };
           this.$set(this.addPersonForm, 'describe', newVal.personnelDescribe);
           this.$set(this.addPersonForm, 'disEndTime', new Date(newVal.disEndTime));
           this.$set(this.addPersonForm, 'disStartTime', new Date(newVal.disStartTime));

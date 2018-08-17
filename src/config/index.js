@@ -23,12 +23,13 @@ export default {
     delete: '/libraryPersonnel/delPersonnel',
     deleteAll: '/libraryPersonnel/delPersonnel',
     add: '/libraryPersonnel/savePersonnel',
-    checkImage: '/libraryPersonnel/checkPersonnelImage'
+    checkImage: '/libraryPersonnel/checkPersonnelImage',
+    updateImage: '/libraryPersonnel/modifyPersonnelImg'
   },
   recognition: {
     list: '/distinguishRecord/info/list',
     detail: '/recognition/detail',
-    compareDetail: '/recognition/compareDetail'
+    compareDetail: '/distinguishRecord/info/recordList'
   },
   database: {
     list: '/library/searchLibraryList',

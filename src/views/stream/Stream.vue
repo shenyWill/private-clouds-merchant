@@ -34,7 +34,7 @@
           class="stream__compare-item">
         </StreamCompare>
       </div>
-    </div>    
+    </div>
     <div class="stream__capture">
       <p class="stream__capture-title">实时抓拍</p>
       <div class="stream__capture-list">
