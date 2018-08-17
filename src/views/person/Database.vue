@@ -23,7 +23,7 @@
             <p class="database-list-group">所属组织： {{ obj.groupName }}</p>
           </div>
           <i class="el-icon-view detabase-detail detabase-opa" @click.self.stop="goPerson(obj.libraryId)"></i>
-          <i class="el-icon-circle-plus-outline detabase-add detabase-opa"></i>
+          <i class="el-icon-circle-plus-outline detabase-add detabase-opa" @click.self.stop="addPerson(obj.libraryId)"></i>
           <i class="el-icon-edit detabase-edit detabase-opa" @click.self.stop="addDatabase(obj)"></i>
           <i class="el-icon-delete detabase-delete detabase-opa" @click.self.stop="deleteDatabase(obj)"></i>
       </el-card>
@@ -64,7 +64,11 @@
     </el-dialog>
 
      <!-- 分页 -->
-    <el-pagination background layout="prev,pager,next" :current-page.sync="currentPage" :total="count" class="paging" @current-change="handleCurrentChange"></el-pagination>
+    <el-pagination background layout="prev,pager,next" :current-page.sync="currentPage" :total="count+1" class="paging" @current-change="handleCurrentChange"></el-pagination>
+    <!-- 添加人员 -->
+    <el-dialog :visible.sync="dialogPersonAdd" width="25%" custom-class="person-detail-add" title="编辑人员信息" :before-close="removePersonAddForm">
+      <PersonAdd :editObj="editObj" :addOrEdit="personAddOrEdit" :deviceList="deviceList" :personTypeList="personTypeList" @addSumbit="addSumbit" ref="person-add"></PersonAdd>
+    </el-dialog>
   </div>
 </template>
 
@@ -73,6 +77,7 @@ import api from '@/api';
 import config from '@/config';
 import icon from '@/config/icon.js';
 import { scollTop } from '@/utils';
+import PersonAdd from '@/views/person/PersonAdd';
  export default {
    name: 'Database',
    data () {
@@ -89,6 +94,12 @@ import { scollTop } from '@/utils';
        deleteDatabaseId: '', // 删除人员ID
        currentPage: 1, // 当前页数
        count: 0, // 总条数
+       personTypeList: [], // 人员类型
+       deviceList: [], // 设备列表
+       personAddOrEdit: 0, // 0--> 增加， 1--> 编辑
+       editObj: {}, // 编辑人员的对象
+       dialogPersonAdd: false, // 添加人员框是否显示
+       currentLibraryId: '', // 当前库ID
        databaseRule: {
          libraryName: [
             { required: true, message: '请输入库名称', trigger: 'blur' }
@@ -98,6 +109,9 @@ import { scollTop } from '@/utils';
          ]
        }
      };
+   },
+   components: {
+     PersonAdd
    },
    methods: {
      async responseAPI (data = {}) {
@@ -147,18 +161,20 @@ import { scollTop } from '@/utils';
     async databaseSumbit () {
       this.$refs['database-form'].validate(async (valid) => {
         if (valid) {
-          let apiUrl, resMsg;
+          let apiUrl, resMsg, editAddPage;
           if (this.addOrEdit === 0) {
             apiUrl = config.database.add;
             resMsg = '人员库添加成功';
+            editAddPage = 1;
           } else {
             apiUrl = config.database.edit;
             resMsg = '人员库修改成功';
+            editAddPage = this.currentPage;
           }
           let response = await api.post(apiUrl, {...this.addForm});
           if (Number(response.data.code) === 0) {
-            this.responseAPI({page: 1, pageSize: 9});
-            this.currentPage = 1;
+            this.responseAPI({page: editAddPage, pageSize: 9});
+            this.currentPage = editAddPage;
             this.$message({
               type: 'success',
               message: resMsg
@@ -214,12 +230,40 @@ import { scollTop } from '@/utils';
     handleCurrentChange (val) {
       this.responseAPI({page: val, pageSize: 9});
       scollTop(80);
+    },
+    // 增加人员
+    addPerson (id) {
+      this.$refs['person-add'] && this.$refs['person-add'].personClearValidate('add-person-form');
+      this.dialogPersonAdd = true;
+      this.currentLibraryId = id;
+    },
+    // 关闭添加人员前清空添加人员列表
+    removePersonAddForm (done) {
+      this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
+      done();
+    },
+    // 提交添加人员
+    async addSumbit (val) {
+      let subObj = {...val};
+      subObj.libraryId = this.currentLibraryId;
+      await api.post(config.person.add, subObj);
+      await this.responseAPI({page: 1, pageSize: 9});
+      this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
+      this.dialogPersonAdd = false;
     }
    },
    async mounted () {
-     this.responseAPI({page: 1, pageSize: 9});
-     this.responseTypeAPI();
-     this.iconObj = icon;
+      this.responseAPI({page: 1, pageSize: 9});
+      this.responseTypeAPI();
+      this.iconObj = icon;
+      let personTypeAPI = await api.post(config.database.list, {});
+      if (Number(personTypeAPI.data.code) === 0) {
+        this.personTypeList = personTypeAPI.data.data.dataList;
+      }
+      let deviceListAPI = await api.post(config.device.list, {});
+      if (Number(deviceListAPI.data.code) === 0) {
+        this.deviceList = deviceListAPI.data.data.rows;
+      }
    }
  };
 </script>

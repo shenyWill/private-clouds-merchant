@@ -92,7 +92,7 @@ export default new Router({
         path: '/person/database',
         component: Database,
         name: 'Database',
-        meta: { title: '库管理', icon: '', cache: true }
+        meta: { title: '库管理', icon: '' }
       }]
     }, {
       path: '/recognize',

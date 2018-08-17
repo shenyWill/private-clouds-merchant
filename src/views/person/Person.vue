@@ -70,12 +70,12 @@
         <el-card class="person-list" v-for="item in personList" :key="item.personnelId" @click.native="showPersonDetail(item.personnelId)">
           <el-tooltip placement="bottom-end" popper-class="person-pop">
             <div slot="content">
-              <i class="el-icon-edit"></i>　<i class="el-icon-delete" @click.self.stop="movePeople(item.personnelId)"></i>
+              <i class="el-icon-edit" @click.self.stop="editPeople(item)"></i>　<i class="el-icon-delete" @click.self.stop="movePeople(item.personnelId)"></i>
             </div>
             <i class="el-icon-more"></i>
           </el-tooltip>
           <div class="list-content">
-            <img :src="item.imageUrl" class="person-image">
+            <img :src="item.personnelImgList[0].imageUrl" class="person-image">
             <p class="person-name">{{ item.personnelName }}</p>
             <p class="person-position">{{ item.personnelDescribe }}</p>
             <p class="person-company">{{ item.groupName }}</p>
@@ -106,7 +106,7 @@
     </div>
     <!-- 添加人员 -->
     <el-dialog :visible.sync="dialogPersonAdd" width="25%" custom-class="person-detail-add" title="编辑人员信息" :before-close="removePersonAddForm">
-      <PersonAdd :deviceList="deviceList" :personTypeList="personTypeList" @addSumbit="addSumbit" ref="person-add"></PersonAdd>
+      <PersonAdd :editObj="editObj" :addOrEdit="addOrEdit" :deviceList="deviceList" :personTypeList="personTypeList" @addSumbit="addSumbit" ref="person-add"></PersonAdd>
     </el-dialog>
   </div>
 </template>
@@ -133,7 +133,9 @@ export default {
       deleteAllOperationTag: false, // 进入删除全部标识
       deletePeopleList: [], //  删除人员集合
       dialogPersonAdd: false, // 添加人员框是否显示
-      currentPage: 1 // 当前页
+      currentPage: 1, // 当前页
+      addOrEdit: 0, // 0--> 增加， 1--> 编辑
+      editObj: {} // 编辑人员的对象
     };
   },
   components: {
@@ -230,20 +232,31 @@ export default {
       this.deletePeopleList = [];
       this.deleteAllOperationTag = false;
     },
-    // 关闭添加人员前情况添加人员列表
+    // 关闭添加人员前清空添加人员列表
     removePersonAddForm (done) {
       this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
       done();
     },
     // 添加人员
     addPerson () {
+      this.addOrEdit = 0;
+      this.$refs['person-add'] && this.$refs['person-add'].personClearValidate('add-person-form');
+      this.dialogPersonAdd = true;
+    },
+    // 编辑人员
+    editPeople (obj) {
+      this.addOrEdit = 1;
+      this.editObj = {...obj};
       this.$refs['person-add'] && this.$refs['person-add'].personClearValidate('add-person-form');
       this.dialogPersonAdd = true;
     },
     // 提交添加人员
     async addSumbit (val) {
-      let addObj = {...val};
-      await api.post(config.person.add, addObj);
+      let subObj = {...val};
+      if (this.addOrEdit === 0) {
+        subObj.libraryId = this.$route.query.id;
+      }
+      await api.post(config.person.add, subObj);
       await this.responseAPI();
       this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
       this.dialogPersonAdd = false;
@@ -251,7 +264,7 @@ export default {
   },
   async mounted () {
     this.responseAPI();
-    let personTypeAPI = await api.post(config.database.typeList, {});
+    let personTypeAPI = await api.post(config.database.list, {});
     if (Number(personTypeAPI.data.code) === 0) {
       this.personTypeList = personTypeAPI.data.data.dataList;
     }

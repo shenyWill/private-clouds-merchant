@@ -22,9 +22,9 @@
             <el-form-item label="人员描述" prop="describe">
                 <el-input v-model="addPersonForm.describe"></el-input>
             </el-form-item>
-            <el-form-item label="人员类型" prop="libraryId">
-                <el-select v-model="addPersonForm.libraryId" placeholder="请选择人员类型">
-                    <el-option :label="item.libraryTypeName" :value="item.id" v-for="item in personTypeList" :key="item.id"></el-option>
+            <el-form-item label="选择库" prop="libraryId" v-if="addOrEdit==1">
+                <el-select v-model="addPersonForm.libraryId" placeholder="请选择库">
+                    <el-option :label="item.libraryName" :value="item.libraryId" v-for="item in personTypeList" :key="item.libraryId"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="开始时间" prop="disStartTime">
@@ -79,7 +79,6 @@ export default {
       image1: '',
       image2: '',
       image3: '',
-      addPersonForm: {},
       fullscreenLoading: false,
       showForm: true, // 展示增加框还是图片选择框
       moreFaceObj: {}, // 多张人脸对象
@@ -87,6 +86,7 @@ export default {
       checkImageUrl: '', // 选择的图片url
       moreFacePosition: '', // 选择多张图片是在第几个框
       personType: {}, // 人员类型
+      addPersonForm: {},
       equipmentNav: [
         {
           label: '东北',
@@ -141,7 +141,7 @@ export default {
       }
     };
   },
-  props: ['personTypeList', 'deviceList'],
+  props: ['personTypeList', 'deviceList', 'addOrEdit', 'editObj'],
   methods: {
     async handleImageChange (file, fileList, val) {
       this.fullscreenLoading = true;
@@ -220,6 +220,32 @@ export default {
     checkImage () {
         this.showImageUrl = this[this.moreFacePosition] = this.addPersonForm[this.moreFacePosition] = 'data:image/png;base64,' + this.checkImageUrl;
         this.showForm = true;
+    }
+  },
+  watch: {
+    editObj: {
+      handler: function (newVal, oldVal) {
+        if (this.addOrEdit === 1) {
+          let equipmentList = [];
+          let disSwitch;
+          newVal.personnelEquipmentList.forEach(item => equipmentList.push(item.equipmentId));
+          if (Number(newVal.disSwitch) === 1) {
+            disSwitch = true;
+          } else {
+            disSwitch = false;
+          }
+          this.$set(this.addPersonForm, 'describe', newVal.personnelDescribe);
+          this.$set(this.addPersonForm, 'disEndTime', new Date(newVal.disEndTime));
+          this.$set(this.addPersonForm, 'disStartTime', new Date(newVal.disStartTime));
+          this.$set(this.addPersonForm, 'disSwitch', newVal.disSwitch);
+          this.$set(this.addPersonForm, 'equipmentList', equipmentList);
+          this.$set(this.addPersonForm, 'libraryId', newVal.libraryId);
+          this.$set(this.addPersonForm, 'disSwitch', disSwitch);
+          this.$set(this.addPersonForm, 'personnelName', newVal.personnelName);
+        }
+      },
+      deep: true,
+      immediate: true
     }
   }
 };

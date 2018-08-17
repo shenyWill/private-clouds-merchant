@@ -16,6 +16,10 @@
                 <span class="people-detail-content-key">组　　织：</span>
                 <span class="people-detail-content-value">{{ personDetail.groupName }}</span>
             </p>
+             <p class="people-detail-library">
+                <span class="people-detail-content-key">所在库　：</span>
+                <span class="people-detail-content-value">{{ personDetail.libraryName }}</span>
+            </p>
             <p class="people-detail-status">
                 <span class="people-detail-content-key">识别开关：</span>
                 <span class="people-detail-content-value">{{ personDetail.disSwitch == '0' ? '关' : '开' }}</span>

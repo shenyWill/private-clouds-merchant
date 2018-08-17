@@ -7,12 +7,7 @@ export default [{
   name: '人员管理',
   path: '/person',
   icon: 'el-icon-sold-out',
-  children: [{
-    name: '人员信息',
-    path: '/person/index',
-    icon: 'el-icon-menu',
-    children: []
-  }, {
+  children: [ {
     name: '人员管理',
     path: '/person/database',
     icon: 'el-icon-menu',

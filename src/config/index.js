@@ -6,7 +6,8 @@ export default {
     list: '/equipment/info/list',
     add: '/equipment/info/save',
     update: '/equipment/info/save',
-    delete: '/equipment/info/remove'
+    delete: '/equipment/info/remove',
+    allList: '/equipment/info/allList'
   },
   region: {
     list: '/area/info/list',
