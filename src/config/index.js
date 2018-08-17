@@ -42,6 +42,9 @@ export default {
     list: '/system/configure/list',
     update: '/system/configure/save'
   },
+  stream: {
+    streamingURL: '/equipment/info/getMediaUrl'
+  },
   deviceType: [{
     value: '1',
     label: '人证比对机'

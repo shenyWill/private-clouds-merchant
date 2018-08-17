@@ -110,10 +110,13 @@
           <el-input v-model="addForm.loginPsw" placeholder="请输入密码" type="password"></el-input>
         </el-form-item>
         <el-form-item label="设备品牌名称" prop="brand">
-          <el-input v-model="deviceForm.brand" placeholder="请输入设备类型"></el-input>
+          <el-input v-model="addForm.brand" placeholder="请输入设备类型"></el-input>
         </el-form-item>
         <el-form-item label="设备型号系列" prop="brandseries">
-          <el-input v-model="deviceForm.brandseries" placeholder="请输入设备型号系列"></el-input>
+          <el-input v-model="addForm.brandseries" placeholder="请输入设备型号系列"></el-input>
+        </el-form-item>
+        <el-form-item label="设备播放地址" prop="mediaUrl">
+          <el-input v-model="addForm.mediaUrl" placeholder="请输入设备rtsp/rtmp地址"></el-input>
         </el-form-item>
         <el-form-item label="设备地址" prop="deviceAddress">
           <el-select v-model="addForm.deviceAddress" placeholder="请选择" @change="changeAddressAddType">
@@ -166,6 +169,15 @@
         </el-form-item>
         <el-form-item label="设备密码" prop="loginPsw">
           <el-input v-model="editForm.loginPsw" placeholder="请填写设备密码" type="password"></el-input>
+        </el-form-item>
+        <el-form-item label="设备品牌名称" prop="brand">
+          <el-input v-model="editForm.brand" placeholder="请输入设备类型"></el-input>
+        </el-form-item>
+        <el-form-item label="设备型号系列" prop="brandseries">
+          <el-input v-model="editForm.brandseries" placeholder="请输入设备型号系列"></el-input>
+        </el-form-item>
+        <el-form-item label="设备播放地址" prop="mediaUrl">
+          <el-input v-model="editForm.mediaUrl" placeholder="请输入设备rtsp/rtmp地址"></el-input>
         </el-form-item>
         <el-form-item label="设备地址" prop="deviceAddress">
           <el-select v-model="editForm.deviceAddress" placeholder="请选择" @change="changeAddressEditType">
@@ -283,6 +295,10 @@
          brandseries: [
            { required: true, message: '请输入设备型号系列', trigger: 'blur' }
          ],
+         mediaUrl: [
+           { required: true, message: '请输入设备rtsp或者rtmp地址', trigger: 'blur' },
+           { validator: this.checkDeviceMediaURL, trigger: 'blur' }
+         ],
          deviceAddress: [
            { required: true, message: '请选择', trigger: 'change' }
          ],
@@ -315,6 +331,16 @@
          ],
          areaId: [
            { required: true, message: '请选择所属区域', trigger: 'change' }
+         ],
+         brand: [
+           { required: true, message: '请输入设备品牌名称', trigger: 'blur' }
+         ],
+         brandseries: [
+           { required: true, message: '请输入设备型号系列', trigger: 'blur' }
+         ],
+         mediaUrl: [
+           { required: true, message: '请输入设备rtsp或者rtmp地址', trigger: 'blur' },
+           { validator: this.checkDeviceMediaURL, trigger: 'blur' }
          ],
          deviceAddress: [
            { required: true, message: '请选择', trigger: 'change' }
@@ -366,6 +392,13 @@
      },
      toggleAddButton () {
        this.showAddButton = !this.showAddButton;
+     },
+     checkDeviceMediaURL (rule, value, callback) {
+       if (!value.startsWith('rtsp://') && !value.startsWith('rtmp://')) {
+         callback(new Error('请输入设备正确rtsp或者rtmp地址'));
+       } else {
+         callback();
+       }
      },
      // add form device ip rules
      checkAddDeviceIP (rule, value, callback) {
@@ -460,7 +493,7 @@
              const response = await api.post(config.device.update, this.editForm);
              this.editDialog = false;
              if (response.data.code === 0) {
-               this.$message({ type: 'success', message: '添加成功' });
+               this.$message({ type: 'success', message: '修改成功' });
                this.fetchData({ offset: this.offset, limt: this.limit, ...this.searchForm });
              } else {
                this.$message({ type: 'error', message: response.data.msg });

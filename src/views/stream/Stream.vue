@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="stream">
     <div class="stream__video-wrapper">
       <div class="camera-title">
@@ -14,21 +14,21 @@
         </el-select>
       </div>
       <video
-        id="camera-monitor"
+        id="player"
+        ref="player"
         class="video-js vjs-default-skin vjs-fluid"
+        preload
         autoplay
         width="1280"
         height="720"
-        data-setup="{}" >
-        <source src="rtmp://172.16.19.150:1935/live/84a3e6dfbb07f149">
-        <!-- <source src="http://172.16.19.150:9580/live/84a3e6dfbb07f149.flv"> -->
-        <!-- <source src="rtsp://172.16.19.150:9554/live/84a3e6dfbb07f149"> -->
+        data-setup="{}">
+        <source :src="streamUrl">
       </video>
     </div>
 
     <div class="stream__compare">
       <p class="compare-title">识别记录</p>
-      <div class="stream__compare-list">
+      <div class="stream__compare-list" v-if="compareList.length > 0">
         <StreamCompare
           v-for="(item, index) in compareList"
           :key="index"
@@ -36,16 +36,22 @@
           class="stream__compare-item">
         </StreamCompare>
       </div>
+      <div v-else class="stream__empty">
+        暂无识别比对记录
+      </div>
     </div>
     <div class="stream__capture">
       <p class="stream__capture-title">实时抓拍</p>
-      <div class="stream__capture-list">
+      <div class="stream__capture-list" v-if="captureList.length > 0">
         <StreamCapture
           class="stream__capture-item"
           v-for="(item, index) in captureList"
           :item="item"
           :key="index">
         </StreamCapture>
+      </div>
+      <div v-else class="stream__empty">
+        暂无抓拍记录
       </div>
     </div>
   </div>
@@ -71,7 +77,8 @@
        captureList: [], // capture data list
        compareList: [], // compare data list
        cameraOption: [],
-       cameraMonitorUrl: ''
+       cameraMonitorUrl: '',
+       streamUrl: 'rtmp://172.16.19.150:1935/live/84a3e6dfbb07f149' // current streaming url
      };
    },
    computed: {
@@ -84,9 +91,17 @@
      StreamCompare
    },
    methods: {
-     switchCamera (newVal) {
-       // TODO
+     // el-select switch video streaming url
+     async switchCamera (newVal) {
        this.destroyPlayer();
+       const response = await api.post(config.stream.streamingURL, {id: newVal});
+       if (response.data.code === 0) {
+         const data = JSON.parse(response.data.data);
+         this.streamUrl = data.rtmp;
+         this.setupPlayer(data.rtmp);
+       } else {
+         this.$message({ type: 'error', message: response.data.msg });
+       }
      },
      // fetch camera list
      async fetchCameraList () {
@@ -108,20 +123,21 @@
      },
      // init video player
      setupPlayer (url) {
-       videojs.options.flash.swf = '@/assets/video-js.swf';
-       this.player = videojs('camera-monitor', {
-       });
-       this.player.ready(function () {
-         this.player.width(1280).height(720);
-         this.src(url);
-         this.load();
-         this.play();
+       this.player = videojs('player', {});
+       this.streamUrl = url;
+       this.$refs.player.src = this.streamUrl;
+       this.player.ready(() => {
+         this.player.src(url);
+         this.player.load();
+         this.player.play();
+         this.subscribeSocket();
        });
      },
      // dispose player when component destroyed
      destroyPlayer () {
-       this.player.ready(function () {
-         this.dispose();
+       if (!this.player) return;
+       this.player.ready(() => {
+         this.player.dispose();
          this.player = null;
        });
      },
@@ -140,9 +156,8 @@
      }
    },
    async mounted () {
-     this.subscribeSocket();
+     this.setupPlayer(this.streamUrl);
      this.cameraOption = await this.fetchCameraList();
-     this.setupPlayer('rtmp://172.16.19.150:1935/live/84a3e6dfbb07f149');
    },
    destroyed () {
      this.destroyPlayer();
@@ -226,6 +241,12 @@
          box-sizing: border-box;
        }
      }
+   }
+   .stream__empty {
+     padding-top: 50px;
+     text-align: center;
+     font-weight: bold;
+     font-size: 24px;
    }
  }
 </style>

@@ -130,6 +130,9 @@
         <el-form-item label="设备型号系列" prop="brandseries">
           <el-input v-model="deviceForm.brandseries" placeholder="请输入设备型号系列"></el-input>
         </el-form-item>
+        <el-form-item label="设备播放地址" prop="mediaUrl">
+          <el-input v-model="deviceForm.mediaUrl" placeholder="请输入设备rtsp/rtmp地址"></el-input>
+        </el-form-item>
         <el-form-item label="设备地址" prop="deviceAddress">
           <el-select v-model="deviceForm.deviceAddress" placeholder="请选择" @change="changeAddDeviceAddress">
             <el-option
@@ -234,6 +237,10 @@
          brandseries: [
            { required: true, message: '请输入设备型号系列', trigger: 'blur' }
          ],
+         mediaUrl: [
+           { required: true, message: '请输入设备rtsp或者rtmp地址', trigger: 'blur' },
+           { validator: this.checkAddDeviceMediaURL, trigger: 'blur' }
+         ],
          deviceAddress: [
            { required: true, message: '请选择设备地址', trigger: 'change' }
          ],
@@ -288,6 +295,13 @@
        this.currentPage = val;
        this.offset = (val - 1) * this.limit;
        this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
+     },
+     checkAddDeviceMediaURL (rule, value, callback) {
+       if (!value.startsWith('rtsp://') && !value.startsWith('rtmp://')) {
+         callback(new Error('请输入设备正确rtsp或者rtmp地址'));
+       } else {
+         callback();
+       }
      },
      checkAddDeviceIP (rule, value, callback) {
        if (this.deviceForm.deviceAddress === 'ip' && (!value || value === '')) {
