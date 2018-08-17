@@ -4,6 +4,7 @@
       <img :src="item.imageUrl2" class="stream-compare__image" />
     </span>
     <span class="stream-compare__image-wrapper">
+      <span class="stream-compare__image-score">{{ item.confidence }}%</span>
       <img :src="item.imageUrl1" class="stream-compare__image" />
     </span>
     <div class="stream-compare__content">
@@ -54,6 +55,19 @@
        display: inline;
        width: 108px;
        height: 108px;
+       border-radius: 10px;
+     }
+     .stream-compare__image-score {
+       position: absolute;
+       padding: 5px;
+       min-width: 40px;
+       top: 0;
+       right: 0;
+       font-size: 14px;
+       color: white;
+       text-align: right;
+       border-radius: 10px;
+       background-color: rgba(74, 73, 72, 0.8);
      }
    }
    .stream-compare__content {
@@ -69,6 +83,13 @@
        margin-bottom: 10px;
        .stream-compare__name {
          font-weight: bold;
+       }
+     }
+     .stream-compare__tag .el-tag {
+       background-color: #008aff;
+       color: white;
+       &:hover {
+         cursor: pointer;
        }
      }
      .stream-compare__time {

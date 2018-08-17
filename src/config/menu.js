@@ -1,9 +1,4 @@
 export default [{
-  name: '系统首页',
-  path: '/index',
-  icon: 'el-icon-goods',
-  children: []
-}, {
   name: '人员管理',
   path: '/person',
   icon: 'el-icon-sold-out',

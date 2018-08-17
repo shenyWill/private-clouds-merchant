@@ -13,7 +13,12 @@
         <div @click="logout">退出登录</div>
       </div>
     </div>
-    <el-dialog title="设置" :visible.sync="settingDialog" width="25%" :append-to-body="true">
+    <el-dialog
+      class="alert-dialog"
+      title="设置"
+      :visible.sync="settingDialog"
+      width="25%"
+      :append-to-body="true">
       <el-form label-width="100px">
         <el-form-item label="报警弹窗开关">
           <el-switch
@@ -75,9 +80,10 @@
        const response = await api.post(config.system.update, data);
        if (response.data.code === 0) {
          this.$message({ type: 'success', message: '更新成功' });
-         this.showMenu = false;
+         this.settingDialog = false;
        } else {
          this.$message({ type: 'error', message: response.data.msg });
+         this.settingDialog = false;
        }
      },
      async switchDialog (newVal) {
@@ -86,9 +92,10 @@
        const response = await api.post(config.system.update, data);
        if (response.data.code === 0) {
          this.$message({ type: 'success', message: '更新成功' });
-         this.showMenu = false;
+         this.settingDialog = false;
        } else {
          this.$message({ type: 'error', message: response.data.msg });
+         this.settingDialog = false;
        }
      },
      async fetchConfig () {
@@ -96,10 +103,12 @@
        if (response.data.code === 0) {
          const data = response.data.configure;
          data.forEach(item => {
-           // alert sound
+           // configure type
+           // 2: blacklist alert sound
+           // 3: blacklist show dialog
            if (item.configureType === '2') {
              this.alertSound = item.parameterValue === '1';
-           } else if (item.configureType === '3') { // blacklist dialog 3
+           } else if (item.configureType === '3') {
              this.alertDialog = item.parameterValue === '1';
            }
          });
@@ -108,7 +117,7 @@
        }
      },
      async logout () {
-       const response = await api.post(config.logoutAPI);
+       const response = await api.post(config.logoutAPI, {});
        if (response.data.code === 0) {
          this.logout();
          this.$router.push('/login');
@@ -145,19 +154,6 @@
      border-right: 16px solid transparent;
      border-left: 16px solid transparent;
    }
-   .el-dialog {
-     border-radius: 20px;
-     padding: 0;
-     padding-left: 20px;
-     .el-dialog__header {
-       font-weight: bold;
-       border-bottom: 1px solid lightgray;
-     }
-     .el-form {
-       margin: 0 auto;
-       width: 300px;
-     }
-   }
    .navbar__menu {
      position: absolute;
      top: 65px;
@@ -191,5 +187,18 @@
    width: 40px;
    height: 40px;
    border-radius: 20px;
+ }
+ .alert-dialog .el-dialog {
+   border-radius: 20px;
+   padding: 0;
+   padding-left: 20px;
+   .el-dialog__header {
+     font-weight: bold;
+     border-bottom: 1px solid lightgray;
+   }
+   .el-form {
+     margin: 0 auto;
+     width: 300px;
+   }
  }
 </style>

@@ -47,10 +47,17 @@
      display: block;
      width: 128px;
      height: 128px;
+     margin-bottom: 10px;
+     border-radius: 10px;
    }
    .stream-capture__content {
      text-align: center;
      font-size: 12px;
+     .stream-capture__type {
+       overflow: hidden;
+       text-overflow: ellipsis;
+       white-space: nowrap;
+     }
    }
  }
 </style>

@@ -2,7 +2,9 @@
   <div class="stream">
     <div class="stream__video-wrapper">
       <div class="camera-title">
-        <el-select v-model="cameraMonitorUrl">
+        <el-select
+          @change="switchCamera"
+          v-model="cameraMonitorUrl">
           <el-option
             v-for="item in cameraOption"
             :key="item.id"
@@ -13,7 +15,7 @@
       </div>
       <video
         id="camera-monitor"
-        class="video-js vjs-default-skin"
+        class="video-js vjs-default-skin vjs-fluid"
         autoplay
         width="1280"
         height="720"
@@ -34,7 +36,7 @@
           class="stream__compare-item">
         </StreamCompare>
       </div>
-    </div>    
+    </div>
     <div class="stream__capture">
       <p class="stream__capture-title">实时抓拍</p>
       <div class="stream__capture-list">
@@ -66,8 +68,8 @@
        socket: null,
        player: null,
        miniScore: 73, // the minimum score to show in compareList
-       captureList: [],
-       compareList: [],
+       captureList: [], // capture data list
+       compareList: [], // compare data list
        cameraOption: [],
        cameraMonitorUrl: ''
      };
@@ -82,6 +84,10 @@
      StreamCompare
    },
    methods: {
+     switchCamera (newVal) {
+       // TODO
+       this.destroyPlayer();
+     },
      // fetch camera list
      async fetchCameraList () {
        const response = await api.post(config.device.all, {});
@@ -97,15 +103,16 @@
        this.socket.subscribe('/face/recognition', response => {
          const data = JSON.parse(response.body);
          this.captureList.unshift(data);
-         this.compareList = this.captureList.filter(item => {
-           return Number(item.confidence) > this.miniScore;
-         });
+         if (Number(data.confidence) > this.miniScore) this.compareList.unshift(data);
        });
      },
      // init video player
      setupPlayer (url) {
-       this.player = videojs('camera-monitor');
-       videojs('camera-monitor').ready(function () {
+       videojs.options.flash.swf = '@/assets/video-js.swf';
+       this.player = videojs('camera-monitor', {
+       });
+       this.player.ready(function () {
+         this.player.width(1280).height(720);
          this.src(url);
          this.load();
          this.play();
@@ -113,11 +120,12 @@
      },
      // dispose player when component destroyed
      destroyPlayer () {
-       this.player = videojs('camera-monitor');
-       videojs('camera-monitor').ready(function () {
+       this.player.ready(function () {
          this.dispose();
+         this.player = null;
        });
      },
+     // store subscribe socket connect action
      subscribeSocket () {
        if (this.socketConnected) {
          // socket connected
@@ -131,9 +139,9 @@
        }
      }
    },
-   mounted () {
+   async mounted () {
      this.subscribeSocket();
-     this.cameraOption = this.fetchCameraList();
+     this.cameraOption = await this.fetchCameraList();
      this.setupPlayer('rtmp://172.16.19.150:1935/live/84a3e6dfbb07f149');
    },
    destroyed () {
@@ -191,11 +199,13 @@
      }
    }
    .stream__capture {
-     height: 250px;
+     height: 280px;
      display: block;
      clear: both;
      background-color: #fff;
      border-radius: 10px;
+     overflow-x: auto;
+     overflow-y: hidden;
      .stream__capture-title {
        height: 60px;
        line-height: 60px;
@@ -207,8 +217,9 @@
        font-weight: bold;
      }
      .stream__capture-list {
-       height: 250px;
-       overflow: scroll;
+       height: 220px;
+       overflow-x: auto;
+       overflow-y: hidden;
        white-space: nowrap;
        .stream__capture-item {
          display: inline-block;

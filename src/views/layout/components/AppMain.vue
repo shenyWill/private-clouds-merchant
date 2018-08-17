@@ -29,6 +29,7 @@
    },
    computed: {
      ...mapGetters([
+       'user',
        'isCollapse',
        'cachedViews'
      ])

@@ -110,7 +110,7 @@
  .blacklist {
    position: fixed;
    width: 400px;
-   height: 500px;
+   height: 450px;
    bottom: 30px;
    right: 50px;
    font-size: 16px;
@@ -148,11 +148,14 @@
          margin-left: 20px;
          .blacklist__image-score {
            position: absolute;
+           padding: 5px;
+           min-width: 40px;
            top: 0;
            right: 0;
-           font-size: 12px;
+           font-size: 14px;
            color: white;
            text-align: right;
+           border-radius: 10px;
            background-color: rgba(255, 0, 0, .5);
          }
          .blacklist__image-type {
