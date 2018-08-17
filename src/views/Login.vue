@@ -41,7 +41,8 @@
  import api from '@/api';
  import Qs from 'qs';
  import config from '@/config';
- import { mapActions } from 'vuex';
+ import Socket from '@/api/Socket';
+ import { mapActions, mapGetters } from 'vuex';
  export default {
    // Login Component
    name: 'Login',
@@ -65,6 +66,11 @@
        }
      };
    },
+   computed: {
+     ...mapGetters([
+       'socketConnected'
+     ])
+   },
    methods: {
      ...mapActions([
        'login'
@@ -77,6 +83,14 @@
        };
        return cb(url, Qs.stringify(data), config);
      },
+     // disconnect socket if connected
+     disconnectSocket () {
+       if (this.socketConnected) {
+         const socket = new Socket(config.socketURL);
+         socket.disconnect();
+       }
+     },
+     // submit login form
      onSubmit () {
        this.$refs['form'].validate(async valid => {
          if (valid) {
@@ -85,8 +99,8 @@
              const response = await this.request(config.loginAPI, this.form, api.post);
              this.disabled = false;
              if (response.data.code === 0) {
-               this.login(response.data.data);
-               this.$router.push('/index');
+               this.login(response.data.user);
+               this.$router.push('/stream/index');
              } else {
                this.$message({ type: 'error', message: response.data.msg });
              }
@@ -99,6 +113,9 @@
          }
        });
      }
+   },
+   mounted () {
+     this.disconnectSocket();
    }
  };
 </script>
