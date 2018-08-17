@@ -109,6 +109,12 @@
         <el-form-item label="设备密码" prop="loginPsw">
           <el-input v-model="addForm.loginPsw" placeholder="请输入密码" type="password"></el-input>
         </el-form-item>
+        <el-form-item label="设备品牌名称" prop="brand">
+          <el-input v-model="deviceForm.brand" placeholder="请输入设备类型"></el-input>
+        </el-form-item>
+        <el-form-item label="设备型号系列" prop="brandseries">
+          <el-input v-model="deviceForm.brandseries" placeholder="请输入设备型号系列"></el-input>
+        </el-form-item>
         <el-form-item label="设备地址" prop="deviceAddress">
           <el-select v-model="addForm.deviceAddress" placeholder="请选择" @change="changeAddressAddType">
             <el-option v-for="item in addressType" :key="item.key" :value="item.value" :label="item.key"></el-option>
@@ -270,6 +276,12 @@
          ],
          equipmentType: [
            { required: true, message: '请选择设备种类', trigger: 'change' }
+         ],
+         brand: [
+           { required: true, message: '请输入设备品牌名称', trigger: 'blur' }
+         ],
+         brandseries: [
+           { required: true, message: '请输入设备型号系列', trigger: 'blur' }
          ],
          deviceAddress: [
            { required: true, message: '请选择', trigger: 'change' }

@@ -7,7 +7,8 @@ export default {
     add: '/equipment/info/save',
     update: '/equipment/info/save',
     delete: '/equipment/info/remove',
-    allList: '/equipment/info/allList'
+    allList: '/equipment/info/allList',
+    all: '/equipment/info/allList'
   },
   region: {
     list: '/area/info/list',
@@ -35,6 +36,10 @@ export default {
     typeList: '/library/libraryTypeList',
     edit: '/library/editLibraryInfo',
     delete: '/library/delLibraryInfo'
+  },
+  system: {
+    list: '/system/configure/list',
+    update: '/system/configure/save'
   },
   deviceType: [{
     value: '1',

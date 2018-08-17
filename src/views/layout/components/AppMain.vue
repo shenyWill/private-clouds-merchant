@@ -10,7 +10,7 @@
 </template>
 
 <script>
- import { mapGetters } from 'vuex';
+ import { mapGetters, mapActions } from 'vuex';
  import Socket from '@/api/Socket';
  import config from '@/config';
  import BlackList from '@/views/components/BlackList';
@@ -18,6 +18,7 @@
    name: 'AppMain',
    data () {
      return {
+       socket: null,
        showAlert: false,
        alertData: null,
        blackList: []
@@ -33,18 +34,24 @@
      ])
    },
    methods: {
+     ...mapActions([
+       'connectSocket',
+       'disconnectSocket'
+     ]),
      alertClose () {
        this.showAlert = false;
      },
      initSocket (url) {
-       const socket = new Socket(url);
-       socket.connect('guest', 'guest', frame => {
-         socket.subscribe('/face/blacklist', response => {
+       this.socket = new Socket(url);
+       this.socket.connect('guest', 'guest', frame => {
+         this.connectSocket();
+         this.socket.subscribe('/face/blacklist', response => {
            this.showAlert = true;
            this.alertData = JSON.parse(response.body);
          });
-       }, error => {
-         console.log(error);
+       }, () => {
+         this.disconnectSocket();
+         // socket connect error, reconnect
          // this.initSocket(url);
        });
      }

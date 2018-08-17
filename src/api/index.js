@@ -24,8 +24,6 @@ service.interceptors.request.use(config => {
  *
  **/
 service.interceptors.response.use(response => {
-  console.log('=============');
-  console.log(response);
   if (response.data.code === 401) {
     router.push('/login');
   }
