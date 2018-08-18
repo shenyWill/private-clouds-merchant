@@ -1,6 +1,6 @@
 <template>
   <div class="stream-capture">
-    <img class="stream__image" :src="item.imageUrl1" alt="capture-image" />
+    <img class="stream__image" :src="item.url + item.imageUrl1" alt="capture-image" />
     <div class="stream-capture__device">{{ item.equipmentName }}</div>
     <div class="stream-capture__content">
       <span class="stream-capture__type">{{ config.deviceType2String[item.equipmentType] }}</span>

@@ -1,11 +1,11 @@
 <template>
   <div class="stream-compare">
     <span class="stream-compare__image-wrapper">
-      <img :src="item.imageUrl2" class="stream-compare__image" />
+      <img :src="item.url + item.imageUrl2" class="stream-compare__image" />
     </span>
     <span class="stream-compare__image-wrapper">
       <span class="stream-compare__image-score">{{ item.confidence }}%</span>
-      <img :src="item.imageUrl1" class="stream-compare__image" />
+      <img :src="item.url + item.imageUrl1" class="stream-compare__image" />
     </span>
     <div class="stream-compare__content">
       <div class="stream-compare__device">{{ item.equipmentName }}</div>
@@ -62,7 +62,9 @@ export default {
     height: 108px;
     margin-left: 20px;
     .stream-compare__image {
-      display: inline;
+      display: inline-block;
+      width: 108px;
+      height: 108px;
       border-radius: 10px;
     }
     .stream-compare__image-score {

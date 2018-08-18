@@ -31,7 +31,8 @@
      ...mapGetters([
        'user',
        'isCollapse',
-       'cachedViews'
+       'cachedViews',
+       'blacklistAlert'
      ])
    },
    methods: {
@@ -43,6 +44,7 @@
        this.showAlert = false;
      },
      initSocket (url) {
+       // TODO
        this.socket = new Socket(url);
        this.socket.connect('guest', 'guest', frame => {
          this.connectSocket();
@@ -55,6 +57,10 @@
          // socket connect error, reconnect
          // this.initSocket(url);
        });
+     }
+   },
+   watch: {
+     $route (newVal, oldVal) {
      }
    },
    mounted () {

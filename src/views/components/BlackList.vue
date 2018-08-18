@@ -14,12 +14,12 @@
       <div class="blacklist__body-image">
         <span class="blacklist__image-wrapper">
           <span class="blacklist__image-type">入库头像</span>
-          <img class="blacklist__image" :src="object.imageUrl2" />
+          <img class="blacklist__image" :src="object.url + object.imageUrl2" />
         </span>
         <span class="blacklist__image-wrapper">
           <span class="blacklist__image-score">相似度: {{ object.confidence }}%</span>
           <span class="blacklist__image-type">识别头像</span>
-          <img class="blacklist__image" :src="object.imageUrl1" />
+          <img class="blacklist__image" :src="object.url + object.imageUrl1" />
         </span>
       </div>
       <div class="blacklist__body-title">

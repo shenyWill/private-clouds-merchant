@@ -1,6 +1,7 @@
 const app = {
   state: {
     socketConnected: false,
+    blacklistAlert: false,
     sidebarToggle: false,
     selectedRegion: ''
   },
@@ -16,6 +17,9 @@ const app = {
     },
     DISCONNECT_SOCKET (state) {
       state.socketConnected = false;
+    },
+    SET_BLACKLIST_ALERT (state, value) {
+      state.blacklistAlert = value;
     }
   },
   actions: {
@@ -30,12 +34,16 @@ const app = {
     },
     disconnectSocket ({ commit }) {
       commit('DISCONNECT_SOCKET', false);
+    },
+    setBlacklistAlert ({ commit }, value) {
+      commit('SET_BLACKLIST_ALERT', value);
     }
   },
   getters: {
     isCollapse: state => state.sidebarToggle,
     selectedRegion: state => state.selectedRegion,
-    socketConnected: state => state.socketConnected
+    socketConnected: state => state.socketConnected,
+    blacklistAlert: state => state.blacklistAlert
   }
 };
 

@@ -69,7 +69,8 @@
    },
    methods: {
      ...mapActions([
-       'logout'
+       'logout',
+       'setBlacklistAlert'
      ]),
      toggleMenu () {
        this.showMenu = !this.showMenu;
@@ -110,6 +111,7 @@
              this.alertSound = item.parameterValue === '1';
            } else if (item.configureType === '3') {
              this.alertDialog = item.parameterValue === '1';
+             this.setBlacklistAlert(this.alertDialog);
            }
          });
        } else {

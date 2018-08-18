@@ -1,5 +1,6 @@
 export default {
   personnelName: '姓名',
+  areaName: '区域名称',
   equipmentId: '设备',
   equipmentName: '设备名称',
   equipmentType: '设备类型',
