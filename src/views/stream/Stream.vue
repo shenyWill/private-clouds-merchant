@@ -12,17 +12,16 @@
             :value="item.id">
           </el-option>
         </el-select>
+        <el-button @click="toggleFullscreen" type="primary" class="stream__fullscreen">全屏</el-button>
       </div>
       <video
         id="player"
-        ref="player"
         class="video-js vjs-default-skin vjs-fluid"
         preload
         autoplay
         width="1280"
         height="720"
         data-setup="{}">
-        <source :src="streamUrl">
       </video>
     </div>
 
@@ -73,12 +72,18 @@
      return {
        socket: null,
        player: null,
+       playerConfig: {
+         techOrder: ['flash', 'html5'],
+         aspectRatio: '16:9',
+         flash: {
+           swf: require('@/assets/VideoJS.swf')
+         }
+       },
        miniScore: 73, // the minimum score to show in compareList
        captureList: [], // capture data list
        compareList: [], // compare data list
        cameraOption: [],
-       cameraMonitorUrl: '',
-       streamUrl: 'rtmp://172.16.19.150:1935/live/84a3e6dfbb07f149' // current streaming url
+       cameraMonitorUrl: ''
      };
    },
    computed: {
@@ -93,12 +98,10 @@
    methods: {
      // el-select switch video streaming url
      async switchCamera (newVal) {
-       this.destroyPlayer();
        const response = await api.post(config.stream.streamingURL, {id: newVal});
        if (response.data.code === 0) {
          const data = JSON.parse(response.data.data);
-         this.streamUrl = data.rtmp;
-         this.setupPlayer(data.rtmp);
+         this.changePlayerSrc(data.rtmp);
        } else {
          this.$message({ type: 'error', message: response.data.msg });
        }
@@ -122,16 +125,22 @@
        });
      },
      // init video player
-     setupPlayer (url) {
-       this.player = videojs('player', {});
-       this.streamUrl = url;
-       this.$refs.player.src = this.streamUrl;
-       this.player.ready(() => {
-         this.player.src(url);
-         this.player.load();
-         this.player.play();
-         this.subscribeSocket();
-       });
+     initPlayer (config) {
+       videojs.options.flash.swf = require('@/assets/VideoJS.swf');
+       this.player = videojs('player', config);
+     },
+     // change video player src
+     changePlayerSrc (url) {
+       this.player.src(url);
+       this.playPlayer();
+     },
+     toggleFullscreen () {
+       this.player.requestFullscreen();
+     },
+     // play video player
+     playPlayer () {
+       this.player.play();
+       this.subscribeSocket();
      },
      // dispose player when component destroyed
      destroyPlayer () {
@@ -156,7 +165,7 @@
      }
    },
    async mounted () {
-     this.setupPlayer(this.streamUrl);
+     this.initPlayer({ techOrder: ['flash', 'html5'] });
      this.cameraOption = await this.fetchCameraList();
    },
    destroyed () {
@@ -178,6 +187,9 @@
      background-color: #fff;
      overflow: hidden;
      float: left;
+     .stream__fullscreen {
+       float: right;
+     }
    }
    .camera-title {
      width: 100%;
