@@ -60,8 +60,8 @@
       </div>
       <div v-for="item in recognitionList" :key="item.id" class="recognition-card-info">
         <div class="recognition-card-image">
-          <img :src="item.imageUrl1" alt="">
-          <img :src="item.imageUrl2" alt="">
+          <img :src="recognitionUrl + item.imageUrl1" alt="">
+          <img :src="recognitionUrl + item.imageUrl2" alt="">
         </div>
         <div class="recognition-card-content">
           <p class="recognition-card-detail">
@@ -84,7 +84,7 @@
         </div>
         <div class="recognition-card-operation">
           <i class="el-icon-view" @click="showPersonDetail(item.personnelId)"></i>
-          <i class="el-icon-service" @click="showRecognitionDetail(item.personnelId)"></i>
+          <i class="el-icon-service" @click="showRecognitionDetail(item.personnelId, true)"></i>
         </div>
       </div>
     </el-card>
@@ -96,7 +96,7 @@
     </el-dialog>
     <!-- 比对详情 -->
     <el-dialog :visible.sync="dialogRecognitionDetail" width="31%" custom-class="recognition-detail-show" title="比对详情" :lock-scroll="true">
-      <RecognitionDetail :recognitionDetail="recognitionDetail"></RecognitionDetail>
+      <RecognitionDetail :recognitionDetail="recognitionDetail" :recognitionDetailUrl="recognitionDetailUrl"></RecognitionDetail>
     </el-dialog>
   </div>
 </template>
@@ -123,7 +123,12 @@ export default {
       equipmentTypeName: ['人证比对机', '摄像头', '人脸识别门禁平板', '闸机', '门'], // 设备类型名称
       equipmentArr: [], // 设备集合
       currentPage: 2, // 当前页码
-      databaseArr: [] // 库集合
+      databaseArr: [], // 库集合
+      recognitionDetailTag: true, // 滚动的tag
+      recognitionDetailId: '', // 当前对比详情ID
+      recognitionOffset: 0, // 当前对比详情偏移量
+      recognitionUrl: '', // 当前url
+      recognitionDetailUrl: '' // 比对详情url
     };
   },
   components: {
@@ -144,6 +149,7 @@ export default {
       if (Number(response.data.code) === 0) {
         this.count = response.data.data.total;
         this.recognitionList = response.data.data.rows;
+        this.recognitionUrl = response.data.url;
       }
     },
     // 分页
@@ -170,12 +176,24 @@ export default {
       }
     },
     // 查看比对详情
-    async showRecognitionDetail (id) {
-      const response = await api.post(config.recognition.compareDetail, {id: id});
+    async showRecognitionDetail (personnelId, tag) {
+      if (tag) {
+        this.recognitionOffset = 0;
+        this.recognitionDetail = {};
+        this.recognitionDetailId = personnelId;
+      }
+      const response = await api.post(config.recognition.compareDetail, {personnelId: this.recognitionDetailId, offset: this.recognitionOffset});
       if (Number(response.data.code) === 0) {
+        for (let item in response.data.data) {
+          this.$set(this.recognitionDetail, item, response.data.data[item]);
+        }
+        this.recognitionDetailUrl = response.data.url;
         this.recognitionDetail = Object.assign(this.recognitionDetail, response.data.data);
+        this.recognitionOffset = response.data.offset;
         this.dialogRecognitionDetail = true;
-        console.log(this.recognitionDetail)
+        setTimeout(() => {
+          this.recognitionDetailTag = true;
+        }, 2000);
       }
     },
     // 滚动条再次调用
@@ -183,8 +201,9 @@ export default {
       document.getElementsByClassName('recognition-detail-show')[0].onscroll = () => {
         let _self = document.getElementsByClassName('recognition-detail-show')[0];
         let distance = _self.scrollHeight - _self.scrollTop - _self.clientHeight;
-        if (distance < 100) {
-          this.showRecognitionDetail(null);
+        if (distance < 100 && this.recognitionDetailTag === true) {
+          this.recognitionDetailTag = false;
+          this.showRecognitionDetail(this.recognitionDetailId);
         }
       };
     }

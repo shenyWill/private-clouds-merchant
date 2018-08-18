@@ -4,7 +4,7 @@
             <h3>{{key}}</h3>
             <ul>
                 <li v-for="item in obj" :key="item.id" class="recognition-list">
-                    <img :src="item.imageUrl1" alt="" class="recognition-list-image">
+                    <img :src="recognitionDetailUrl + item.imageUrl1" alt="" class="recognition-list-image">
                     <p class="recognition-list-equipmentName">{{ item.equipmentName }}</p>
                     <p class="recognition-list-content">
                         <span class="recognition-list-type">{{ item.groupName }}</span>
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-    props: ['recognitionDetail']
+    props: ['recognitionDetail', 'recognitionDetailUrl']
 };
 </script>
 

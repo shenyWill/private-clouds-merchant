@@ -1,10 +1,10 @@
 <template>
     <div class="people-detail">
         <div class="people-detail-image">
-            <img :src="personDetail.imageUrl" alt="">
-            <img :src="personDetail.imageUrl1" alt="">
-            <img :src="personDetail.imageUrl2" alt="">
-            <img :src="personDetail.imageUrl3" alt="">
+            <img :src="personDetail.url + (personDetail.personnelImgList[0] && personDetail.personnelImgList[0].imageUrl)" alt="">
+            <img :src="personDetail.url + (personDetail.personnelImgList[0] && personDetail.personnelImgList[0].imageUrl)" alt="">
+            <img :src="personDetail.url + (personDetail.personnelImgList[1] && personDetail.personnelImgList[1].imageUrl)" alt="">
+            <img :src="personDetail.url + (personDetail.personnelImgList[2] && personDetail.personnelImgList[2].imageUrl)" alt="">
         </div>
         <p class="people-detail-introduce">
             <span class="people-detail-name">{{ personDetail.personnelName }}</span>

@@ -88,6 +88,7 @@ export default {
       personType: {}, // 人员类型
       addPersonForm: {},
       imagePersonnelId: '', // 修改图片所需人员ID
+      imageIdArr: [], // 修改人员ID集合
       equipmentNav: [
         {
           label: '东北',
@@ -184,8 +185,10 @@ export default {
       let requerstObj = {};
       requerstObj[imgIndex] = imgUrl;
       requerstObj.personnelId = this.imagePersonnelId;
+      let index = imgIndex.charAt(imgIndex.length - 1);
+      requerstObj['imageId' + index] = this.imageIdArr[index - 1];
       let imageResponse = await api.post(config.person.updateImage, requerstObj);
-      if (Number(imageResponse.data.code) === 0) {
+      if (imageResponse.data.code === 0) {
         this[imgIndex] = this.addPersonForm[imgIndex] = this.showImageUrl = imgUrl;
         this.$message({
           type: 'success',
@@ -255,6 +258,7 @@ export default {
           let equipmentList = [];
           let disSwitch;
           this.imagePersonnelId = newVal.personnelId;
+          this.imageIdArr = [];
           newVal.personnelEquipmentList.forEach(item => equipmentList.push(item.equipmentId));
           if (Number(newVal.disSwitch) === 1) {
             disSwitch = true;
@@ -265,6 +269,8 @@ export default {
             newVal.personnelImgList.forEach((item, index) => {
               this.$set(this.addPersonForm, `image${index + 1}`, newVal.url + item.imageUrl);
               this[`image${index + 1}`] = newVal.url + item.imageUrl;
+              // 获取imageIdArr集合
+              this.imageIdArr.push(item.imageId);
             });
             this.showImageUrl = newVal.url + newVal.personnelImgList[0].imageUrl;
           };
