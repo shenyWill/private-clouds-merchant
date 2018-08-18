@@ -282,6 +282,7 @@ export default {
           this.$set(this.addPersonForm, 'libraryId', newVal.libraryId);
           this.$set(this.addPersonForm, 'disSwitch', disSwitch);
           this.$set(this.addPersonForm, 'personnelName', newVal.personnelName);
+          this.$set(this.addPersonForm, 'personnelId', newVal.personnelId);
         }
       },
       deep: true,

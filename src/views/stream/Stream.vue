@@ -32,6 +32,8 @@
           v-for="(item, index) in compareList"
           :key="index"
           :item="item"
+          @showRecognitionDetail="showRecognitionDetail"
+          @showPersonDetail="showPersonDetail"
           class="stream__compare-item">
         </StreamCompare>
       </div>
@@ -46,13 +48,24 @@
           class="stream__capture-item"
           v-for="(item, index) in captureList"
           :item="item"
-          :key="index">
+          :key="index"
+          >
         </StreamCapture>
       </div>
       <div v-else class="stream__empty">
         暂无抓拍记录
       </div>
     </div>
+
+    <!-- 显示详情 -->
+    <el-dialog :visible.sync="dialogPersonDetail" width="25%" custom-class="person-detail-show">
+      <PersonDetail :personDetail="personDetail"></PersonDetail>
+    </el-dialog>
+
+    <!-- 比对详情 -->
+    <el-dialog :visible.sync="dialogRecognitionDetail" width="31%" custom-class="recognition-detail-show" title="比对详情" :lock-scroll="true">
+      <RecognitionDetail :recognitionDetail="recognitionDetail" :recognitionDetailUrl="recognitionDetailUrl"></RecognitionDetail>
+    </el-dialog>
   </div>
 </template>
 
@@ -64,6 +77,8 @@
  import api from '@/api';
  import StreamCapture from './StreamCapture';
  import StreamCompare from './StreamCompare';
+ import PersonDetail from '@/views/person/PersonDetail';
+ import RecognitionDetail from '@/views/recognition/RecognitionDetail';
  import { mapGetters } from 'vuex';
  export default {
    // Video Streaming Component
@@ -83,7 +98,16 @@
        captureList: [], // capture data list
        compareList: [], // compare data list
        cameraOption: [],
-       cameraMonitorUrl: ''
+       cameraMonitorUrl: '',
+       personDetail: {}, // 个人详情
+       dialogPersonDetail: false, // 详情框是否显示
+       recognitionDetailTag: true, // 滚动的tag
+       recognitionDetailId: '', // 当前对比详情ID
+       recognitionOffset: 0, // 当前对比详情偏移量
+       recognitionUrl: '', // 当前url
+       recognitionDetailUrl: '', // 比对详情url
+       recognitionDetail: {}, // 比对详情
+       dialogRecognitionDetail: false
      };
    },
    computed: {
@@ -93,7 +117,9 @@
    },
    components: {
      StreamCapture,
-     StreamCompare
+     StreamCompare,
+     PersonDetail,
+     RecognitionDetail
    },
    methods: {
      // el-select switch video streaming url
@@ -162,7 +188,46 @@
            }
          });
        }
-     }
+     },
+     async showPersonDetail (id) {
+        const response = await api.post(config.person.detail, {personnelId: id});
+        if (Number(response.data.code) === 0) {
+          this.personDetail = response.data.data;
+          this.dialogPersonDetail = true;
+        }
+     },
+     // 查看比对详情
+    async showRecognitionDetail (personnelId, tag) {
+      if (tag) {
+        this.recognitionOffset = 0;
+        this.recognitionDetail = {};
+        this.recognitionDetailId = personnelId;
+      }
+      const response = await api.post(config.recognition.compareDetail, {personnelId: this.recognitionDetailId, offset: this.recognitionOffset});
+      if (Number(response.data.code) === 0) {
+        for (let item in response.data.data) {
+          this.$set(this.recognitionDetail, item, response.data.data[item]);
+        }
+        this.recognitionDetailUrl = response.data.url;
+        this.recognitionDetail = Object.assign(this.recognitionDetail, response.data.data);
+        this.recognitionOffset = response.data.offset;
+        this.dialogRecognitionDetail = true;
+        setTimeout(() => {
+          this.recognitionDetailTag = true;
+        }, 2000);
+      }
+    },
+    // 滚动条再次调用
+    detailScroll () {
+      document.getElementsByClassName('recognition-detail-show')[0].onscroll = () => {
+        let _self = document.getElementsByClassName('recognition-detail-show')[0];
+        let distance = _self.scrollHeight - _self.scrollTop - _self.clientHeight;
+        if (distance < 100 && this.recognitionDetailTag === true) {
+          this.recognitionDetailTag = false;
+          this.showRecognitionDetail(this.recognitionDetailId);
+        }
+      };
+    }
    },
    async mounted () {
      this.initPlayer({ techOrder: ['flash', 'html5'] });

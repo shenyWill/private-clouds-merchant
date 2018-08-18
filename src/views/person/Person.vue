@@ -229,11 +229,17 @@ export default {
     // 提交添加人员
     async addSumbit (val) {
       let subObj = {...val};
+      let requestUrl = 'edit';
       if (this.addOrEdit === 0) {
         subObj.libraryId = this.$route.query.id;
         this.currentPage = 1;
+        requestUrl = 'add';
+      } else {
+        delete subObj.image1;
+        delete subObj.image2;
+        delete subObj.image3;
       }
-      await api.post(config.person.add, subObj);
+      await api.post(config.person[requestUrl], subObj);
       await this.responseAPI();
       this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
       this.dialogPersonAdd = false;

@@ -23,6 +23,7 @@ export default {
     delete: '/libraryPersonnel/delPersonnel',
     deleteAll: '/libraryPersonnel/delPersonnel',
     add: '/libraryPersonnel/savePersonnel',
+    edit: '/libraryPersonnel/modifyPersonnel',
     checkImage: '/libraryPersonnel/checkPersonnelImage',
     updateImage: '/libraryPersonnel/modifyPersonnelImg'
   },

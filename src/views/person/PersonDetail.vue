@@ -1,10 +1,10 @@
 <template>
     <div class="people-detail">
         <div class="people-detail-image">
-            <img :src="personDetail.url + (personDetail.personnelImgList[0] && personDetail.personnelImgList[0].imageUrl)" alt="">
-            <img :src="personDetail.url + (personDetail.personnelImgList[0] && personDetail.personnelImgList[0].imageUrl)" alt="">
-            <img :src="personDetail.url + (personDetail.personnelImgList[1] && personDetail.personnelImgList[1].imageUrl)" alt="">
-            <img :src="personDetail.url + (personDetail.personnelImgList[2] && personDetail.personnelImgList[2].imageUrl)" alt="">
+            <img :src="personDetail.url + (personDetail.personnelImgList && personDetail.personnelImgList[0] && personDetail.personnelImgList[0].imageUrl)" alt="">
+            <img :src="personDetail.url + (personDetail.personnelImgList && personDetail.personnelImgList[0] && personDetail.personnelImgList[0].imageUrl)" alt="">
+            <img :src="personDetail.url + (personDetail.personnelImgList && personDetail.personnelImgList[1] && personDetail.personnelImgList[1].imageUrl)" alt="">
+            <img :src="personDetail.url + (personDetail.personnelImgList && personDetail.personnelImgList[2] && personDetail.personnelImgList[2].imageUrl)" alt="">
         </div>
         <p class="people-detail-introduce">
             <span class="people-detail-name">{{ personDetail.personnelName }}</span>
@@ -121,5 +121,8 @@ export default {
     margin-left: 97px;
     display: inline-block;
     line-height: 30px;
+}
+.people-detail {
+    text-align: center;
 }
 </style>
