@@ -1,7 +1,12 @@
 <template>
   <div class="person">
     <Search :searchResult='searchResult' :equipmentArr="deviceList">
-      <el-form ref="search-form" :model="searchForm" slot="search-form" label-width="60px" class="search-form-box">
+      <el-form
+        ref="search-form"
+        :model="searchForm"
+        slot="search-form"
+        label-width="100px"
+        class="search-form-box">
         <el-row>
           <el-col :span="5">
             <el-form-item label="姓名">
@@ -18,7 +23,12 @@
           <el-col :span="5" :offset="3">
             <el-form-item label="识别设备">
               <el-select v-model="searchForm.equipmentId" size="small">
-                <el-option :label="item.equipmentName" :value="item.id" v-for="item in deviceList" :key="item.id"></el-option>
+                <el-option
+                  :label="item.equipmentName"
+                  :value="item.id"
+                  v-for="item in deviceList"
+                  :key="item.id">
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -61,7 +71,16 @@
         </el-card>
     </div>
     <!-- 分页 -->
-    <el-pagination :page-size="9" :current-page.sync="currentPage" :disabled='deleteAllOperationTag' background layout="prev,pager,next" :total="count" class="paging" @current-change="handleCurrentChange"></el-pagination>
+    <el-pagination
+      :page-size="9"
+      :current-page.sync="currentPage"
+      :disabled='deleteAllOperationTag'
+      background
+      layout="prev,pager,next"
+      :total="count"
+      class="paging"
+      @current-change="handleCurrentChange">
+    </el-pagination>
     <!-- 显示详情 -->
     <el-dialog :visible.sync="dialogPersonDetail" width="25%" custom-class="person-detail-show">
       <PersonDetail :personDetail="personDetail"></PersonDetail>
@@ -80,8 +99,20 @@
       </div>
     </div>
     <!-- 添加人员 -->
-    <el-dialog :visible.sync="dialogPersonAdd" width="25%" custom-class="person-detail-add" title="编辑人员信息" :before-close="removePersonAddForm">
-      <PersonAdd :editObj="editObj" :addOrEdit="addOrEdit" :deviceList="deviceList" :personTypeList="personTypeList" @addSumbit="addSumbit" ref="person-add"></PersonAdd>
+    <el-dialog
+      :visible.sync="dialogPersonAdd"
+      width="25%"
+      custom-class="person-detail-add"
+      title="编辑人员信息"
+      :before-close="removePersonAddForm">
+      <PersonAdd
+        :editObj="editObj"
+        :addOrEdit="addOrEdit"
+        :deviceList="deviceList"
+        :personTypeList="personTypeList"
+        @addSumbit="addSumbit"
+        ref="person-add">
+      </PersonAdd>
     </el-dialog>
   </div>
 </template>
@@ -239,7 +270,10 @@ export default {
         delete subObj.image2;
         delete subObj.image3;
       }
-      await api.post(config.person[requestUrl], subObj);
+      const response = await api.post(config.person[requestUrl], subObj);
+      if (response.data.code === 0) {
+        this.$message({type: 'success', message: response.data.msg});
+      }
       await this.responseAPI();
       this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
       this.dialogPersonAdd = false;

@@ -1,13 +1,8 @@
 export default [{
   name: '人员管理',
-  path: '/person',
+  path: '/person/database',
   icon: 'el-icon-sold-out',
-  children: [ {
-    name: '人员管理',
-    path: '/person/database',
-    icon: 'el-icon-menu',
-    children: []
-  }]
+  children: []
 }, {
   name: '识别记录',
   path: '/recognize/index',

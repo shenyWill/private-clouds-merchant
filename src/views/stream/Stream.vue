@@ -63,7 +63,12 @@
     </el-dialog>
 
     <!-- 比对详情 -->
-    <el-dialog :visible.sync="dialogRecognitionDetail" width="31%" custom-class="recognition-detail-show" title="比对详情" :lock-scroll="true">
+    <el-dialog
+      :visible.sync="dialogRecognitionDetail"
+      width="31%"
+      custom-class="recognition-detail-show"
+      title="比对详情"
+      :lock-scroll="true">
       <RecognitionDetail :recognitionDetail="recognitionDetail" :recognitionDetailUrl="recognitionDetailUrl"></RecognitionDetail>
     </el-dialog>
   </div>
@@ -94,7 +99,7 @@
            swf: require('@/assets/VideoJS.swf')
          }
        },
-       miniScore: 73, // the minimum score to show in compareList
+       miniScore: config.score.compare, // the minimum score to show in compareList
        captureList: [], // capture data list
        compareList: [], // compare data list
        cameraOption: [],
@@ -113,7 +118,10 @@
    computed: {
      ...mapGetters([
        'socketConnected'
-     ])
+     ]),
+     config: () => {
+       return config;
+     }
    },
    components: {
      StreamCapture,
@@ -157,7 +165,9 @@
      },
      // change video player src
      changePlayerSrc (url) {
+       this.player.pause();
        this.player.src(url);
+       this.player.load();
        this.playPlayer();
      },
      toggleFullscreen () {
@@ -203,7 +213,10 @@
         this.recognitionDetail = {};
         this.recognitionDetailId = personnelId;
       }
-      const response = await api.post(config.recognition.compareDetail, {personnelId: this.recognitionDetailId, offset: this.recognitionOffset});
+      const response = await api.post(config.recognition.compareDetail, {
+        personnelId: this.recognitionDetailId,
+        offset: this.recognitionOffset
+      });
       if (Number(response.data.code) === 0) {
         for (let item in response.data.data) {
           this.$set(this.recognitionDetail, item, response.data.data[item]);
@@ -233,7 +246,13 @@
      this.initPlayer({ techOrder: ['flash', 'html5'] });
      this.cameraOption = await this.fetchCameraList();
    },
-   destroyed () {
+   beforeRouteLeave (to, from, next) {
+     next();
+   },
+   beforeRouteEnter (to, from, next) {
+     next();
+   },
+   beforeDestroy () {
      this.destroyPlayer();
    }
  };

@@ -25,7 +25,8 @@ export default {
     add: '/libraryPersonnel/savePersonnel',
     edit: '/libraryPersonnel/modifyPersonnel',
     checkImage: '/libraryPersonnel/checkPersonnelImage',
-    updateImage: '/libraryPersonnel/modifyPersonnelImg'
+    updateImage: '/libraryPersonnel/modifyPersonnelImg',
+    totalNum: '/library/personnelTotalCount'
   },
   recognition: {
     list: '/distinguishRecord/info/list',
@@ -75,5 +76,9 @@ export default {
   }, {
     key: 'URL地址',
     value: 'url'
-  }]
+  }],
+  score: {
+    compare: 0,
+    blacklist: 73
+  }
 };

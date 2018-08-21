@@ -169,7 +169,7 @@ export default {
     },
     // 查看个人详情
     async showPersonDetail (id) {
-      const response = await api.post(config.person.detail, {id: id});
+      const response = await api.post(config.person.detail, {personnelId: id});
       if (Number(response.data.code) === 0) {
         this.personDetail = response.data.data;
         this.dialogPersonDetail = true;

@@ -82,12 +82,12 @@ export default new Router({
         path: '/person/index',
         component: Person,
         name: 'Person',
-        meta: { title: '人员管理', icon: '' }
+        meta: { title: '人员管理', icon: '', cache: false }
       }, {
         path: '/person/database',
         component: Database,
         name: 'Database',
-        meta: { title: '库管理', icon: '' }
+        meta: { title: '库管理', icon: '', cache: false }
       }]
     }, {
       path: '/recognize',
@@ -97,7 +97,7 @@ export default new Router({
         path: '/recognize/index',
         component: Recognition,
         name: 'Recognition',
-        meta: { title: '识别记录', icon: '', cache: true }
+        meta: { title: '识别记录', icon: '', cache: false }
       }]
     }, {
       path: '/system',
@@ -142,7 +142,7 @@ export default new Router({
         path: '/stream/index',
         component: Stream,
         name: 'Stream',
-        meta: { title: '视频管理', icon: '' }
+        meta: { title: '视频管理', icon: '', cache: false }
       }]
     }
   ]

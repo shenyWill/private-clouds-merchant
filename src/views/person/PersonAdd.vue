@@ -1,70 +1,131 @@
 <template>
     <div class="dialog-person-add" v-loading.fullscreen.lock="fullscreenLoading">
-        <el-form v-show="showForm" ref="add-person-form" :rules="rules" :model="addPersonForm" label-width="80px" label-position="top" size="small">
-            <div class="person-add-upload">
-                <img class="avatar-uploader-show avatar" :src="showImageUrl">
-                <el-upload class="avatar-uploader-first" action="" :auto-upload="false" :show-file-list="false" :on-change="handleFirstImageChange">
-                    <img :src="image1" class="avatar" v-if="image1" @click.stop="showImage(image1)" @dblclick.self="inputFile($event)">
-                    <i class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-                <el-upload class="avatar-uploader-second" action="" :auto-upload="false" :show-file-list="false" :on-change="handleSecondImageChange">
-                    <img :src="image2" class="avatar" v-if="image2" @click.stop="showImage(image2)" @dblclick.self="inputFile($event)">
-                    <i class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-                <el-upload class="avatar-uploader-third" action="" :auto-upload="false" :show-file-list="false" :on-change="handleThirdImageChange">
-                    <img :src="image3" class="avatar" v-if="image3" @click.stop="showImage(image3)" @dblclick.self="inputFile($event)">
-                    <i class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-            </div>
-            <el-form-item label="人员姓名" prop="personnelName">
-                <el-input v-model="addPersonForm.personnelName"></el-input>
-            </el-form-item>
-            <el-form-item label="人员描述" prop="describe">
-                <el-input v-model="addPersonForm.describe"></el-input>
-            </el-form-item>
-            <el-form-item label="选择库" prop="libraryId" v-if="addOrEdit==1">
-                <el-select v-model="addPersonForm.libraryId" placeholder="请选择库">
-                    <el-option :label="item.libraryName" :value="item.libraryId" v-for="item in personTypeList" :key="item.libraryId"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="开始时间" prop="disStartTime">
-                <el-date-picker type="datetime" placeholder="选择日期" v-model="addPersonForm.disStartTime" style="width: 100%;"></el-date-picker>
-            </el-form-item>
-            <el-form-item label="结束时间" prop="disEndTime">
-                <el-date-picker type="datetime" placeholder="选择日期" v-model="addPersonForm.disEndTime" style="width: 100%;"></el-date-picker>
-            </el-form-item>
-            <el-form-item label="识别设备" prop="equipmentList">
-                <el-select v-model="addPersonForm.equipmentList" placeholder="请选择设备" multiple>
-                    <!-- <el-option-group v-for="group in deviceList" :key="group.areaId" :label="group.areaName">
-                        <el-option v-for="item in group.equipmentList" :key="item.id" :label="item.label" :value="item.value"></el-option>
-                    </el-option-group> -->
-                    <el-option v-for="item in deviceList" :key="item.id" :label="item.equipmentName" :value="item.id"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="">
-                <span class="status-switch">识别开关：</span>
-                <el-switch name="l" v-model="addPersonForm.disSwitch" active-text="开" inactive-text="关"></el-switch>
-            </el-form-item>
-            <el-form-item>
-                <el-col :span="24" :offset="18">
-                    <el-button type="primary" @click="onSubmit('add-person-form')">{{ addOrEdit==0 ? '确认添加' : '确认修改' }}</el-button>
-                </el-col>
-            </el-form-item>
-        </el-form>
-         <!-- 多张人脸选择框 -->
-         <div class="more-face" v-show="!showForm">
-             <div class="main-image">
-                 <img :src="mainImg" alt="">
-             </div>
-             <div class="image-list" v-for="(value, key) in moreFaceObj" :key="key">
-                 <img :src="'data:image/png;base64,' + value" alt="" @click="checkImageUrl = value" :class="{'checked-image': value==checkImageUrl}">
-                 <i class="el-icon-success" v-if="value==checkImageUrl"></i>
-             </div>
-             <p class="btn-content">
-                <el-button type="info" @click="showForm=true">取消选择</el-button>
-                <el-button type="primary" @click="checkImage">选择图片</el-button>
-             </p>
-         </div>
+      <el-form
+        class="dialog-person-form"
+        v-show="showForm"
+        ref="add-person-form"
+        :rules="rules"
+        :model="addPersonForm"
+        label-width="100px"
+        size="small">
+        <div class="person-add-upload">
+          <img class="avatar-uploader-show avatar" :src="showImageUrl">
+          <el-upload
+            class="avatar-uploader-first"
+            action=""
+            :auto-upload="false"
+            :show-file-list="false"
+            :on-change="handleFirstImageChange">
+            <img
+              :src="image1"
+              class="avatar"
+              v-if="image1"
+              @click.stop="showImage(image1)"
+              @dblclick.self="inputFile($event)">
+            <i class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+          <el-upload
+            class="avatar-uploader-second"
+            action=""
+            :auto-upload="false"
+            :show-file-list="false"
+            :on-change="handleSecondImageChange">
+            <img
+              :src="image2"
+              class="avatar"
+              v-if="image2"
+              @click.stop="showImage(image2)"
+              @dblclick.self="inputFile($event)">
+            <i class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+          <el-upload
+            class="avatar-uploader-third"
+            action=""
+            :auto-upload="false"
+            :show-file-list="false"
+            :on-change="handleThirdImageChange">
+            <img
+              :src="image3"
+              class="avatar"
+              v-if="image3"
+              @click.stop="showImage(image3)"
+              @dblclick.self="inputFile($event)">
+            <i class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </div>
+        <el-form-item label="人员姓名" prop="personnelName">
+          <el-input v-model="addPersonForm.personnelName"></el-input>
+        </el-form-item>
+        <el-form-item label="人员描述" prop="describe">
+          <el-input v-model="addPersonForm.describe"></el-input>
+        </el-form-item>
+        <el-form-item label="选择库" prop="libraryId" v-if="addOrEdit==1">
+          <el-select v-model="addPersonForm.libraryId" placeholder="请选择库">
+            <el-option
+              :label="item.libraryName"
+              :value="item.libraryId"
+              v-for="item in personTypeList"
+              :key="item.libraryId">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="开始时间" prop="disStartTime">
+          <el-date-picker
+            type="datetime"
+            format="yyyy-MM-dd HH:mm"
+            placeholder="选择日期"
+            v-model="addPersonForm.disStartTime"
+            style="width: 100%;">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="结束时间" prop="disEndTime">
+          <el-date-picker
+            type="datetime"
+            placeholder="选择日期"
+            format="yyyy-MM-dd HH:mm"
+            v-model="addPersonForm.disEndTime"
+            style="width: 100%;">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="识别设备" prop="equipmentList">
+          <el-select v-model="addPersonForm.equipmentList" placeholder="请选择设备" multiple>
+            <!-- <el-option-group v-for="group in deviceList" :key="group.areaId" :label="group.areaName">
+                 <el-option v-for="item in group.equipmentList" :key="item.id" :label="item.label" :value="item.value"></el-option>
+                 </el-option-group> -->
+            <el-option v-for="item in deviceList" :key="item.id" :label="item.equipmentName" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="识别开关">
+          <el-switch name="l" v-model="addPersonForm.disSwitch" active-text="开" inactive-text="关"></el-switch>
+        </el-form-item>
+        <el-form-item>
+          <el-col :span="24" :offset="18">
+            <el-button
+              type="primary"
+              @click="onSubmit('add-person-form')">
+              {{ addOrEdit == 0 ? '确认添加' : '确认修改' }}
+            </el-button>
+          </el-col>
+        </el-form-item>
+      </el-form>
+      <!-- 多张人脸选择框 -->
+      <div class="more-face" v-show="!showForm">
+        <div class="main-image">
+          <img :src="mainImg" alt="">
+        </div>
+        <div class="image-list" v-for="(value, key) in moreFaceObj" :key="key">
+          <img
+            :src="'data:image/png;base64,' + value"
+            alt=""
+            @click="checkImageUrl = value"
+            :class="{'checked-image': value==checkImageUrl}">
+          <i class="el-icon-success" v-if="value==checkImageUrl"></i>
+        </div>
+        <p class="btn-content">
+          <el-button type="info" @click="showForm=true">取消选择</el-button>
+          <el-button type="primary" @click="checkImage">选择图片</el-button>
+        </p>
+      </div>
     </div>
 </template>
 
@@ -118,27 +179,13 @@ export default {
           { required: true, message: '请选择人员类型', trigger: 'change' }
         ],
         disStartTime: [
-          {
-            type: 'date',
-            required: true,
-            message: '请选择开始时间',
-            trigger: 'change'
-          }
+          { type: 'date', required: true, message: '请选择开始时间', trigger: 'change' }
         ],
         disEndTime: [
-          {
-            type: 'date',
-            required: true,
-            message: '请选择结束时间',
-            trigger: 'change'
-          }
+          { type: 'date', required: true, message: '请选择结束时间', trigger: 'change' }
         ],
         equipmentList: [
-          {
-            required: true,
-            message: '请选择至少一个识别设备',
-            trigger: 'change'
-          }
+          { required: true, message: '请选择至少一个识别设备', trigger: 'change' }
         ]
       }
     };
@@ -265,7 +312,7 @@ export default {
           } else {
             disSwitch = false;
           }
-          if (newVal.personnelImgList) {
+          if (newVal.personnelImgList.length > 0) {
             newVal.personnelImgList.forEach((item, index) => {
               this.$set(this.addPersonForm, `image${index + 1}`, newVal.url + item.imageUrl);
               this[`image${index + 1}`] = newVal.url + item.imageUrl;
@@ -295,7 +342,7 @@ export default {
 <style lang="scss" scoped>
 .person-add-upload {
   height: 130px;
-  margin: 0 auto;
+  margin: 0 auto 20px;
   width: 175px;
   overflow: hidden;
   .avatar-uploader-show {
@@ -377,11 +424,14 @@ export default {
 }
 </style>
 
-<style>
-.person-add-upload .el-form-item {
-  width: 130px;
-  height: 130px;
-  overflow: hidden;
-  float: left;
-}
+<style lang="scss">
+ .person-add-upload {
+   margin-bottom: 20px;
+ }
+ .person-add-upload .el-form-item {
+   /* width: 130px;
+      height: 130px;
+      overflow: hidden;
+      float: left; */
+ }
 </style>

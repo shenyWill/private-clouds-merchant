@@ -44,16 +44,20 @@
        this.showAlert = false;
      },
      initSocket (url) {
-       // TODO
        this.socket = new Socket(url);
        this.socket.connect('guest', 'guest', frame => {
          this.connectSocket();
          this.socket.subscribe('/face/blacklist', response => {
-           this.showAlert = true;
-           this.alertData = JSON.parse(response.body);
+           const data = JSON.parse(response.body);
+           if (Number(data.confidence) > config.score.blacklist) {
+             this.showAlert = true;
+             this.alertData = JSON.parse(response.body);
+           }
          });
-       }, () => {
-         this.disconnectSocket();
+       }, error => {
+         console.log('socket error');
+         console.log(error);
+         // this.disconnectSocket();
          // socket connect error, reconnect
          // this.initSocket(url);
        });
