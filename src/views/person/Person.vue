@@ -274,7 +274,7 @@ export default {
       if (response.data.code === 0) {
         this.$message({type: 'success', message: response.data.msg});
       }
-      await this.responseAPI();
+      await this.responseAPI({page: this.currentPage});
       this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
       this.dialogPersonAdd = false;
     }

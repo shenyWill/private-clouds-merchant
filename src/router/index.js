@@ -1,15 +1,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import TestExample from '@/views/TestExample';
-
 import Layout from '@/views/layout/Layout';
 
 // Index Page
-import Dashboard from '@/views/Dashboard';
 import Login from '@/views/Login';
 
-import Products from '@/views/products/Products';
 import Stream from '@/views/stream/Stream';
 
 // System Modules
@@ -39,31 +35,6 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
-    }, {
-      path: '',
-      component: Layout,
-      redirect: '/index',
-      children: [{
-        path: '/index',
-        component: Dashboard,
-        name: 'Dashboard',
-        meta: { title: '系统首页', icon: '', cache: true }
-      }]
-    }, {
-      path: '/products',
-      component: Layout,
-      redirect: '/products/index',
-      children: [{
-        path: '/products/index',
-        component: Products,
-        name: 'Products',
-        meta: { title: '产品信息', icon: '', cache: true }
-      }, {
-        path: '/products/test',
-        component: TestExample,
-        name: 'Test',
-        meta: { title: '产品测试', icon: '', cache: true }
-      }]
     }, {
       path: '/device',
       component: Layout,

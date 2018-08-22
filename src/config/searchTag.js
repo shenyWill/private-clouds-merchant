@@ -4,6 +4,7 @@ export default {
   equipmentId: '设备',
   equipmentName: '设备名称',
   equipmentType: '设备类型',
+  describe: '描述',
   url: '设备URL地址',
   ipAddress: '设备IP地址',
   confidence: '相似度',

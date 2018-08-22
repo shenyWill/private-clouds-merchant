@@ -1,7 +1,7 @@
 <template>
   <div class="recognition">
     <Search :searchResult='searchResult' :equipmentArr='equipmentArr' :databaseArr='databaseArr'>
-      <el-form ref="search-form" :model="searchForm" slot="search-form" label-width="60px" class="search-form-box">
+      <el-form ref="search-form" :model="searchForm" slot="search-form" label-width="80px" class="search-form-box">
         <el-row>
           <el-col :span="5">
             <el-form-item label="姓名">
@@ -77,14 +77,14 @@
           </p>
         </div>
         <div class="recognition-card-simi">
-          <span><i class="el-icon-refresh"> 相似度：{{ item.confidence }}%</i></span>
+          <span><i class="iconfont icon-xiangsidu-lan"> 相似度：{{ item.confidence }}%</i></span>
         </div>
         <div class="recognition-card-date">
           <span><i class="el-icon-time"> 比对时间：{{ item.createTime }}</i></span>
         </div>
         <div class="recognition-card-operation">
-          <i class="el-icon-view" @click="showPersonDetail(item.personnelId)"></i>
-          <i class="el-icon-service" @click="showRecognitionDetail(item.personnelId, true)"></i>
+          <i class="iconfont icon-chakan-lan" @click="showPersonDetail(item.personnelId)"></i>
+          <i class="iconfont icon-shibiejilu-lan" @click="showRecognitionDetail(item.personnelId, true)"></i>
         </div>
       </div>
     </el-card>
@@ -244,102 +244,103 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.search-form-box {
-  margin: 30px 40px;
-}
-.recognition-card {
-  text-align: left;
-  margin: 30px 40px;
-  .clearfix {
-    height: 30px;
-    line-height: 30px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #555;
-  }
-}
-.recognition-card-info {
-  height: 159px;
-  box-sizing: border-box;
-  border-bottom: 1px solid #dcdcdc;
-  overflow: hidden;
-  padding: 20px;
-}
-.recognition-card-image {
-  height: 100%;
-  width: 260px;
-  overflow: hidden;
-  float: left;
-  img {
-    height: 120px;
-    width: 120px;
-    border-radius: 10px;
-  }
-}
-.recognition-card-content {
-  height: 100%;
-  width: 400px;
-  float: left;
-  margin-left: 20px;
-  p {
-    margin: 8px 0 0px 0;
-  }
-  .recognition-card-detail {
-    height: 21px;
-    line-height: 21px;
-    font-size: 21px;
-    color: #333;
-    font-weight: bold;
-  }
-  .detail-name {
-    display: inline-block;
-    padding-right: 11px;
-    position: relative;
-    box-sizing: border-box;
-    &::before {
-      content: '';
-      position: absolute;
-      display: block;
-      height: 100%;
-      width: 2px;
-      background-color: #333;
-      right: 0;
-    }
-  }
-  .detail-position {
-    font-size: 18px;
-  }
-  .recognition-card-equipment {
-    height: 18px;
-    line-height: 18px;
-    color: #666;
-    font-size: 16px;
-    margin-top: 15px;
-  }
-}
-.recognition-card-simi,.recognition-card-date,.recognition-card-operation {
-  height: 100%;
-  width: 200px;
-  float: left;
-  margin-left: 20px;
-  line-height: 120px;
-  overflow: hidden;
-  font-size: 16px;
-  color: #666;
-}
-.recognition-card-date {
-  width: 380px;
-}
-.recognition-card-operation {
-  color: #008aff;
-  font-weight: bold;
-  font-size: 30px;
-  text-align: right;
-  i {
-    margin-left: 20px;
-    cursor: pointer;
-  }
-}
+ .search-form-box {
+   margin: 30px 40px;
+ }
+ .recognition-card {
+   text-align: left;
+   margin: 30px 40px;
+   .clearfix {
+     height: 30px;
+     line-height: 30px;
+     font-size: 18px;
+     font-weight: bold;
+     color: #555;
+   }
+ }
+ .recognition-card-info {
+   height: 159px;
+   box-sizing: border-box;
+   border-bottom: 1px solid #dcdcdc;
+   overflow: hidden;
+   padding: 20px;
+ }
+ .recognition-card-image {
+   height: 100%;
+   width: 260px;
+   overflow: hidden;
+   float: left;
+   img {
+     height: 120px;
+     width: 120px;
+     border-radius: 10px;
+   }
+ }
+ .recognition-card-content {
+   height: 100%;
+   width: 400px;
+   float: left;
+   margin-left: 20px;
+   p {
+     margin: 8px 0 0px 0;
+   }
+   .recognition-card-detail {
+     height: 21px;
+     line-height: 21px;
+     font-size: 21px;
+     color: #333;
+     font-weight: bold;
+   }
+   .detail-name {
+     display: inline-block;
+     padding-right: 11px;
+     position: relative;
+     box-sizing: border-box;
+     &::before {
+       content: '';
+       position: absolute;
+       display: block;
+       height: 100%;
+       width: 2px;
+       background-color: #333;
+       right: 0;
+     }
+   }
+   .detail-position {
+     font-size: 18px;
+   }
+   .recognition-card-equipment {
+     height: 18px;
+     line-height: 18px;
+     color: #666;
+     font-size: 16px;
+     margin-top: 15px;
+   }
+ }
+ .recognition-card-simi,.recognition-card-date,.recognition-card-operation {
+   height: 100%;
+   width: 200px;
+   float: left;
+   margin-left: 20px;
+   line-height: 120px;
+   overflow: hidden;
+   font-size: 16px;
+   color: #666;
+ }
+ .recognition-card-date {
+   width: 380px;
+ }
+ .recognition-card-operation {
+   color: #008aff;
+   font-weight: bold;
+   font-size: 30px;
+   text-align: right;
+   i {
+     font-size: 28px;
+     margin-left: 30px;
+     cursor: pointer;
+   }
+ }
 </style>
 
 <style>
@@ -351,7 +352,7 @@ export default {
   text-align: left;
   border-radius: 15px;
   height: 700px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .recognition .el-dialog__wrapper {
   overflow: hidden;

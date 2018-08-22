@@ -309,126 +309,126 @@
 </script>
 
 <style lang="scss" scoped>
-.database-nav {
-  margin: 50px;
-  overflow: hidden;
-  .database-add,.database-list {
-    width: 740px;
-    height: 160px;
-    border-radius: 10px;
-    float: left;
-    margin-right: 50px;
-    margin-bottom: 50px;
-    position: relative;
-    &:hover {
-      cursor:pointer;
-    }
-  }
-  .database-list:nth-child(2n) {
-    margin-right: 0;
-  }
-  .database-list:hover {
-    .detabase-opa {
-      display: block;
-    }
-  }
-  .database-add {
-    border: 1px dashed #999;
-  }
-  .detabase-add-icon {
-    width: 120px;
-    height: 120px;
-    line-height: 120px;
-    border-radius: 8px;
-    border: 1px dashed #999;
-    color: #999;
-    font-size: 60px;
-    cursor: pointer;
-    float: left;
-  }
-  .database-add-content {
-    float: left;
-    text-align: left;
-    margin-left: 20px;
-    p {
-      margin: 15px 0;
-    }
-  }
-  .content-num {
-    font-size: 26px;
-    font-weight: bold;
-  }
-  .content-operate {
-    font-size: 18px;
-    color: #666;
-  }
-  .database-list-icon {
-    height: 120px;
-    width: 120px;
-    line-height: 120px;
-    border-radius: 20px;
-    font-size: 60px;
-    overflow: hidden;
-    float: left;
-    color: #ffffff;
-  }
-  .database-list-content {
-    width: 300px;
-    height: 120px;
-    float: left;
-    margin-left: 20px;
-    text-align: left;
-  }
-  .database-list-library {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 5px 0;
-  }
-  .library-name {
-    font-size: 26px;
-  }
-  .database-list-group {
-    font-size: 16px;
-    color: #666;
-    margin: 10px 0;
-  }
-  .detabase-opa {
-    color: #666666;
-    font-size: 35px;
-    position: absolute;
-    top: 60px;
-    display: none;
-    cursor: pointer;
-  }
-  .detabase-detail {
-    right: 244px;
-  }
-  .detabase-add {
-    right: 174px;
-  }
-  .detabase-edit {
-    right: 104px;
-  }
-  .detabase-delete {
-    right: 34px;
-  }
-}
-.can-not-delete-detail {
-  font-weight: bold;
-  margin-top: 0;
-}
-.can-not-delete-button {
-  margin-left: 130px;
-  margin-top: 20px;
-}
-.can-delete-detail {
-  font-weight: bold;
-  margin-left: 100px;
-  margin-bottom: 50px;
-}
-.can-delete-cancel {
-  margin-left: 75px;
-}
+ .database-nav {
+   margin: 50px;
+   overflow: hidden;
+   .database-add,.database-list {
+     width: 740px;
+     height: 160px;
+     border-radius: 10px;
+     float: left;
+     margin-right: 50px;
+     margin-bottom: 50px;
+     position: relative;
+     &:hover {
+       cursor:pointer;
+     }
+   }
+   .database-list:nth-child(2n) {
+     margin-right: 0;
+   }
+   .database-list:hover {
+     .detabase-opa {
+       display: block;
+     }
+   }
+   .database-add {
+     border: 1px dashed #999;
+   }
+   .detabase-add-icon {
+     width: 120px;
+     height: 120px;
+     line-height: 120px;
+     border-radius: 8px;
+     border: 1px dashed #999;
+     color: #999;
+     font-size: 60px;
+     cursor: pointer;
+     float: left;
+   }
+   .database-add-content {
+     float: left;
+     text-align: left;
+     margin-left: 20px;
+     p {
+       margin: 15px 0;
+     }
+   }
+   .content-num {
+     font-size: 26px;
+     font-weight: bold;
+   }
+   .content-operate {
+     font-size: 18px;
+     color: #666;
+   }
+   .database-list-icon {
+     height: 120px;
+     width: 120px;
+     line-height: 120px;
+     border-radius: 20px;
+     font-size: 60px;
+     overflow: hidden;
+     float: left;
+     color: #ffffff;
+   }
+   .database-list-content {
+     width: 300px;
+     height: 120px;
+     float: left;
+     margin-left: 20px;
+     text-align: left;
+   }
+   .database-list-library {
+     font-size: 20px;
+     font-weight: bold;
+     margin: 5px 0;
+   }
+   .library-name {
+     font-size: 26px;
+   }
+   .database-list-group {
+     font-size: 16px;
+     color: #666;
+     margin: 10px 0;
+   }
+   .detabase-opa {
+     color: #666666;
+     font-size: 35px;
+     position: absolute;
+     top: 60px;
+     display: none;
+     cursor: pointer;
+   }
+   .detabase-detail {
+     right: 244px;
+   }
+   .detabase-add {
+     right: 174px;
+   }
+   .detabase-edit {
+     right: 104px;
+   }
+   .detabase-delete {
+     right: 34px;
+   }
+ }
+ .can-not-delete-detail {
+   font-weight: bold;
+   margin-top: 0;
+ }
+ .can-not-delete-button {
+   margin-left: 130px;
+   margin-top: 20px;
+ }
+ .can-delete-detail {
+   font-weight: bold;
+   margin-left: 100px;
+   margin-bottom: 50px;
+ }
+ .can-delete-cancel {
+   margin-left: 75px;
+ }
 
 </style>
 <style lang="scss">
@@ -441,6 +441,11 @@
    }
    .el-dialog__body {
      margin-left: 80px;
+   }
+ }
+ .database .person-detail-add {
+   .el-dialog__body {
+     margin-left: 0;
    }
  }
 </style>

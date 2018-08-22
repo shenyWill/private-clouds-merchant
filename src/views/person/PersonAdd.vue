@@ -229,12 +229,12 @@ export default {
     },
     // 编辑时修改图片
     async editImage (imgUrl, imgIndex) {
-      let requerstObj = {};
-      requerstObj[imgIndex] = imgUrl;
-      requerstObj.personnelId = this.imagePersonnelId;
+      let data = {};
       let index = imgIndex.charAt(imgIndex.length - 1);
-      requerstObj['imageId' + index] = this.imageIdArr[index - 1];
-      let imageResponse = await api.post(config.person.updateImage, requerstObj);
+      data.personnelId = this.imagePersonnelId;
+      data['imageId' + index] = this.imageIdArr[index - 1];
+      data[imgIndex] = imgUrl;
+      let imageResponse = await api.post(config.person.updateImage, data);
       if (imageResponse.data.code === 0) {
         this[imgIndex] = this.addPersonForm[imgIndex] = this.showImageUrl = imgUrl;
         this.$message({
@@ -270,9 +270,10 @@ export default {
           obj.disStartTime && (obj.disStartTime = parseTime(obj.disStartTime));
           obj.disEndTime && (obj.disEndTime = parseTime(obj.disEndTime));
           if (obj.disSwitch) {
-              obj.disSwitch = 1;
+            // disSwitch 1: on 2: off
+            obj.disSwitch = 1;
           } else {
-              obj.disSwitch = 0;
+            obj.disSwitch = 2;
           }
           this.$emit('addSumbit', obj);
         }

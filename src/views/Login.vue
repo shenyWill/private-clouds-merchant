@@ -17,7 +17,7 @@
             auto-complete="off"
             @keyup.enter.native="onSubmit"
             v-model="form.username">
-            <i slot="prefix" class="el-input__icon el-icon-location"></i>
+            <i slot="prefix" class="iconfont icon-qita-lan"></i>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -28,7 +28,7 @@
             type="password"
             v-model="form.password"
             @keyup.enter.native="onSubmit">
-            <i slot="prefix" class="el-input__icon el-icon-view"></i>
+            <i slot="prefix" class="iconfont icon-mima-lan"></i>
           </el-input>
         </el-form-item>
         <el-button class="login__form-button" type="primary" @click="onSubmit" :disabled="disabled">登 录</el-button>

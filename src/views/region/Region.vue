@@ -58,8 +58,9 @@
       <el-form
         ref="addForm"
         :model="addForm"
-        :rules="addRules"
-        label-position="top">
+        label-width="80px"
+        label-position="right"
+        :rules="addRules">
         <el-form-item label="区域名称" prop="areaName">
           <el-input
             v-model="addForm.areaName"
@@ -82,7 +83,8 @@
       title="编辑区域">
       <el-form
         ref="editForm"
-        label-position="top"
+        label-width="80px"
+        label-position="right"
         :model="editForm"
         :rules="editRules">
         <el-form-item label="区域名称" prop="areaName">
@@ -101,7 +103,11 @@
       :visible.sync="addDeviceDialog"
       :fullscreen="true"
       width="25%">
-      <el-form ref="deviceForm" label-position="top" :model="deviceForm" :rules="deviceRules">
+      <el-form ref="deviceForm"
+        :model="deviceForm"
+        :rules="deviceRules"
+        label-position="right"
+        label-width="100px">
         <el-form-item label="设备名称" prop="equipmentName">
           <el-input v-model="deviceForm.equipmentName" placeholder="请输入设备名称"></el-input>
         </el-form-item>
@@ -124,13 +130,13 @@
         <el-form-item label="设备密码" prop="loginPsw">
           <el-input v-model="deviceForm.loginPsw" placeholder="请输入与设备密码" type="password"></el-input>
         </el-form-item>
-        <el-form-item label="设备品牌名称" prop="brand">
+        <el-form-item label="品牌名称" prop="brand">
           <el-input v-model="deviceForm.brand" placeholder="请输入设备类型"></el-input>
         </el-form-item>
-        <el-form-item label="设备型号系列" prop="brandseries">
+        <el-form-item label="型号系列" prop="brandseries">
           <el-input v-model="deviceForm.brandseries" placeholder="请输入设备型号系列"></el-input>
         </el-form-item>
-        <el-form-item label="设备播放地址" prop="mediaUrl">
+        <el-form-item label="播放地址" prop="mediaUrl">
           <el-input v-model="deviceForm.mediaUrl" placeholder="请输入设备rtsp/rtmp地址"></el-input>
         </el-form-item>
         <el-form-item label="设备地址" prop="deviceAddress">
@@ -143,13 +149,13 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="deviceForm.deviceAddress === 'ip'" label="设备IP地址" prop="ipAddress">
+        <el-form-item v-if="deviceForm.deviceAddress === 'ip'" label="IP地址" prop="ipAddress">
           <el-input v-model="deviceForm.ipAddress" placeholder="请输入设备IP地址"></el-input>
         </el-form-item>
         <el-form-item v-if="deviceForm.deviceAddress === 'ip'" label="设备端口号" prop="port">
           <el-input v-model="deviceForm.port" placeholder="请填写设备端口号"></el-input>
         </el-form-item>
-        <el-form-item v-if="deviceForm.deviceAddress === 'url'" label="设备URL地址" prop="url">
+        <el-form-item v-if="deviceForm.deviceAddress === 'url'" label="URL地址" prop="url">
           <el-input v-model="deviceForm.url" placeholder="请输入设备URL地址"></el-input>
         </el-form-item>
       </el-form>
@@ -563,7 +569,6 @@
      }
      .el-form {
        margin: 0 auto;
-       width: 50%;
        font-weight: bold;
      }
    }

@@ -12,7 +12,7 @@
             :value="item.id">
           </el-option>
         </el-select>
-        <el-button @click="toggleFullscreen" type="primary" class="stream__fullscreen">全屏</el-button>
+        <i class="iconfont icon-zhankaiquanping-lan stream__fullscreen" @click="toggleFullscreen"></i>
       </div>
       <video
         id="player"
@@ -166,6 +166,7 @@
      // change video player src
      changePlayerSrc (url) {
        this.player.pause();
+       this.player.reset();
        this.player.src(url);
        this.player.load();
        this.playPlayer();
@@ -273,6 +274,11 @@
      float: left;
      .stream__fullscreen {
        float: right;
+       margin-top: 5px;
+       font-size: 20px;
+       &:hover {
+         cursor: pointer;
+       }
      }
    }
    .camera-title {
@@ -287,11 +293,11 @@
      object-fit:fill;
    }
    .stream__compare {
-     float: left;
-     width: 500px;
+     position: absolute;
+     right: 0;
+     min-width: 500px;
      height: 641px;
      background-color: #fff;
-     margin-left: 25px;
      border-radius: 10px;
      overflow: auto;
      .compare-title {

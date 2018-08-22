@@ -54,9 +54,7 @@
              this.alertData = JSON.parse(response.body);
            }
          });
-       }, error => {
-         console.log('socket error');
-         console.log(error);
+       }, () => {
          // this.disconnectSocket();
          // socket connect error, reconnect
          // this.initSocket(url);

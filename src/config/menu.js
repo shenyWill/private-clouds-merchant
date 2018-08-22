@@ -1,21 +1,21 @@
 export default [{
+  name: '实时视频',
+  path: '/stream/index',
+  icon: 'iconfont icon-shishijiankong-lan',
+  children: []
+}, {
   name: '人员管理',
   path: '/person/database',
-  icon: 'el-icon-sold-out',
+  icon: 'iconfont icon-renyuanguanli-lan',
   children: []
 }, {
-  name: '识别记录',
+  name: '人员识别',
   path: '/recognize/index',
-  icon: 'el-icon-picture',
+  icon: 'iconfont icon-shibiejilu-lan',
   children: []
 }, {
-  name: '区域管理',
+  name: '设备管理',
   path: '/region/index',
-  icon: 'el-icon-location',
-  children: []
-}, {
-  name: '实时监控',
-  path: '/stream/index',
-  icon: 'el-icon-location',
+  icon: 'iconfont icon-guanyushebei-lan',
   children: []
 }];

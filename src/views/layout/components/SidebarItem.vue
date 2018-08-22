@@ -43,15 +43,16 @@ export default {
 };
 </script>
 
-<style>
-.sidebar-item {
-  font-size: 0;
-}
-.sidebar-item__icon {
-  font-size: 28px;
-  color: black;
-}
-.sidebar-item__container {
-  text-decoration: none;
-}
+<style lang="scss">
+ .sidebar-item {
+   font-size: 0;
+   .sidebar-item__icon {
+     font-size: 32px;
+     color: white;
+     margin-right: 20px;
+   }
+ }
+ .sidebar-item__container {
+   text-decoration: none;
+ }
 </style>

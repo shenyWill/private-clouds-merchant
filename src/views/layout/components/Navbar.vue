@@ -1,7 +1,8 @@
 <template>
   <div :class="['navbar', isCollapse ? 'navbar__collapse' : '']">
     <el-menu mode="horizontal">
-      <el-button class="navbar__btn" icon="el-icon-menu" @click="toggleMenu"></el-button>
+      <i class="iconfont icon-zhediecaidanlan-lan navbar__btn" @click="toggleMenu" v-if="isCollapse"></i>
+      <i class="iconfont icon-zhankaicaidanlan-lan navbar__btn" @click="toggleMenu" v-else></i>
       <div class="navbar__userpane">
         <Userpane></Userpane>
       </div>
@@ -47,7 +48,11 @@
    transition: all .2s;
    .navbar__btn {
      position: relative;
-     left: 10px;
+     left: 20px;
+     font-size: 28px;
+     &:hover {
+       cursor: pointer;
+     }
    }
    .navbar__userpane {
      float: right;
