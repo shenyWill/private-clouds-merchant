@@ -70,7 +70,8 @@
    methods: {
      ...mapActions([
        'logout',
-       'setBlacklistAlert'
+       'setBlacklistAlert',
+       'setBlacklistSound'
      ]),
      toggleMenu () {
        this.showMenu = !this.showMenu;
@@ -81,6 +82,7 @@
        const response = await api.post(config.system.update, data);
        if (response.data.code === 0) {
          this.$message({ type: 'success', message: '更新成功' });
+         this.setBlacklistSound(newVal);
          this.settingDialog = false;
        } else {
          this.$message({ type: 'error', message: response.data.msg });
@@ -93,6 +95,7 @@
        const response = await api.post(config.system.update, data);
        if (response.data.code === 0) {
          this.$message({ type: 'success', message: '更新成功' });
+         this.setBlacklistAlert(newVal);
          this.settingDialog = false;
        } else {
          this.$message({ type: 'error', message: response.data.msg });
@@ -109,6 +112,7 @@
            // 3: blacklist show dialog
            if (item.configureType === '2') {
              this.alertSound = item.parameterValue === '1';
+             this.setBlacklistSound(this.alertSound);
            } else if (item.configureType === '3') {
              this.alertDialog = item.parameterValue === '1';
              this.setBlacklistAlert(this.alertDialog);

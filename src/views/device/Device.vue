@@ -69,7 +69,7 @@
     </div>
     <div v-else>暂无数据</div>
     <el-pagination
-      v-if="size > 0"
+      v-if="size > 10"
       background
       :current-page.sync="currentPage"
       @current-change="handleCurrentChange"
@@ -143,6 +143,7 @@
       class="device__dialog-add"
       :visible.sync="editDialog"
       width="25%"
+      :fullscreen="true"
       title="修改设备">
       <el-form
         ref="editForm"
@@ -213,7 +214,7 @@
       <div class="dialog__content">
         <div class="dialog__content-item" v-for="(value, key) in deviceDetail" :key="key">
           <span class="dialog__content-key">{{ key }}:</span>
-          <span class="dialog__content-value">{{ value }}</span>
+          <span :title="value" class="dialog__content-value">{{ value }}</span>
         </div>
       </div>
     </el-dialog>
@@ -239,7 +240,7 @@
  import { isValidIP } from '@/utils';
  import DeviceCell from './DeviceCell';
  import Search from '@/views/search/Search';
- import { mapGetters } from 'vuex';
+ import { mapGetters, mapActions } from 'vuex';
 
  export default {
    name: 'Device',
@@ -386,6 +387,9 @@
      }
    },
    methods: {
+     ...mapActions([
+       'setSelectedRegion'
+     ]),
      resetForm (name) {
        if (!name) return;
        if (!this.$refs[name]) return;
@@ -585,7 +589,7 @@
        if (!this.regionID || this.regionID === '') {
          this.regionID = this.selectedRegion;
        }
-       this.$store.dispatch('setSeletedRegion', this.regionID);
+       this.setSelectedRegion(this.regionID);
        this.checkCanAccess(this.regionID);
        await this.fetchData({limit: this.limit, offset: this.offset});
      }

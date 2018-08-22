@@ -78,7 +78,7 @@ export default {
     value: 'url'
   }],
   score: {
-    compare: 0,
+    compare: 73,
     blacklist: 73
   }
 };

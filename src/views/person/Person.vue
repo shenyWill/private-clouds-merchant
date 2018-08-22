@@ -60,7 +60,7 @@
             <i class="el-icon-more"></i>
           </el-tooltip>
           <div class="list-content">
-            <img :src="item.personnelImgList[0] && (item.url + item.personnelImgList[0].imageUrl)" class="person-image">
+            <img :src="item.personnelImgList[0] && (item.url + item.personnelImgList[0])" class="person-image">
             <p class="person-name">{{ item.personnelName }}</p>
             <p class="person-position">{{ item.personnelDescribe }}</p>
             <p class="person-company">{{ item.groupName }}</p>
@@ -73,6 +73,7 @@
     <!-- 分页 -->
     <el-pagination
       :page-size="9"
+      v-if="count > 9"
       :current-page.sync="currentPage"
       :disabled='deleteAllOperationTag'
       background
@@ -103,7 +104,7 @@
       :visible.sync="dialogPersonAdd"
       width="25%"
       custom-class="person-detail-add"
-      title="编辑人员信息"
+      title="人员信息"
       :before-close="removePersonAddForm">
       <PersonAdd
         :editObj="editObj"
@@ -493,18 +494,24 @@ export default {
 </style>
 
 <style lang="scss">
-.person-detail-show,.person-detail-add {
-  border-radius: 15px;
-}
-.person-detail-add {
-  text-align: left;
-}
-.person-pop {
-  padding: 5px 10px;
-  i {
-    font-size: 22px;
-    padding: 10px;
-    cursor: pointer;
-  }
-}
+ .person-detail-show,.person-detail-add {
+   border-radius: 15px;
+ }
+ .person-detail-add {
+   text-align: left;
+   .el-dialog__header {
+     font-size: 20px;
+     font-weight: bold;
+     border-bottom: 1px solid lightgray;
+   }
+
+ }
+ .person-pop {
+   padding: 5px 10px;
+   i {
+     font-size: 22px;
+     padding: 10px;
+     cursor: pointer;
+   }
+ }
 </style>

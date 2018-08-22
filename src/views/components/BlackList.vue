@@ -46,10 +46,12 @@
         </div>
       </div>
     </div>
+    <audio ref="audio" :src="sound" v-show="false"></audio>
   </div>
 </template>
 
 <script>
+ import { mapGetters } from 'vuex';
  export default {
    name: 'BlackList',
    props: {
@@ -71,8 +73,14 @@
        visible: false,
        timer: null,
        duration: 3000,
+       sound: require('@/assets/blacklist.mp3'),
        closed: false
      };
+   },
+   computed: {
+     ...mapGetters([
+       'blacklistSound'
+     ])
    },
    watch: {
      show (newVal) {
@@ -102,6 +110,7 @@
    },
    mounted () {
      this.startTimer();
+     if (this.blacklistSound) this.$refs['audio'].play();
    }
  };
 </script>

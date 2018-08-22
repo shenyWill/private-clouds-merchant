@@ -1,7 +1,8 @@
 const app = {
   state: {
     socketConnected: false,
-    blacklistAlert: false,
+    blacklistAlert: false, // show blacklist alert dialog
+    blacklistSound: false, // blacklist alert sound
     sidebarToggle: false,
     selectedRegion: ''
   },
@@ -20,13 +21,16 @@ const app = {
     },
     SET_BLACKLIST_ALERT (state, value) {
       state.blacklistAlert = value;
+    },
+    SET_BLACKLIST_SOUND (state, value) {
+      state.blacklistSound = value;
     }
   },
   actions: {
     toggleMenu ({ commit }) {
       commit('TOGGLE_MENU');
     },
-    setSeletedRegion ({ commit }, region) {
+    setSelectedRegion ({ commit }, region) {
       commit('SET_SELECTED_REGION', region);
     },
     connectSocket ({ commit }) {
@@ -37,13 +41,17 @@ const app = {
     },
     setBlacklistAlert ({ commit }, value) {
       commit('SET_BLACKLIST_ALERT', value);
+    },
+    setBlacklistSound ({ commit }, value) {
+      commit('SET_BLACKLIST_SOUND', value);
     }
   },
   getters: {
     isCollapse: state => state.sidebarToggle,
     selectedRegion: state => state.selectedRegion,
     socketConnected: state => state.socketConnected,
-    blacklistAlert: state => state.blacklistAlert
+    blacklistAlert: state => state.blacklistAlert,
+    blacklistSound: state => state.blacklistSound
   }
 };
 

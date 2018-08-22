@@ -102,6 +102,7 @@
        miniScore: config.score.compare, // the minimum score to show in compareList
        captureList: [], // capture data list
        compareList: [], // compare data list
+       isSubscribed: false,
        cameraOption: [],
        cameraMonitorUrl: '',
        personDetail: {}, // 个人详情
@@ -155,13 +156,21 @@
        this.socket.subscribe('/face/recognition', response => {
          const data = JSON.parse(response.body);
          this.captureList.unshift(data);
-         if (Number(data.confidence) > this.miniScore) this.compareList.unshift(data);
+         if (data.timeType === '1' && Number(data.confidence) > this.miniScore) this.compareList.unshift(data);
        });
+       this.isSubscribed = true;
      },
      // init video player
      initPlayer (config) {
        videojs.options.flash.swf = require('@/assets/VideoJS.swf');
        this.player = videojs('player', config);
+       this.player.on('dblclick', () => {
+         if (this.player.isFullscreen()) {
+           this.player.exitFullscreen();
+         } else {
+           this.player.requestFullscreen();
+         }
+       });
      },
      // change video player src
      changePlayerSrc (url) {
@@ -177,7 +186,9 @@
      // play video player
      playPlayer () {
        this.player.play();
-       this.subscribeSocket();
+       if (!this.isSubscribed) {
+         this.subscribeSocket();
+       }
      },
      // dispose player when component destroyed
      destroyPlayer () {
@@ -201,53 +212,54 @@
        }
      },
      async showPersonDetail (id) {
-        const response = await api.post(config.person.detail, {personnelId: id});
-        if (Number(response.data.code) === 0) {
-          this.personDetail = response.data.data;
-          this.dialogPersonDetail = true;
-        }
+       const response = await api.post(config.person.detail, {personnelId: id});
+       if (Number(response.data.code) === 0) {
+         this.personDetail = response.data.data;
+         this.dialogPersonDetail = true;
+       }
      },
      // 查看比对详情
-    async showRecognitionDetail (personnelId, tag) {
-      if (tag) {
-        this.recognitionOffset = 0;
-        this.recognitionDetail = {};
-        this.recognitionDetailId = personnelId;
-      }
-      const response = await api.post(config.recognition.compareDetail, {
-        personnelId: this.recognitionDetailId,
-        offset: this.recognitionOffset
-      });
-      if (Number(response.data.code) === 0) {
-        for (let item in response.data.data) {
-          this.$set(this.recognitionDetail, item, response.data.data[item]);
-        }
-        this.recognitionDetailUrl = response.data.url;
-        this.recognitionDetail = Object.assign(this.recognitionDetail, response.data.data);
-        this.recognitionOffset = response.data.offset;
-        this.dialogRecognitionDetail = true;
-        setTimeout(() => {
-          this.recognitionDetailTag = true;
-        }, 2000);
-      }
-    },
-    // 滚动条再次调用
-    detailScroll () {
-      document.getElementsByClassName('recognition-detail-show')[0].onscroll = () => {
-        let _self = document.getElementsByClassName('recognition-detail-show')[0];
-        let distance = _self.scrollHeight - _self.scrollTop - _self.clientHeight;
-        if (distance < 100 && this.recognitionDetailTag === true) {
-          this.recognitionDetailTag = false;
-          this.showRecognitionDetail(this.recognitionDetailId);
-        }
-      };
-    }
+     async showRecognitionDetail (personnelId, tag) {
+       if (tag) {
+         this.recognitionOffset = 0;
+         this.recognitionDetail = {};
+         this.recognitionDetailId = personnelId;
+       }
+       const response = await api.post(config.recognition.compareDetail, {
+         personnelId: this.recognitionDetailId,
+         offset: this.recognitionOffset
+       });
+       if (Number(response.data.code) === 0) {
+         for (let item in response.data.data) {
+           this.$set(this.recognitionDetail, item, response.data.data[item]);
+         }
+         this.recognitionDetailUrl = response.data.url;
+         this.recognitionDetail = Object.assign(this.recognitionDetail, response.data.data);
+         this.recognitionOffset = response.data.offset;
+         this.dialogRecognitionDetail = true;
+         setTimeout(() => {
+           this.recognitionDetailTag = true;
+         }, 2000);
+       }
+     },
+     // 滚动条再次调用
+     detailScroll () {
+       document.getElementsByClassName('recognition-detail-show')[0].onscroll = () => {
+         let _self = document.getElementsByClassName('recognition-detail-show')[0];
+         let distance = _self.scrollHeight - _self.scrollTop - _self.clientHeight;
+         if (distance < 100 && this.recognitionDetailTag === true) {
+           this.recognitionDetailTag = false;
+           this.showRecognitionDetail(this.recognitionDetailId);
+         }
+       };
+     }
    },
    async mounted () {
      this.initPlayer({ techOrder: ['flash', 'html5'] });
      this.cameraOption = await this.fetchCameraList();
    },
    beforeRouteLeave (to, from, next) {
+     this.isSubscribed = false;
      next();
    },
    beforeRouteEnter (to, from, next) {
@@ -266,7 +278,7 @@
    text-align: left;
    overflow: hidden;
    .stream__video-wrapper {
-     margin-bottom: 30px;
+     margin-bottom: 10px;
      width: 1035px;
      border-radius: 5px;
      background-color: #fff;
@@ -295,6 +307,7 @@
    .stream__compare {
      position: absolute;
      right: 0;
+     left: 1050px;
      min-width: 500px;
      height: 641px;
      background-color: #fff;

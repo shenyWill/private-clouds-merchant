@@ -30,91 +30,93 @@ import Region from '@/views/region/Region';
 Vue.use(Router);
 
 export default new Router({
-  routes: [
-    {
-      path: '/login',
-      name: 'Login',
-      component: Login
+  routes: [{
+    path: '/',
+    name: 'Login',
+    component: Login
+  }, {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  }, {
+    path: '/device',
+    component: Layout,
+    redirect: '/device/index',
+    children: [{
+      path: '/device/index',
+      component: Device,
+      name: 'Device',
+      meta: { title: '设备管理', icon: '', cache: false }
+    }]
+  }, {
+    path: '/person',
+    component: Layout,
+    redirect: '/person/index',
+    children: [{
+      path: '/person/index',
+      component: Person,
+      name: 'Person',
+      meta: { title: '人员管理', icon: '', cache: false }
     }, {
-      path: '/device',
-      component: Layout,
-      redirect: '/device/index',
-      children: [{
-        path: '/device/index',
-        component: Device,
-        name: 'Device',
-        meta: { title: '设备管理', icon: '', cache: false }
-      }]
+      path: '/person/database',
+      component: Database,
+      name: 'Database',
+      meta: { title: '库管理', icon: '', cache: false }
+    }]
+  }, {
+    path: '/recognize',
+    component: Layout,
+    redirect: '/recognize/index',
+    children: [{
+      path: '/recognize/index',
+      component: Recognition,
+      name: 'Recognition',
+      meta: { title: '识别记录', icon: '', cache: false }
+    }]
+  }, {
+    path: '/system',
+    component: Layout,
+    redirect: '/system/index',
+    children: [{
+      path: '/system/index',
+      component: System,
+      name: 'System',
+      meta: { title: '系统管理', icon: '', cache: true }
     }, {
-      path: '/person',
-      component: Layout,
-      redirect: '/person/index',
-      children: [{
-        path: '/person/index',
-        component: Person,
-        name: 'Person',
-        meta: { title: '人员管理', icon: '', cache: false }
-      }, {
-        path: '/person/database',
-        component: Database,
-        name: 'Database',
-        meta: { title: '库管理', icon: '', cache: false }
-      }]
+      path: '/system/organization',
+      component: Organization,
+      name: 'Organization',
+      meta: { title: '组织管理', icon: '', cache: true }
     }, {
-      path: '/recognize',
-      component: Layout,
-      redirect: '/recognize/index',
-      children: [{
-        path: '/recognize/index',
-        component: Recognition,
-        name: 'Recognition',
-        meta: { title: '识别记录', icon: '', cache: false }
-      }]
+      path: '/system/accounts',
+      component: Accounts,
+      name: 'Accounts',
+      meta: { title: '账号管理', icon: '', cache: true }
     }, {
-      path: '/system',
-      component: Layout,
-      redirect: '/system/index',
-      children: [{
-        path: '/system/index',
-        component: System,
-        name: 'System',
-        meta: { title: '系统管理', icon: '', cache: true }
-      }, {
-        path: '/system/organization',
-        component: Organization,
-        name: 'Organization',
-        meta: { title: '组织管理', icon: '', cache: true }
-      }, {
-        path: '/system/accounts',
-        component: Accounts,
-        name: 'Accounts',
-        meta: { title: '账号管理', icon: '', cache: true }
-      }, {
-        path: '/system/role',
-        component: Role,
-        name: 'Role',
-        meta: { title: '角色管理', icon: '', cache: true }
-      }]
-    }, {
-      path: '/region',
-      component: Layout,
-      redirect: '/region/index',
-      children: [{
-        path: '/region/index',
-        component: Region,
-        name: 'Region',
-        meta: { title: '区域管理', icon: '', cache: true }
-      }]
-    }, {
-      path: '/stream',
-      component: Layout,
-      redirect: '/stream/index',
-      children: [{
-        path: '/stream/index',
-        component: Stream,
-        name: 'Stream',
-        meta: { title: '视频管理', icon: '', cache: false }
-      }]
-    }
-  ]
+      path: '/system/role',
+      component: Role,
+      name: 'Role',
+      meta: { title: '角色管理', icon: '', cache: true }
+    }]
+  }, {
+    path: '/region',
+    component: Layout,
+    redirect: '/region/index',
+    children: [{
+      path: '/region/index',
+      component: Region,
+      name: 'Region',
+      meta: { title: '区域管理', icon: '', cache: true }
+    }]
+  }, {
+    path: '/stream',
+    component: Layout,
+    redirect: '/stream/index',
+    children: [{
+      path: '/stream/index',
+      component: Stream,
+      name: 'Stream',
+      meta: { title: '视频管理', icon: '', cache: false }
+    }]
+  }]
 });

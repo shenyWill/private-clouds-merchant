@@ -1,6 +1,6 @@
 <template>
   <div class="region">
-    <Search :searchResult="searchResult">
+    <Search :searchResult="searchResult" v-if="false">
       <el-form
         class="region__search"
         slot="search-form"
@@ -39,7 +39,7 @@
         </el-col>
       </el-row>
       <el-pagination
-        v-if="size > 0"
+        v-if="size > 11"
         background
         :current-page.sync="currentPage"
         :page-size="limit"

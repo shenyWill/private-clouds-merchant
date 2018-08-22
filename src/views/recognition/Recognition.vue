@@ -71,6 +71,7 @@
           <p class="recognition-card-tag">
             <el-tag type="warning">{{ equipmentTypeName[item.equipmentType] }}</el-tag>
             <el-tag :type="item.libraryTypeName=='黑名单' ? 'danger' : 'success'">{{ item.libraryTypeName }}</el-tag>
+            <el-tag type="danger" v-if="item.timeType === '2'">过期</el-tag>
           </p>
           <p class="recognition-card-equipment">
             <span class="equipment-name">设备名称： {{ item.equipmentName }}</span>
@@ -198,6 +199,7 @@ export default {
     },
     // 滚动条再次调用
     detailScroll () {
+      if (!document.getElementsByClassName('recognition-detail-show')[0]) return;
       document.getElementsByClassName('recognition-detail-show')[0].onscroll = () => {
         let _self = document.getElementsByClassName('recognition-detail-show')[0];
         let distance = _self.scrollHeight - _self.scrollTop - _self.clientHeight;
@@ -343,18 +345,21 @@ export default {
  }
 </style>
 
-<style>
-.recognition-card .el-card__body {
-  padding: 0;
-  margin: 0;
-}
-.recognition-detail-show {
-  text-align: left;
-  border-radius: 15px;
-  height: 700px;
-  overflow-y: auto;
-}
-.recognition .el-dialog__wrapper {
-  overflow: hidden;
-}
+<style lang="scss">
+ .recognition-card .el-card__body {
+   padding: 0;
+   margin: 0;
+ }
+ .recognition-detail-show {
+   text-align: left;
+   border-radius: 15px;
+   height: 700px;
+   overflow-y: auto;
+   .el-dialog {
+     border-radius: 20px;
+   }
+ }
+ .recognition .el-dialog__wrapper {
+   overflow: hidden;
+ }
 </style>

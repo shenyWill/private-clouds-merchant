@@ -1,10 +1,11 @@
 <template>
   <div class="stream-compare">
     <span class="stream-compare__image-wrapper">
+      <span class="stream-compare__image-type">{{ item.libraryTypeName }}</span>
       <img :src="item.url + item.imageUrl2" class="stream-compare__image" />
     </span>
     <span class="stream-compare__image-wrapper">
-      <span class="stream-compare__image-score">{{ item.confidence }}%</span>
+      <span class="stream-compare__image-score">{{ parseInt(item.confidence) }}%</span>
       <img :src="item.url + item.imageUrl1" class="stream-compare__image" />
     </span>
     <div class="stream-compare__content">
@@ -51,65 +52,77 @@ export default {
 </script>
 
 <style lang="scss">
-.stream-compare {
-  border-bottom: 1px solid lightgray;
-  overflow: hidden;
-  .stream-compare__image-wrapper {
-    margin-top: 20px;
-    position: relative;
-    display: inline-block;
-    width: 108px;
-    height: 108px;
-    margin-left: 20px;
-    .stream-compare__image {
-      display: inline-block;
-      width: 108px;
-      height: 108px;
-      border-radius: 10px;
-    }
-    .stream-compare__image-score {
-      position: absolute;
-      padding: 5px;
-      min-width: 40px;
-      top: 0;
-      right: 0;
-      font-size: 14px;
-      color: white;
-      text-align: right;
-      border-radius: 10px;
-      background-color: rgba(74, 73, 72, 0.8);
-    }
-  }
-  .stream-compare__content {
-    margin-left: 10px;
-    margin-bottom: 10px;
-    display: inline-block;
-    font-size: 14px;
-    .stream-compare__device {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .stream-compare__person {
-      margin-bottom: 10px;
-      .stream-compare__name {
-        font-weight: bold;
-      }
-    }
-    .stream-compare__tag .el-tag {
-      background-color: #008aff;
-      color: white;
-      &:hover {
-        cursor: pointer;
-      }
-    }
-    .stream-compare__time {
-      margin-bottom: 5px;
-      .el-tag {
-        &:hover {
-          cursor: pointer;
-        }
-      }
-    }
-  }
-}
+ .stream-compare {
+   border-bottom: 1px solid lightgray;
+   overflow: hidden;
+   .stream-compare__image-wrapper {
+     margin-top: 20px;
+     position: relative;
+     display: inline-block;
+     width: 108px;
+     height: 108px;
+     margin-left: 20px;
+     .stream-compare__image {
+       display: inline-block;
+       width: 108px;
+       height: 108px;
+       border-radius: 10px;
+     }
+     .stream-compare__image-type {
+       position: absolute;
+       padding: 5px;
+       min-width: 40px;
+       top: 0;
+       right: 0;
+       font-size: 14px;
+       color: white;
+       text-align: right;
+       border-radius: 10px;
+       background-color: rgba(74, 73, 72, 0.8);
+     }
+     .stream-compare__image-score {
+       position: absolute;
+       padding: 5px;
+       min-width: 40px;
+       top: 0;
+       right: 0;
+       font-size: 14px;
+       color: white;
+       text-align: right;
+       border-radius: 10px;
+       background-color: rgba(74, 73, 72, 0.8);
+     }
+   }
+   .stream-compare__content {
+     margin-left: 10px;
+     margin-bottom: 10px;
+     display: inline-block;
+     font-size: 14px;
+     .stream-compare__device {
+       font-weight: bold;
+       margin-bottom: 10px;
+     }
+     .stream-compare__person {
+       margin-bottom: 10px;
+       .stream-compare__name {
+         font-weight: bold;
+       }
+     }
+     .stream-compare__tag .el-tag {
+       background-color: #008aff;
+       color: white;
+       &:hover {
+         cursor: pointer;
+       }
+     }
+     .stream-compare__time {
+       margin-bottom: 5px;
+       .el-tag {
+         &:hover {
+           cursor: pointer;
+         }
+       }
+     }
+   }
+ }
 </style>

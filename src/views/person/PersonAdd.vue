@@ -99,13 +99,12 @@
           <el-switch name="l" v-model="addPersonForm.disSwitch" active-text="开" inactive-text="关"></el-switch>
         </el-form-item>
         <el-form-item>
-          <el-col :span="24" :offset="18">
-            <el-button
-              type="primary"
-              @click="onSubmit('add-person-form')">
-              {{ addOrEdit == 0 ? '确认添加' : '确认修改' }}
-            </el-button>
-          </el-col>
+          <el-button
+            class="dialog-confirm-button"
+            type="primary"
+            @click="onSubmit('add-person-form')">
+            {{ addOrEdit == 0 ? '确认添加' : '确认修改' }}
+          </el-button>
         </el-form-item>
       </el-form>
       <!-- 多张人脸选择框 -->
@@ -136,7 +135,7 @@ import config from '@/config';
 export default {
   data () {
     return {
-      showImageUrl: '',
+      showImageUrl: require('@/assets/image/avatar.png'),
       image1: '',
       image2: '',
       image3: '',
@@ -149,7 +148,7 @@ export default {
       personType: {}, // 人员类型
       addPersonForm: {},
       imagePersonnelId: '', // 修改图片所需人员ID
-      imageIdArr: [], // 修改人员ID集合
+      imageList: [], // 修改人员三张图片集合
       equipmentNav: [
         {
           label: '东北',
@@ -209,6 +208,7 @@ export default {
               message: response.data.msg
             });
           }
+          // image has one face
           if (Number(response.data.code) === 1) {
             if (Number(this.addOrEdit) === 1) {
               await this.editImage(data, val);
@@ -216,6 +216,7 @@ export default {
               this[val] = this.addPersonForm[val] = this.showImageUrl = data;
             }
           }
+          // image has more than one face
           if (Number(response.data.code) > 1) {
             this.mainImg = data;
             this.moreFaceObj = { ...response.data.data.faceImgData };
@@ -229,14 +230,20 @@ export default {
     },
     // 编辑时修改图片
     async editImage (imgUrl, imgIndex) {
-      let data = {};
-      let index = imgIndex.charAt(imgIndex.length - 1);
-      data.personnelId = this.imagePersonnelId;
-      data['imageId' + index] = this.imageIdArr[index - 1];
-      data[imgIndex] = imgUrl;
+      const index = Number(imgIndex.substring(5)) - 1;
+      let images = ['', '', '']; // edit person three images
+      this.imageList.forEach((item, index) => {
+        if (item && item !== '') images[index] = item;
+      });
+      images[index] = imgUrl;
+      let data = {
+        personnelId: this.imagePersonnelId,
+        imageList: images
+      };
       let imageResponse = await api.post(config.person.updateImage, data);
       if (imageResponse.data.code === 0) {
         this[imgIndex] = this.addPersonForm[imgIndex] = this.showImageUrl = imgUrl;
+        this.imageList[index] = imgUrl;
         this.$message({
           type: 'success',
           message: imageResponse.data.msg
@@ -305,8 +312,8 @@ export default {
         if (this.addOrEdit === 1) {
           let equipmentList = [];
           let disSwitch;
+          this.imageList = [];
           this.imagePersonnelId = newVal.personnelId;
-          this.imageIdArr = [];
           newVal.personnelEquipmentList.forEach(item => equipmentList.push(item.equipmentId));
           if (Number(newVal.disSwitch) === 1) {
             disSwitch = true;
@@ -315,12 +322,11 @@ export default {
           }
           if (newVal.personnelImgList.length > 0) {
             newVal.personnelImgList.forEach((item, index) => {
-              this.$set(this.addPersonForm, `image${index + 1}`, newVal.url + item.imageUrl);
-              this[`image${index + 1}`] = newVal.url + item.imageUrl;
-              // 获取imageIdArr集合
-              this.imageIdArr.push(item.imageId);
+              this.$set(this.addPersonForm, `image${index + 1}`, newVal.url + item);
+              this[`image${index + 1}`] = newVal.url + item;
+              this.imageList.push(item);
             });
-            this.showImageUrl = newVal.url + newVal.personnelImgList[0].imageUrl;
+            this.showImageUrl = newVal.url + newVal.personnelImgList[0];
           };
           this.$set(this.addPersonForm, 'describe', newVal.personnelDescribe);
           this.$set(this.addPersonForm, 'disEndTime', new Date(newVal.disEndTime));
@@ -434,5 +440,12 @@ export default {
       height: 130px;
       overflow: hidden;
       float: left; */
+ }
+ .dialog-person-form {
+   position: relative;
+   .dialog-confirm-button {
+     position: absolute;
+     right: 10px;
+   }
  }
 </style>

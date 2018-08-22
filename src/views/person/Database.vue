@@ -77,6 +77,7 @@
 
      <!-- 分页 -->
     <el-pagination
+      v-if="count > 9"
       background
       layout="prev,pager,next"
       :current-page.sync="currentPage"

@@ -4,14 +4,14 @@ export default [{
   icon: 'iconfont icon-shishijiankong-lan',
   children: []
 }, {
-  name: '人员管理',
-  path: '/person/database',
-  icon: 'iconfont icon-renyuanguanli-lan',
-  children: []
-}, {
   name: '人员识别',
   path: '/recognize/index',
   icon: 'iconfont icon-shibiejilu-lan',
+  children: []
+}, {
+  name: '人员管理',
+  path: '/person/database',
+  icon: 'iconfont icon-renyuanguanli-lan',
   children: []
 }, {
   name: '设备管理',

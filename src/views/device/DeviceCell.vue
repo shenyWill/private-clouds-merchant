@@ -58,6 +58,9 @@
            '设备种类': config.deviceType2String[this.device.equipmentType],
            '所属组织': this.device.groupName,
            '所属区域': this.device.areaName,
+           '品牌名称': this.device.brand,
+           '型号系列': this.device.brandseries,
+           '播放地址': this.device.mediaUrl,
            'IP地址': this.device.ipAddress,
            '端口号': this.device.port
          };
@@ -67,6 +70,9 @@
            '设备种类': config.deviceType2String[this.device.equipmentType],
            '所属组织': this.device.groupName,
            '所属区域': this.device.areaName,
+           '品牌名称': this.device.brand,
+           '型号系列': this.device.brandseries,
+           '播放地址': this.device.mediaUrl,
            '设备URL': this.device.url
          };
        }

@@ -1,19 +1,19 @@
 <template>
-    <div class="recognition-detail">
-        <div class="recognition-nav" v-for="(obj,key) in recognitionDetail" :key="obj.id">
-            <h3>{{key}}</h3>
-            <ul>
-                <li v-for="item in obj" :key="item.id" class="recognition-list">
-                    <img :src="recognitionDetailUrl + item.imageUrl1" alt="" class="recognition-list-image">
-                    <p class="recognition-list-equipmentName">{{ item.equipmentName }}</p>
-                    <p class="recognition-list-content">
-                        <span class="recognition-list-type">{{ item.groupName }}</span>
-                        <span class="recognition-list-time">{{ item.createTime }}</span>
-                    </p>
-                </li>
-            </ul>
-        </div>
+  <div class="recognition-detail">
+    <div class="recognition-nav" v-for="(obj,key) in recognitionDetail" :key="obj.id">
+      <h3>{{key}}</h3>
+      <ul>
+        <li v-for="item in obj" :key="item.id" class="recognition-list">
+          <img :src="recognitionDetailUrl + item.imageUrl1" alt="" class="recognition-list-image">
+          <p class="recognition-list-equipmentName">{{ item.equipmentName }}</p>
+          <p class="recognition-list-content">
+            <span class="recognition-list-type">{{ item.groupName }}</span>
+            <span class="recognition-list-time">{{ item.createTime }}</span>
+          </p>
+        </li>
+      </ul>
     </div>
+  </div>
 </template>
 
 <script>
