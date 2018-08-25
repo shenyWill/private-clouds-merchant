@@ -24,11 +24,11 @@
                 <span class="people-detail-content-key">识别开关：</span>
                 <span class="people-detail-content-value">{{ personDetail.disSwitch == '2' ? '关' : '开' }}</span>
             </p>
-            <p class="people-detail-time">
+            <p class="people-detail-time" v-if="personDetail.disSwitch === '1'">
                 <span class="people-detail-content-key">开始时间：</span>
                 <span class="people-detail-content-value">{{ personDetail.disStartTime }}</span>
             </p>
-            <p class="people-detail-time">
+            <p class="people-detail-time" v-if="personDetail.disSwitch === '1'">
                 <span class="people-detail-content-key">结束时间：</span>
                 <span class="people-detail-content-value">{{ personDetail.disEndTime }}</span>
             </p>

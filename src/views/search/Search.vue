@@ -4,7 +4,7 @@
         <div :class="['search-title',visibleSearch ? 'hide-search-title' : '']" @click.self="visibleSearch = !visibleSearch">
             <i class="el-icon-search" @click.stop="visibleSearch = !visibleSearch"></i>
             <i class="el-icon-delete" @click.stop="removeTag"></i>
-            <span v-if="Array.isArray(equipmentObj)">
+            <span v-if="Array.isArray(equipmentObj) && equipmentObj.length > 0">
               <el-tag
                 closable
                 class="search-tag"

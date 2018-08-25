@@ -90,6 +90,7 @@
     </el-pagination>
     <!-- 添加人员 -->
     <el-dialog
+      v-loading.fullscreen.lock="isLoading"
       :visible.sync="dialogPersonAdd"
       width="25%"
       custom-class="person-detail-add"
@@ -117,6 +118,7 @@
    name: 'Database',
    data () {
      return {
+       isLoading: false,
        personTotal: 0,
        databaseArr: [], // 人员库列表
        databaseTypeArr: [], // 库类型列表
@@ -138,7 +140,8 @@
        currentLibraryId: '', // 当前库ID
        databaseRule: {
          libraryName: [
-           { required: true, message: '请输入库名称', trigger: 'blur' }
+           { required: true, message: '请输入库名称', trigger: 'blur' },
+           { min: 2, max: 18, message: '请输入2-18位字符' }
          ],
          libraryTypeId: [
            { required: true, message: '请选择库类型', trigger: 'change' }
@@ -282,9 +285,11 @@
      async addSumbit (val) {
        let subObj = {...val};
        subObj.libraryId = this.currentLibraryId;
+       this.isLoading = true;
        await api.post(config.person.add, subObj);
        await this.responseAPI({page: 1, pageSize: 9});
        this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
+       this.isLoading = false;
        this.dialogPersonAdd = false;
      },
      // 获取所有库的总人数

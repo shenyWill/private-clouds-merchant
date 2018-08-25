@@ -54,14 +54,14 @@
         </el-row>
       </el-form>
     </Search>
-    <el-card class="recognition-card">
+    <el-card class="recognition-card" v-if="recognitionList && recognitionList.length > 0">
       <div slot="header" class="clearfix">
         <span>人员识别</span>
       </div>
       <div v-for="item in recognitionList" :key="item.id" class="recognition-card-info">
         <div class="recognition-card-image">
-          <img :src="recognitionUrl + item.imageUrl1" alt="">
           <img :src="recognitionUrl + item.imageUrl2" alt="">
+          <img :src="recognitionUrl + item.imageUrl1" alt="">
         </div>
         <div class="recognition-card-content">
           <p class="recognition-card-detail">
@@ -88,14 +88,34 @@
         </div>
       </div>
     </el-card>
+    <div v-else class="recognition__empty">
+      <img :src="emptyImage">
+      <div>
+        暂无数据
+      </div>
+    </div>
     <!-- 分页 -->
-    <el-pagination background layout="prev,pager,next" :current-page.sync="currentPage" :total="count" class="paging" @current-change="handleCurrentChange"></el-pagination>
+    <el-pagination
+      v-if="count > 10"
+      background
+      layout="prev,pager,next"
+      :current-page.sync="currentPage"
+      :total="count"
+      class="paging"
+      @current-change="handleCurrentChange">
+    </el-pagination>
     <!-- 显示详情 -->
     <el-dialog :visible.sync="dialogPersonDetail" width="25%" custom-class="person-detail-show">
       <PersonDetail :personDetail="personDetail"></PersonDetail>
     </el-dialog>
     <!-- 比对详情 -->
-    <el-dialog :visible.sync="dialogRecognitionDetail" width="31%" custom-class="recognition-detail-show" title="比对详情" :lock-scroll="true">
+    <el-dialog
+      class="recognition-dialog-detail"
+      :visible.sync="dialogRecognitionDetail"
+      width="31%"
+      custom-class="recognition-detail-show"
+      title="比对详情"
+      :lock-scroll="true">
       <RecognitionDetail :recognitionDetail="recognitionDetail" :recognitionDetailUrl="recognitionDetailUrl"></RecognitionDetail>
     </el-dialog>
   </div>
@@ -112,6 +132,7 @@ export default {
   name: 'Recognition',
   data () {
     return {
+      emptyImage: require('@/assets/image/empty.png'),
       searchForm: {},
       searchResult: {},
       recognitionList: [],
@@ -122,7 +143,7 @@ export default {
       dialogRecognitionDetail: false, // 比对详情框是否显示
       equipmentTypeName: ['人证比对机', '摄像头', '人脸识别门禁平板', '闸机', '门'], // 设备类型名称
       equipmentArr: [], // 设备集合
-      currentPage: 2, // 当前页码
+      currentPage: 1, // 当前页码
       databaseArr: [], // 库集合
       recognitionDetailTag: true, // 滚动的tag
       recognitionDetailId: '', // 当前对比详情ID
@@ -359,6 +380,7 @@ export default {
    margin: 0;
  }
  .recognition-detail-show {
+   position: relative;
    text-align: left;
    border-radius: 15px;
    height: 700px;
@@ -367,7 +389,33 @@ export default {
      border-radius: 20px;
    }
  }
+ .recognition-dialog-detail {
+   .el-dialog {
+     position: relative;
+     .el-dialog__header {
+       position: sticky;
+       top: 0;
+       height: 30px;
+       background-color: #fff;
+       border-radius: 20px;
+       z-index: 1;
+     }
+     .el-dialog__title {
+       font-size: 20px;
+       font-weight: bold;
+     }
+     .el-dialog__close {
+       font-size: 32px;
+     }
+   }
+ }
  .recognition .el-dialog__wrapper {
    overflow: hidden;
+ }
+ .recognition__empty {
+   font-size: 20px;
+   font-weight: bold;
+   margin-top: 180px;
+   margin-bottom: 40px;
  }
 </style>

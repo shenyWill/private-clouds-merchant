@@ -38,7 +38,10 @@
         </StreamCompare>
       </div>
       <div v-else class="stream__empty">
-        暂无识别比对记录
+        <img :src="emptyImage">
+        <div>
+          暂无识别比对记录
+        </div>
       </div>
     </div>
     <div class="stream__capture">
@@ -66,6 +69,7 @@
     <el-dialog
       :visible.sync="dialogRecognitionDetail"
       width="31%"
+      class="stream__dialog-detail"
       custom-class="recognition-detail-show"
       title="比对详情"
       :lock-scroll="true">
@@ -90,6 +94,7 @@
    name: 'Stream',
    data () {
      return {
+       emptyImage: require('@/assets/image/empty.png'),
        socket: null,
        player: null,
        playerConfig: {
@@ -398,10 +403,30 @@
      }
    }
    .stream__empty {
-     padding-top: 50px;
+     margin-top: 50px;
      text-align: center;
      font-weight: bold;
      font-size: 24px;
+   }
+ }
+ .stream__dialog-detail {
+   .el-dialog {
+     position: relative;
+     .el-dialog__header {
+       position: sticky;
+       top: 0;
+       height: 30px;
+       background-color: #fff;
+       border-radius: 20px;
+       z-index: 1;
+     }
+     .el-dialog__title {
+       font-size: 20px;
+       font-weight: bold;
+     }
+     .el-dialog__close {
+       font-size: 32px;
+     }
    }
  }
 </style>

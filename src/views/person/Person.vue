@@ -101,6 +101,7 @@
     </div>
     <!-- 添加人员 -->
     <el-dialog
+      v-loading.fullscreen.lock="isLoading"
       :visible.sync="dialogPersonAdd"
       width="25%"
       custom-class="person-detail-add"
@@ -131,6 +132,7 @@
    name: 'Person',
    data () {
      return {
+       isLoading: false, // submit loading
        databaseID: '',
        searchForm: {},
        searchResult: {},
@@ -283,12 +285,14 @@
          delete subObj.image2;
          delete subObj.image3;
        }
+       this.isLoading = true;
        const response = await api.post(config.person[requestUrl], subObj);
        if (response.data.code === 0) {
          this.$message({type: 'success', message: response.data.msg});
        }
        await this.responseAPI({page: this.currentPage});
        this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
+       this.isLoading = false;
        this.dialogPersonAdd = false;
      },
      checkCanAccess (id) {

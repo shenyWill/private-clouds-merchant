@@ -67,7 +67,12 @@
         :key="index">
       </DeviceCell>
     </div>
-    <div v-else>暂无数据</div>
+    <div v-else class="device__empty">
+      <img :src="emptyImage">
+      <div>
+        暂无数据
+      </div>
+    </div>
     <el-pagination
       v-if="size > 10"
       background
@@ -130,7 +135,7 @@
           <el-input v-model="addForm.ipAddress" placeholder="请输入IP地址"></el-input>
         </el-form-item>
         <el-form-item label="端口号" prop="port" v-if="addForm.deviceAddress === 'ip'">
-          <el-input v-model="addForm.port" placeholder="请输入设备端口号"></el-input>
+          <el-input v-model.number="addForm.port" placeholder="请输入设备端口号"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -197,7 +202,7 @@
           <el-input v-model="editForm.ipAddress" placeholder="请输入IP地址"></el-input>
         </el-form-item>
         <el-form-item label="端口号" prop="port" v-if="editForm.deviceAddress === 'ip'">
-          <el-input v-model="editForm.port" placeholder="请填写设备端口号"></el-input>
+          <el-input v-model.number="editForm.port" placeholder="请填写设备端口号"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -258,6 +263,7 @@
    },
    data () {
      return {
+       emptyImage: require('@/assets/image/empty.png'),
        regionID: '',
        list: null, // deivce list
        deviceDetail: null, // detail dialog info
@@ -318,7 +324,7 @@
          ],
          port: [
            { required: true, message: '请填写端口号', trigger: 'blur' },
-           { min: 1, max: 5, message: '请输入正确的端口号', trigger: 'blur' }
+           { type: 'number', message: '端口号必须为数字' }
          ],
          loginName: [
            { required: true, message: '请填写登陆账号', trigger: 'blur' }
@@ -361,7 +367,7 @@
          ],
          port: [
            { required: true, message: '请填写端口号', trigger: 'blur' },
-           { min: 1, max: 5, message: '请输入正确的端口号', trigger: 'blur' }
+           { type: 'number', message: '端口号必须为数字' }
          ],
          loginName: [
            { required: true, message: '请填写登陆账号', trigger: 'blur' }
@@ -712,6 +718,12 @@
        text-overflow: ellipsis;
        white-space: nowrap;
      }
+   }
+   .device__empty {
+     font-size: 20px;
+     font-weight: bold;
+     margin-top: 180px;
+     margin-bottom: 40px;
    }
  }
 </style>

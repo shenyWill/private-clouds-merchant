@@ -51,7 +51,24 @@ export function parseTime (obj) {
 
   return `${year}-${month}-${day} ${hour}:${minutes}:${seconds}`;
 }
+
 export function isValidIP (ip) {
   const reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
   return reg.test(ip);
+}
+
+export function fileType (name) {
+  if (!name) return '';
+  const dotIndex = name.lastIndexOf('.');
+  const type = name.substring(dotIndex + 1).toLowerCase();
+  return type;
+}
+
+export function isImage (name) {
+  const type = fileType(name);
+  const lists = ['jpg', 'png', 'jpeg'];
+  for (let i = 0; i < lists.length; i++) {
+    if (type === lists[i]) return true;
+  }
+  return false;
 }

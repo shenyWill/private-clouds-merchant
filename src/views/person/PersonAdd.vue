@@ -95,7 +95,7 @@
             <el-option v-for="item in deviceList" :key="item.id" :label="item.equipmentName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="识别开关">
+        <el-form-item label="识别开关" prop="disSwitch">
           <el-switch
             name="l"
             v-model="addPersonForm.disSwitch"
@@ -135,12 +135,13 @@
 </template>
 
 <script>
- import { img2Base64, base64Length, parseTime } from '@/utils';
+ import { img2Base64, base64Length, parseTime, isImage } from '@/utils';
  import api from '@/api';
  import config from '@/config';
  export default {
    data () {
      return {
+       isSubmit: false, // hacks/sign for el-select validation
        showImageUrl: require('@/assets/image/avatar.png'),
        addFormDefaultImage: require('@/assets/image/avatar.png'),
        image1: '',
@@ -177,13 +178,21 @@
            { type: 'date', required: true, message: '请选择结束时间', trigger: 'change' }
          ],
          equipmentList: [
-           { required: true, message: '请选择至少一个识别设备', trigger: 'change' }
+           { required: true, validator: this.checkEquipmentList, trigger: 'change' }
          ]
        }
      };
    },
    props: ['personTypeList', 'deviceList', 'addOrEdit', 'editObj'],
    methods: {
+     checkEquipmentList (rule, value, callback) {
+       // hacks for el-form/el-select no reason validation when first show
+       // need to be fixed in next version
+       if (this.isSubmit && value.length === 0) {
+         callback(new Error('请选择识别设备'));
+       }
+       callback();
+     },
      async handleImageChange (file, fileList, val) {
        this.fullscreenLoading = true;
        const url = URL.createObjectURL(file.raw);
@@ -248,13 +257,29 @@
          });
        }
      },
+     checkIsImage (name) {
+       if (!isImage(name)) return false;
+       return true;
+     },
      handleFirstImageChange (file, fileList) {
+       if (!this.checkIsImage(file.name)) {
+         this.$message({type: 'error', message: '请上传正确格式的照片'});
+         return;
+       }
        this.handleImageChange(file, fileList, 'image1');
      },
      handleSecondImageChange (file, fileList) {
+       if (!this.checkIsImage(file.name)) {
+         this.$message({type: 'error', message: '请上传正确格式的照片'});
+         return;
+       }
        this.handleImageChange(file, fileList, 'image2');
      },
      handleThirdImageChange (file, fileList) {
+       if (!this.checkIsImage(file.name)) {
+         this.$message({type: 'error', message: '请上传正确格式的照片'});
+         return;
+       }
        this.handleImageChange(file, fileList, 'image3');
      },
      showImage (imgUrl) {
@@ -274,6 +299,7 @@
          this.$message({type: 'error', message: '起始时间不能大于结束时间'});
          return false;
        }
+       this.isSubmit = true;
        this.$refs[formName].validate(valid => {
          if (valid) {
            let obj = { ...this.addPersonForm };
@@ -285,6 +311,7 @@
            } else {
              obj.disSwitch = 2;
            }
+           this.isSubmit = false;
            this.$emit('addSumbit', obj);
          }
        });
@@ -310,8 +337,8 @@
      }
    },
    mounted () {
+     // this.$refs['add-person-form'].clearValidate();
      // this.$refs['add-person-form'].resetFields();
-     this.$refs['add-person-form'].clearValidate();
    },
    watch: {
      editObj: {
@@ -335,9 +362,11 @@
              });
              this.showImageUrl = newVal.url + newVal.personnelImgList[0];
            };
+           let startTime = newVal.disStartTime ? new Date(newVal.disStartTime) : new Date();
+           let endTime = newVal.disEndTime ? new Date(newVal.disEndTime) : new Date();
            this.$set(this.addPersonForm, 'describe', newVal.personnelDescribe);
-           this.$set(this.addPersonForm, 'disEndTime', new Date(newVal.disEndTime));
-           this.$set(this.addPersonForm, 'disStartTime', new Date(newVal.disStartTime));
+           this.$set(this.addPersonForm, 'disEndTime', endTime);
+           this.$set(this.addPersonForm, 'disStartTime', startTime);
            this.$set(this.addPersonForm, 'disSwitch', newVal.disSwitch);
            this.$set(this.addPersonForm, 'equipmentList', equipmentList);
            this.$set(this.addPersonForm, 'libraryId', newVal.libraryId);
