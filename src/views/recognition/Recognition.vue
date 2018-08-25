@@ -21,7 +21,7 @@
         <el-row>
           <el-col :span="5">
             <el-form-item label="设备">
-              <el-select v-model="searchForm.equipmentId" size="small">
+              <el-select v-model="searchForm.equipmentId" size="small" multiple>
                 <el-option v-for="item in equipmentArr" :key="item.id" :label="item.equipmentName" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -71,7 +71,6 @@
           <p class="recognition-card-tag">
             <el-tag type="warning">{{ equipmentTypeName[item.equipmentType] }}</el-tag>
             <el-tag :type="item.libraryTypeName=='黑名单' ? 'danger' : 'success'">{{ item.libraryTypeName }}</el-tag>
-            <el-tag type="danger" v-if="item.timeType === '2'">过期</el-tag>
           </p>
           <p class="recognition-card-equipment">
             <span class="equipment-name">设备名称： {{ item.equipmentName }}</span>
@@ -140,6 +139,12 @@ export default {
   methods: {
     // 点击搜索
     searchSubmit () {
+      const startTime = new Date(this.searchForm.startTime).getTime();
+      const endTime = new Date(this.searchForm.endTime).getTime();
+      if (startTime > endTime) {
+        this.$message({type: 'error', message: '开始时间不能大于结束时间'});
+        return;
+      }
       this.searchForm.startTime && (this.searchForm.startTime = parseTime(this.searchForm.startTime));
       this.searchForm.endTime && (this.searchForm.endTime = parseTime(this.searchForm.endTime));
       this.searchResult = { ...this.searchForm };
@@ -226,7 +231,10 @@ export default {
     searchResult: {
       // 搜索发送请求
       handler (newVal, oldVal) {
-        this.searchForm = { ...newVal };
+        this.searchForm = {
+          ...newVal,
+          equipmentId: newVal.equipmentId ? newVal.equipmentId : []
+        };
         let requestObj = {...newVal};
         if (requestObj.startTime && !requestObj.endTime) {
           requestObj.endTime = parseTime(new Date());

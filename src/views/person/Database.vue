@@ -10,11 +10,14 @@
           <p class="content-operate">添加新的人员库</p>
         </div>
       </el-card>
-      <el-card class="database-list" v-for="(obj,index) in databaseArr" :key="obj.libraryId" @click.native="goPerson(obj.libraryId)">
+      <el-card class="database-list" v-for="(obj) in databaseArr" :key="obj.libraryId" @click.native="goPerson(obj.libraryId)">
         <div
           class="database-list-icon"
-          :style="index <iconObj.databaseBg.length ? {background: iconObj.databaseBg[index]} : {background: '#00a0e9'}">
-          <i class="el-icon-tickets"></i>
+          :style="iconObj.databaseBg.length ? {background: iconObj.databaseBg[Number(obj.typeId)-1]} : {background: '#00a0e9'}">
+          <i class="iconfont icon-baimingdan-lan1" v-if="obj.typeId === '1'"></i>
+          <i class="iconfont icon-fangke-lan" v-if="obj.typeId === '2'"></i>
+          <i class="iconfont icon-heimingdan-lan" v-if="obj.typeId === '3'"></i>
+          <i class="iconfont icon-qita-lan" v-if="obj.typeId === '4'"></i>
         </div>
         <div class="database-list-content">
           <p class="database-list-library">
@@ -257,7 +260,7 @@
      },
      // 前往人员列表
      goPerson (id) {
-       this.$router.push({path: 'index', query: {id: id}});
+       this.$router.push({name: 'Person', params: {id: id}});
      },
      // 分页
      handleCurrentChange (val) {
@@ -372,6 +375,9 @@
      overflow: hidden;
      float: left;
      color: #ffffff;
+     i {
+       font-size: 50px;
+     }
    }
    .database-list-content {
      width: 300px;

@@ -17,7 +17,7 @@
           <img class="blacklist__image" :src="object.url + object.imageUrl2" />
         </span>
         <span class="blacklist__image-wrapper">
-          <span class="blacklist__image-score">相似度: {{ object.confidence }}%</span>
+          <span class="blacklist__image-score">相似度: {{ parseInt(object.confidence) }}%</span>
           <span class="blacklist__image-type">识别头像</span>
           <img class="blacklist__image" :src="object.url + object.imageUrl1" />
         </span>
@@ -30,7 +30,7 @@
       <div class="blacklist__content">
         <div class="blacklist__item">
           <span class="blacklist__key">所在库:</span>
-          <span class="blacklist__value">{{ object.libraryTypeName }}</span>
+          <span class="blacklist__value">{{ object.libraryName }}</span>
         </div>
         <div class="blacklist__item">
           <span class="blacklist__key">所属组织:</span>
@@ -121,10 +121,10 @@
    width: 400px;
    height: 450px;
    bottom: 30px;
-   right: 50px;
+   right: 30px;
    font-size: 16px;
    border: 5px solid red;
-   border-radius: 20px;
+   border-radius: 10px;
    overflow: hidden;
    background-color: #fff;
    .blacklist__header {
@@ -155,6 +155,8 @@
          height: 128px;
          border: 3px solid red;
          margin-left: 20px;
+         border-radius: 20px;
+         overflow: hidden;
          .blacklist__image-score {
            position: absolute;
            padding: 5px;
@@ -164,7 +166,7 @@
            font-size: 14px;
            color: white;
            text-align: right;
-           border-radius: 10px;
+           border-radius: 0 0 0 10px;
            background-color: rgba(255, 0, 0, .5);
          }
          .blacklist__image-type {

@@ -49,7 +49,7 @@
          this.connectSocket();
          this.socket.subscribe('/face/blacklist', response => {
            const data = JSON.parse(response.body);
-           if (Number(data.confidence) > config.score.blacklist) {
+           if (Number(data.confidence) > config.score.blacklist && data.timeType === '1' && this.blacklistAlert) {
              this.showAlert = true;
              this.alertData = JSON.parse(response.body);
            }

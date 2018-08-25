@@ -380,6 +380,12 @@
      searchResult: {
        handler (newVal, oldVal) {
          this.searchForm = {...newVal};
+         if (this.searchForm.equipmentType && this.searchForm.equipmentType !== '') {
+           this.searchForm = {
+             ...this.searchForm,
+             equipmentType: config.deviceString2Num[this.searchForm.equipmentType]
+           };
+         }
          this.currentPage = 1;
          this.fetchData({ offset: 0, limit: this.limit, ...this.searchForm });
        },
@@ -538,18 +544,10 @@
      },
      // on search form submit
      onSearch () {
-       this.searchResult = {};
-       for (let key in this.searchForm) {
-         if (this.searchForm[key]) {
-           if (key === 'equipmentType') {
-             this.searchResult[key] = config.deviceType2String[this.searchForm.equipmentType];
-           } else {
-             this.searchResult[key] = this.searchForm[key];
-           }
-         }
+       this.searchResult = this.searchForm;
+       if (this.searchResult.equipmentType && this.searchResult.equipmentType !== '') {
+         this.searchResult.equipmentType = config.deviceType2String[this.searchForm.equipmentType];
        }
-       this.currentPage = 1;
-       this.fetchData({limit: this.limit, offset: 0, ...this.searchForm});
      },
      // submit delete device action
      async deleteDevice () {

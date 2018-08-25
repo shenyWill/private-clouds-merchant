@@ -70,6 +70,13 @@ export default {
     '4': '闸机',
     '5': '门'
   },
+  deviceString2Num: {
+    '人证比对机': '1',
+    '摄像头': '2',
+    '人脸识别门禁平板': '3',
+    '闸机': '4',
+    '门': '5'
+  },
   deviceAddressType: [{
     key: 'IP地址',
     value: 'ip'

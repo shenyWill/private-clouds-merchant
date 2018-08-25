@@ -4,7 +4,9 @@ const app = {
     blacklistAlert: false, // show blacklist alert dialog
     blacklistSound: false, // blacklist alert sound
     sidebarToggle: false,
-    selectedRegion: ''
+    selectedRegion: '',
+    selectedPersonDatabase: '',
+    selectedStreaming: '' // Stream module user selected streaming option
   },
   mutations: {
     TOGGLE_MENU (state) {
@@ -24,6 +26,12 @@ const app = {
     },
     SET_BLACKLIST_SOUND (state, value) {
       state.blacklistSound = value;
+    },
+    SET_SELECTED_STREAMING (state, value) {
+      state.selectedStreaming = value;
+    },
+    SET_SELECTED_PERSON_DATABASE (state, value) {
+      state.selectedPersonDatabase = value;
     }
   },
   actions: {
@@ -44,6 +52,12 @@ const app = {
     },
     setBlacklistSound ({ commit }, value) {
       commit('SET_BLACKLIST_SOUND', value);
+    },
+    setSelectedStreaming ({ commit }, value) {
+      commit('SET_SELECTED_STREAMING', value);
+    },
+    setSelectedPersonDatabase ({ commit }, value) {
+      commit('SET_SELECTED_PERSON_DATABASE', value);
     }
   },
   getters: {
@@ -51,7 +65,9 @@ const app = {
     selectedRegion: state => state.selectedRegion,
     socketConnected: state => state.socketConnected,
     blacklistAlert: state => state.blacklistAlert,
-    blacklistSound: state => state.blacklistSound
+    blacklistSound: state => state.blacklistSound,
+    selectedStreaming: state => state.selectedStreaming,
+    selectedPersonDatabase: state => state.selectedPersonDatabase
   }
 };
 

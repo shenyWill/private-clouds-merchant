@@ -37,7 +37,7 @@
 
 <style lang="scss">
  .stream-capture {
-   margin: 20px;
+   margin: 20px 8px;
    font-size: 14px;
    width: 160px;
    height: 250px;
@@ -50,13 +50,28 @@
      margin-bottom: 10px;
      border-radius: 10px;
    }
+   .stream-capture__device {
+     text-align: left;
+     margin-left: 15px;
+     margin-bottom: 8px;
+   }
    .stream-capture__content {
-     text-align: center;
+     position: relative;
      font-size: 12px;
      .stream-capture__type {
+       position: absolute;
+       left: 15px;
+       top: 0;
        overflow: hidden;
+       line-height: 15px;
        text-overflow: ellipsis;
        white-space: nowrap;
+     }
+     .stream-capture__time {
+       position: absolute;
+       right: 15px;
+       top: 0;
+       line-height: 15px;
      }
    }
  }

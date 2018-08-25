@@ -105,6 +105,7 @@
       width="25%"
       custom-class="person-detail-add"
       title="人员信息"
+      :close-on-click-modal="false"
       :before-close="removePersonAddForm">
       <PersonAdd
         :editObj="editObj"
@@ -119,188 +120,215 @@
 </template>
 
 <script>
-import Search from '@/views/search/Search';
-import PersonDetail from '@/views/person/PersonDetail';
-import PersonAdd from '@/views/person/PersonAdd';
-import api from '@/api';
-import config from '@/config';
-import { scollTop } from '@/utils';
-export default {
-  name: 'Person',
-  data () {
-    return {
-      searchForm: {},
-      searchResult: {},
-      personList: [], // 人员列表
-      count: 0, // 人员数量
-      personTypeList: [], // 人员类型
-      deviceList: [], // 设备列表
-      personDetail: {}, // 个人详情
-      dialogPersonDetail: false, // 详情框是否显示
-      deleteAllOperationTag: false, // 进入删除全部标识
-      deletePeopleList: [], //  删除人员集合
-      dialogPersonAdd: false, // 添加人员框是否显示
-      currentPage: 1, // 当前页
-      addOrEdit: 0, // 0--> 增加， 1--> 编辑
-      editObj: {} // 编辑人员的对象
-    };
-  },
-  components: {
-    Search,
-    PersonDetail,
-    PersonAdd
-  },
-  methods: {
-    // 点击搜索
-    searchSubmit () {
-      this.searchResult = { ...this.searchForm };
-    },
-    // 请求
-    async responseAPI (data = {}) {
-      !data.libraryId && (data.libraryId = this.$route.query.id);
-      !data.pageSize && (data.pageSize = 9);
-      !data.page && (data.page = 1);
-      let requestObj = {...data, ...this.searchResult};
-      const response = await api.post(config.person.list, requestObj);
-      if (Number(response.data.code) === 0) {
-        this.count = response.data.data.totalCount;
-        this.personList = response.data.data.dataList;
-      }
-    },
-    // 点击分页
-    async handleCurrentChange (val) {
-      this.currentPage = val;
-      this.responseAPI({page: val});
-      scollTop(80);
-    },
-    // 查看详情
-    async showPersonDetail (id) {
-      const response = await api.post(config.person.detail, {personnelId: id});
-      if (Number(response.data.code) === 0) {
-        this.personDetail = response.data.data;
-        this.dialogPersonDetail = true;
-      }
-    },
-    // 删除单个人员
-    async movePeople (id) {
-      this.$confirm('你确认要把该人员从库中删除吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(async () => {
-        let response = await api.post(config.person.delete, {personnelIdList: [{personnelId: id}]});
-        if (Number(response.data.code) === 0) {
-          this.$message({
-            type: 'success',
-            message: response.data.msg
-          });
-          this.responseAPI();
-        }
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消删除'
-        });
-      });
-    },
-    // 删除全部
-    removeAll () {
-      this.deleteAllOperationTag = true;
-    },
-    // 选择删除人员
-    checkDeletePeople (id) {
-      if (this.deletePeopleList.indexOf(id) > -1) {
-        this.deletePeopleList.splice(this.deletePeopleList.indexOf(id), 1);
-      } else {
-        this.deletePeopleList.push(id);
-      }
-    },
-    // 选择删除全部人员
-    deleteAllSelect () {
-      if (this.deletePeopleList.length !== this.personList.length) {
-        this.deletePeopleList = [];
-        this.personList.forEach(item => this.deletePeopleList.push(item.personnelId));
-      } else {
-        this.deletePeopleList = [];
-      }
-    },
-    // 取消删除全部
-    deleteAllCancel () {
-      this.deletePeopleList = [];
-      this.deleteAllOperationTag = false;
-    },
-    // 确认删除全部
-    async deleteAllSure () {
-      let requestObj = {personnelIdList: []};
-      this.deletePeopleList.forEach(item => {
-        requestObj.personnelIdList.push({personnelId: item});
-      });
-      await api.post(config.person.deleteAll, requestObj);
-      await this.responseAPI({page: this.currentPage});
-      this.deletePeopleList = [];
-      this.deleteAllOperationTag = false;
-    },
-    // 关闭添加人员前清空添加人员列表
-    removePersonAddForm (done) {
-      this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
-      done();
-    },
-    // 添加人员
-    addPerson () {
-      this.addOrEdit = 0;
-      this.$refs['person-add'] && this.$refs['person-add'].personClearValidate('add-person-form');
-      this.dialogPersonAdd = true;
-    },
-    // 编辑人员
-    editPeople (obj) {
-      this.addOrEdit = 1;
-      this.editObj = {...obj};
-      this.$refs['person-add'] && this.$refs['person-add'].personClearValidate('add-person-form');
-      this.dialogPersonAdd = true;
-    },
-    // 提交添加人员
-    async addSumbit (val) {
-      let subObj = {...val};
-      let requestUrl = 'edit';
-      if (this.addOrEdit === 0) {
-        subObj.libraryId = this.$route.query.id;
-        this.currentPage = 1;
-        requestUrl = 'add';
-      } else {
-        delete subObj.image1;
-        delete subObj.image2;
-        delete subObj.image3;
-      }
-      const response = await api.post(config.person[requestUrl], subObj);
-      if (response.data.code === 0) {
-        this.$message({type: 'success', message: response.data.msg});
-      }
-      await this.responseAPI({page: this.currentPage});
-      this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
-      this.dialogPersonAdd = false;
-    }
-  },
-  async mounted () {
-    this.responseAPI();
-    let personTypeAPI = await api.post(config.database.list, {});
-    if (Number(personTypeAPI.data.code) === 0) {
-      this.personTypeList = personTypeAPI.data.data.dataList;
-    }
-    let deviceListAPI = await api.post(config.device.all, {});
-    if (Number(deviceListAPI.data.code) === 0) {
-      this.deviceList = deviceListAPI.data.data.rows;
-    }
-  },
-  watch: {
-    searchResult: {
-      handler (newVal, oldVal) {
-        this.searchForm = { ...newVal };
-        this.responseAPI({...this.searchForm});
-      },
-      deep: true
-    }
-  }
-};
+ import Search from '@/views/search/Search';
+ import PersonDetail from '@/views/person/PersonDetail';
+ import PersonAdd from '@/views/person/PersonAdd';
+ import api from '@/api';
+ import config from '@/config';
+ import { scollTop } from '@/utils';
+ import { mapGetters, mapActions } from 'vuex';
+ export default {
+   name: 'Person',
+   data () {
+     return {
+       databaseID: '',
+       searchForm: {},
+       searchResult: {},
+       personList: [], // 人员列表
+       count: 0, // 人员数量
+       personTypeList: [], // 人员类型
+       deviceList: [], // 设备列表
+       personDetail: {}, // 个人详情
+       dialogPersonDetail: false, // 详情框是否显示
+       deleteAllOperationTag: false, // 进入删除全部标识
+       deletePeopleList: [], //  删除人员集合
+       dialogPersonAdd: false, // 添加人员框是否显示
+       currentPage: 1, // 当前页
+       addOrEdit: 0, // 0--> 增加， 1--> 编辑
+       editObj: {} // 编辑人员的对象
+     };
+   },
+   components: {
+     Search,
+     PersonDetail,
+     PersonAdd
+   },
+   computed: {
+     ...mapGetters([
+       'selectedPersonDatabase'
+     ])
+   },
+   methods: {
+     ...mapActions([
+       'setSelectedPersonDatabase'
+     ]),
+     // 点击搜索
+     searchSubmit () {
+       this.searchResult = { ...this.searchForm };
+     },
+     // 请求
+     async responseAPI (data = {}) {
+       !data.libraryId && (data.libraryId = this.databaseID);
+       !data.pageSize && (data.pageSize = 9);
+       !data.page && (data.page = 1);
+       let requestObj = {...data, ...this.searchResult};
+       const response = await api.post(config.person.list, requestObj);
+       if (Number(response.data.code) === 0) {
+         this.count = response.data.data.totalCount;
+         this.personList = response.data.data.dataList;
+       }
+     },
+     // 点击分页
+     async handleCurrentChange (val) {
+       this.currentPage = val;
+       this.responseAPI({page: val});
+       scollTop(80);
+     },
+     // 查看详情
+     async showPersonDetail (id) {
+       const response = await api.post(config.person.detail, {personnelId: id});
+       if (Number(response.data.code) === 0) {
+         this.personDetail = response.data.data;
+         this.dialogPersonDetail = true;
+       }
+     },
+     // 删除单个人员
+     async movePeople (id) {
+       this.$confirm('你确认要把该人员从库中删除吗?', '提示', {
+         confirmButtonText: '确定',
+         cancelButtonText: '取消',
+         type: 'warning'
+       }).then(async () => {
+         let response = await api.post(config.person.delete, {personnelIdList: [id]});
+         if (Number(response.data.code) === 0) {
+           this.$message({
+             type: 'success',
+             message: response.data.msg
+           });
+           this.responseAPI();
+         }
+       }).catch(() => {
+         this.$message({
+           type: 'info',
+           message: '取消删除'
+         });
+       });
+     },
+     // 删除全部
+     removeAll () {
+       this.deleteAllOperationTag = true;
+     },
+     // 选择删除人员
+     checkDeletePeople (id) {
+       if (this.deletePeopleList.indexOf(id) > -1) {
+         this.deletePeopleList.splice(this.deletePeopleList.indexOf(id), 1);
+       } else {
+         this.deletePeopleList.push(id);
+       }
+     },
+     // 选择删除全部人员
+     deleteAllSelect () {
+       if (this.deletePeopleList.length !== this.personList.length) {
+         this.deletePeopleList = [];
+         this.personList.forEach(item => this.deletePeopleList.push(item.personnelId));
+       } else {
+         this.deletePeopleList = [];
+       }
+     },
+     // 取消删除全部
+     deleteAllCancel () {
+       this.deletePeopleList = [];
+       this.deleteAllOperationTag = false;
+     },
+     // 确认删除全部
+     async deleteAllSure () {
+       let requestObj = {personnelIdList: []};
+       this.deletePeopleList.forEach(item => {
+         requestObj.personnelIdList.push(item);
+       });
+       await api.post(config.person.deleteAll, requestObj);
+       await this.responseAPI({page: this.currentPage});
+       this.deletePeopleList = [];
+       this.deleteAllOperationTag = false;
+     },
+     // 关闭添加人员前清空添加人员列表
+     async removePersonAddForm (done) {
+       this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
+       done();
+       await this.responseAPI({page: this.currentPage});
+     },
+     // 添加人员
+     addPerson () {
+       this.addOrEdit = 0;
+       this.$refs['person-add'] && this.$refs['person-add'].personClearValidate('add-person-form');
+       this.dialogPersonAdd = true;
+     },
+     // 编辑人员
+     editPeople (obj) {
+       this.addOrEdit = 1;
+       this.editObj = {...obj};
+       this.$refs['person-add'] && this.$refs['person-add'].personClearValidate('add-person-form');
+       this.dialogPersonAdd = true;
+     },
+     // 提交添加人员
+     async addSumbit (val) {
+       let subObj = {...val};
+       let requestUrl = 'edit';
+       if (this.addOrEdit === 0) {
+         subObj.libraryId = this.databaseID;
+         this.currentPage = 1;
+         requestUrl = 'add';
+       } else {
+         delete subObj.image1;
+         delete subObj.image2;
+         delete subObj.image3;
+       }
+       const response = await api.post(config.person[requestUrl], subObj);
+       if (response.data.code === 0) {
+         this.$message({type: 'success', message: response.data.msg});
+       }
+       await this.responseAPI({page: this.currentPage});
+       this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
+       this.dialogPersonAdd = false;
+     },
+     checkCanAccess (id) {
+       // check person database id or push to database
+       if (!id || id === '') {
+         const view = {name: 'Database', path: '/person/database', title: '库管理'};
+         this.$store.dispatch('delVisitedViews', view).then(views => {
+           // push router to region
+           this.$router.push('/person/database');
+         });
+       }
+     }
+   },
+   async mounted () {
+     this.databaseID = this.$route.params.id;
+     if (!this.databaseID || this.databaseID === '') {
+       this.databaseID = this.selectedPersonDatabase;
+     }
+     this.setSelectedPersonDatabase(this.databaseID);
+     this.checkCanAccess(this.databaseID);
+     this.responseAPI();
+     let personTypeAPI = await api.post(config.database.list, {});
+     if (Number(personTypeAPI.data.code) === 0) {
+       this.personTypeList = personTypeAPI.data.data.dataList;
+     }
+     let deviceListAPI = await api.post(config.device.all, {});
+     if (Number(deviceListAPI.data.code) === 0) {
+       this.deviceList = deviceListAPI.data.data.rows;
+     }
+   },
+   watch: {
+     searchResult: {
+       handler (newVal, oldVal) {
+         this.searchForm = { ...newVal };
+         this.responseAPI({...this.searchForm});
+       },
+       deep: true
+     }
+   }
+ };
 </script>
 
 <style lang="scss" scoped>

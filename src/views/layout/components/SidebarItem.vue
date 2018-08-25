@@ -47,7 +47,7 @@ export default {
  .sidebar-item {
    font-size: 0;
    .sidebar-item__icon {
-     font-size: 32px;
+     font-size: 28px;
      color: white;
      margin-right: 20px;
    }

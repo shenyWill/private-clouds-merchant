@@ -6,7 +6,7 @@ export default [{
 }, {
   name: '人员识别',
   path: '/recognize/index',
-  icon: 'iconfont icon-shibiejilu-lan',
+  icon: 'iconfont icon-renlianshibie',
   children: []
 }, {
   name: '人员管理',

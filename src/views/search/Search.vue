@@ -4,7 +4,36 @@
         <div :class="['search-title',visibleSearch ? 'hide-search-title' : '']" @click.self="visibleSearch = !visibleSearch">
             <i class="el-icon-search" @click.stop="visibleSearch = !visibleSearch"></i>
             <i class="el-icon-delete" @click.stop="removeTag"></i>
-            <el-tag v-for="(value, key) in searchResult" :key="key" closable class="search-tag" @click.prevent.stop="true" @close.stop="closeTag(key)">{{searchTagObj[key]}} : {{key == 'equipmentId' ? equipmentObj[value] : (key == 'libraryTypeId' ? databaseObj[value]: value)}} </el-tag>
+            <span v-if="Array.isArray(equipmentObj)">
+              <el-tag
+                closable
+                class="search-tag"
+                @click.prevent.stop="true"
+                @close.stop="closeTag('equipmentId')">
+                {{searchTagObj.equipmentId}} : {{equipmentObj}}
+              </el-tag>
+            </span>
+            <span v-else-if="searchResult.equipmentId && !Array.isArray(equipmentObj)">
+              <el-tag
+                closable
+                class="search-tag"
+                @click.prevent.stop="true"
+                @close.stop="closeTag('equipmentId')">
+                {{searchTagObj.equipmentId}} : {{equipmentObj}}
+              </el-tag>
+            </span>
+            <span>
+              <el-tag
+                v-for="(value, key) in searchResult"
+                v-if="key !== 'equipmentId'"
+                :key="key"
+                closable
+                class="search-tag"
+                @click.prevent.stop="true"
+                @close.stop="closeTag(key)">
+                {{searchTagObj[key]}} : {{key == 'libraryTypeId' ? databaseObj[value]: value}}
+              </el-tag>
+            </span>
         </div>
         <div :class="['search-form',visibleSearch ? '' : 'hide-search-form']">
             <slot name="search-form"></slot>
@@ -13,61 +42,75 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import SearchTag from '@/config/searchTag.js';
-export default {
-  data () {
-    return {
-      visibleSearch: false, // 搜索框显示与否标识
-      searchTagObj: {...SearchTag}
-    };
-  },
-  methods: {
-    // 删除单个tag
-    closeTag (tag) {
-      Vue.delete(this.searchResult, tag);
-    },
-    // 删除全部tag
-    removeTag () {
-      this.$confirm('此操作将清空所有搜索条件，是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        for (let key in this.searchResult) {
-          Vue.delete(this.searchResult, key);
-        }
-      });
-    }
-  },
-  props: {
-    searchResult: {
-      type: Object
-    },
-    equipmentArr: {
-      type: Array
-    },
-    databaseArr: {
-      type: Array
-    }
-  },
-  computed: {
-    equipmentObj () {
-      let obj = {};
-      this.equipmentArr && this.equipmentArr.forEach(item => {
-        obj[item.id] = item.equipmentName;
-      });
-      return obj;
-    },
-    databaseObj () {
-      let obj = {};
-      this.databaseArr && this.databaseArr.forEach(item => {
-        obj[item.id] = item.libraryTypeName;
-      });
-      return obj;
-    }
-  }
-};
+ import Vue from 'vue';
+ import SearchTag from '@/config/searchTag.js';
+ export default {
+   data () {
+     return {
+       visibleSearch: false, // 搜索框显示与否标识
+       searchTagObj: {...SearchTag}
+     };
+   },
+   methods: {
+     // 删除单个tag
+     closeTag (tag) {
+       Vue.delete(this.searchResult, tag);
+     },
+     // 删除全部tag
+     removeTag () {
+       this.$confirm('此操作将清空所有搜索条件，是否继续?', '提示', {
+         confirmButtonText: '确定',
+         cancelButtonText: '取消',
+         type: 'warning'
+       }).then(() => {
+         for (let key in this.searchResult) {
+           Vue.delete(this.searchResult, key);
+         }
+       });
+     }
+   },
+   props: {
+     searchResult: {
+       type: Object
+     },
+     equipmentArr: {
+       type: Array
+     },
+     databaseArr: {
+       type: Array
+     }
+   },
+   computed: {
+     equipmentObj () {
+       if (this.searchResult.equipmentId && Array.isArray(this.searchResult.equipmentId)) {
+         let obj = [];
+         this.searchResult.equipmentId.forEach(id => {
+           this.equipmentArr.forEach(item => {
+             if (id === item.equipmentCode) {
+               obj.push(item.equipmentName);
+             }
+           });
+         });
+         return obj;
+       } else {
+         let obj = '';
+         this.equipmentArr && this.equipmentArr.forEach(item => {
+           if (item.id === this.searchResult.equipmentId) {
+             obj = item.equipmentName;
+           }
+         });
+         return obj;
+       }
+     },
+     databaseObj () {
+       let obj = {};
+       this.databaseArr && this.databaseArr.forEach(item => {
+         obj[item.id] = item.libraryTypeName;
+       });
+       return obj;
+     }
+   }
+ };
 </script>
 
 <style lang="scss" scoped>

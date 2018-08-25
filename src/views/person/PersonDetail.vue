@@ -22,7 +22,7 @@
             </p>
             <p class="people-detail-status">
                 <span class="people-detail-content-key">识别开关：</span>
-                <span class="people-detail-content-value">{{ personDetail.disSwitch == '0' ? '关' : '开' }}</span>
+                <span class="people-detail-content-value">{{ personDetail.disSwitch == '2' ? '关' : '开' }}</span>
             </p>
             <p class="people-detail-time">
                 <span class="people-detail-content-key">开始时间：</span>

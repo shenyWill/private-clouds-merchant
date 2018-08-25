@@ -56,7 +56,7 @@
            if (lastView) {
              this.$router.push(lastView.path);
            } else {
-             this.$router.push('/index');
+             this.$router.push('/stream/index');
            }
          }
        });

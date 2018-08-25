@@ -84,7 +84,7 @@
  import StreamCompare from './StreamCompare';
  import PersonDetail from '@/views/person/PersonDetail';
  import RecognitionDetail from '@/views/recognition/RecognitionDetail';
- import { mapGetters } from 'vuex';
+ import { mapGetters, mapActions } from 'vuex';
  export default {
    // Video Streaming Component
    name: 'Stream',
@@ -118,7 +118,8 @@
    },
    computed: {
      ...mapGetters([
-       'socketConnected'
+       'socketConnected',
+       'selectedStreaming'
      ]),
      config: () => {
        return config;
@@ -131,8 +132,12 @@
      RecognitionDetail
    },
    methods: {
+     ...mapActions([
+       'setSelectedStreaming'
+     ]),
      // el-select switch video streaming url
      async switchCamera (newVal) {
+       this.setSelectedStreaming(newVal);
        const response = await api.post(config.stream.streamingURL, {id: newVal});
        if (response.data.code === 0) {
          const data = JSON.parse(response.data.data);
@@ -150,6 +155,31 @@
          this.$message({ type: 'error', message: response.data.msg });
        }
      },
+     async fetchNewestCaptureData () {
+       const response = await api.post(config.recognition.list, {limit: 9, timeType: '1'});
+       if (response.data.code === 0) {
+         const data = response.data.data.rows;
+         const url = response.data.url;
+         data.forEach(item => {
+           item.url = url;
+           this.captureList.push(item);
+         });
+       }
+     },
+     async fetchNewestCompareData () {
+       const response = await api.post(config.recognition.list, {
+         limit: 4,
+         timeType: '1',
+         confidence: this.miniScore});
+       if (response.data.code === 0) {
+         const data = response.data.data.rows;
+         const url = response.data.url;
+         data.forEach(item => {
+           item.url = url;
+           this.compareList.push(item);
+         });
+       }
+     },
      // subscribe /face/recognition
      initSocket (url) {
        this.socket = new Socket(url);
@@ -157,6 +187,12 @@
          const data = JSON.parse(response.body);
          this.captureList.unshift(data);
          if (data.timeType === '1' && Number(data.confidence) > this.miniScore) this.compareList.unshift(data);
+         if (this.captureList.length > 9) {
+           this.captureList.pop();
+         }
+         if (this.compareList.length > 4) {
+           this.compareList.pop();
+         }
        });
        this.isSubscribed = true;
      },
@@ -174,6 +210,7 @@
      },
      // change video player src
      changePlayerSrc (url) {
+       if (!this.player) return;
        this.player.pause();
        this.player.reset();
        this.player.src(url);
@@ -193,10 +230,8 @@
      // dispose player when component destroyed
      destroyPlayer () {
        if (!this.player) return;
-       this.player.ready(() => {
-         this.player.dispose();
-         this.player = null;
-       });
+       this.player.dispose();
+       this.player = null;
      },
      // store subscribe socket connect action
      subscribeSocket () {
@@ -257,15 +292,23 @@
    async mounted () {
      this.initPlayer({ techOrder: ['flash', 'html5'] });
      this.cameraOption = await this.fetchCameraList();
+     this.fetchNewestCaptureData();
+     this.fetchNewestCompareData();
+     if (this.selectedStreaming && this.selectedStreaming !== '') {
+       this.cameraMonitorUrl = this.selectedStreaming;
+     } else if (this.cameraOption && this.cameraOption.length > 0) {
+       this.cameraMonitorUrl = this.cameraOption[0].id;
+     }
+     this.switchCamera(this.cameraMonitorUrl);
    },
    beforeRouteLeave (to, from, next) {
      this.isSubscribed = false;
      next();
    },
-   beforeRouteEnter (to, from, next) {
+   beforeRouteUpdate (to, from, next) {
      next();
    },
-   beforeDestroy () {
+   destroyed () {
      this.destroyPlayer();
    }
  };
@@ -278,15 +321,15 @@
    text-align: left;
    overflow: hidden;
    .stream__video-wrapper {
-     margin-bottom: 10px;
+     margin-bottom: 15px;
      width: 1035px;
-     border-radius: 5px;
+     border-radius: 10px;
      background-color: #fff;
      overflow: hidden;
      float: left;
      .stream__fullscreen {
        float: right;
-       margin-top: 5px;
+       margin-top: 15px;
        font-size: 20px;
        &:hover {
          cursor: pointer;
@@ -312,11 +355,10 @@
      height: 641px;
      background-color: #fff;
      border-radius: 10px;
-     overflow: auto;
+     overflow: hidden;
      .compare-title {
        height: 60px;
        line-height: 60px;
-       border-bottom: 1px solid #dcdcdc;
        font-size: 18px;
        color: #333;
        text-indent: 20px;
@@ -325,7 +367,7 @@
      }
      .stream__compare-list {
        height: 580px;
-       overflow-y: auto;
+       overflow-y: hidden;
      }
    }
    .stream__capture {
@@ -334,8 +376,7 @@
      clear: both;
      background-color: #fff;
      border-radius: 10px;
-     overflow-x: auto;
-     overflow-y: hidden;
+     overflow: hidden;
      .stream__capture-title {
        height: 60px;
        line-height: 60px;
@@ -348,8 +389,7 @@
      }
      .stream__capture-list {
        height: 220px;
-       overflow-x: auto;
-       overflow-y: hidden;
+       overflow: hidden;
        white-space: nowrap;
        .stream__capture-item {
          display: inline-block;
