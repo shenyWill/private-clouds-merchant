@@ -44,7 +44,7 @@
     </Search>
     <div class="person-nav">
       <!-- 添加新人员 -->
-        <el-card class="person-add person-list">
+        <el-card class="person-add person-list" v-if="personList.length || !Object.keys(searchResult).length">
           <div class="add-content" @click="addPerson">
             <i class="el-icon-plus"></i>
           </div>
@@ -69,6 +69,15 @@
             <i class="el-icon-circle-check"></i>
           </div>
         </el-card>
+
+        <!-- 搜索为空时显示 -->
+        <div class="search-empty" v-if="!(personList.length || !Object.keys(searchResult).length)">
+          <img :src="emptyImg" alt="">
+          <p class="empty-content">
+            <span class="content-first">对不起，没有找到符合条件的人员，</span>
+            <span class="content-second">请重新搜索！</span>
+          </p>
+        </div>
     </div>
     <!-- 分页 -->
     <el-pagination
@@ -147,7 +156,8 @@
        dialogPersonAdd: false, // 添加人员框是否显示
        currentPage: 1, // 当前页
        addOrEdit: 0, // 0--> 增加， 1--> 编辑
-       editObj: {} // 编辑人员的对象
+       editObj: {}, // 编辑人员的对象
+       emptyImg: require('@/assets/image/empty.png') // 搜索为空时显示
      };
    },
    components: {
@@ -524,6 +534,13 @@
     color: #008aff !important;
   }
 }
+ .empty-content {
+   font-size: 18px;
+   font-weight: bold;
+ }
+ .content-second{
+   display: block;
+ }
 </style>
 
 <style lang="scss">
@@ -547,4 +564,5 @@
      cursor: pointer;
    }
  }
+
 </style>

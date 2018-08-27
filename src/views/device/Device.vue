@@ -692,8 +692,6 @@
      font-weight: bold;
      margin: 0 auto;
      text-align: left;
-     .el-form-item__label {
-     }
      .el-select {
        width: 100%;
      }
