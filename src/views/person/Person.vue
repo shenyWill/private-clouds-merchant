@@ -325,9 +325,10 @@
    },
    watch: {
      searchResult: {
-       handler (newVal, oldVal) {
+       async handler (newVal, oldVal) {
          this.searchForm = { ...newVal };
-         this.responseAPI({...this.searchForm});
+         await this.responseAPI({...this.searchForm});
+         this.currentPage = 1;
        },
        deep: true
      }
