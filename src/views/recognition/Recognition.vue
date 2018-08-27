@@ -60,7 +60,7 @@
       </div>
       <div v-for="item in recognitionList" :key="item.id" class="recognition-card-info">
         <div class="recognition-card-image">
-          <img :src="recognitionUrl + item.imageUrl2" alt="" :onerror="`src='${recognitionUrl + item.imageUrl1}'`">
+          <img :src="recognitionUrl + item.imageUrl2" alt="" :onerror="`src='${errorImage}'`">
           <img :src="recognitionUrl + item.imageUrl1" alt="">
         </div>
         <div class="recognition-card-content">
@@ -133,6 +133,7 @@ export default {
   data () {
     return {
       emptyImage: require('@/assets/image/empty.png'),
+      errorImage: require('@/assets/image/timg.jpg'),
       searchForm: {},
       searchResult: {},
       recognitionList: [],
