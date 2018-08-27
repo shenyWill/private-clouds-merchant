@@ -10,7 +10,7 @@ class Socket {
     if (!Socket.created) {
       const socket = new SockJS(socketURL);
       Socket.socket = Stomp.over(socket);
-      Socket.debug = null;
+      Socket.socket.debug = null;
       Socket.created = true;
     }
     return Socket.socket;

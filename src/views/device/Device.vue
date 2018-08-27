@@ -42,7 +42,7 @@
         </el-form-item>
       </el-form>
     </Search>
-    <div class="device__list" v-if="list && list.length > 0">
+    <div class="device__list">
       <div
         @mouseover="toggleAddButton()"
         @mouseout="toggleAddButton()"
@@ -55,22 +55,24 @@
           <i class="el-icon-arrow-right" v-if="showAddButton"></i>
         </el-button>
       </div>
-      <div class="device__list-header">
-        查看设备
+      <div v-if="list && list.length > 0">
+        <div class="device__list-header">
+          查看设备
+        </div>
+        <DeviceCell
+          v-for="(device, index) in list"
+          @delete="showDeleteDialog"
+          @detail="showDetailDialog"
+          @edit="showEditDialog"
+          :device="device"
+          :key="index">
+        </DeviceCell>
       </div>
-      <DeviceCell
-        v-for="(device, index) in list"
-        @delete="showDeleteDialog"
-        @detail="showDetailDialog"
-        @edit="showEditDialog"
-        :device="device"
-        :key="index">
-      </DeviceCell>
-    </div>
-    <div v-else class="device__empty">
-      <img :src="emptyImage">
-      <div>
-        暂无数据
+      <div v-else class="device__empty">
+        <img :src="emptyImage">
+        <div>
+          暂无数据
+        </div>
       </div>
     </div>
     <el-pagination
@@ -87,6 +89,7 @@
       class="device__dialog-add"
       title="添加设备"
       :visible.sync="addDialog"
+      :fullscreen="true"
       width="25%">
       <el-form
         ref="addForm"
