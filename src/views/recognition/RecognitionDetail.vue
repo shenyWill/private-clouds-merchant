@@ -8,7 +8,7 @@
           <span class="recognition-score">{{ parseInt(item.confidence) }}%</span>
           <p class="recognition-list-equipmentName">{{ item.equipmentName }}</p>
           <p class="recognition-list-content">
-            <span class="recognition-list-type">{{ item.groupName }}</span>
+            <span :title="item.createTime" class="recognition-list-type">{{ item.groupName }}</span>
             <span :title="item.createTime" class="recognition-list-time">{{ item.createTime.split(' ')[1] }}</span>
           </p>
         </li>

@@ -201,6 +201,11 @@ export default {
       if (Number(response.data.code) === 0) {
         this.personDetail = response.data.data;
         this.dialogPersonDetail = true;
+      } else {
+        this.$message({
+          type: 'error',
+          message: response.data.msg
+        });
       }
     },
     // 查看比对详情

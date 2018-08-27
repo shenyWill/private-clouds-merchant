@@ -10,7 +10,7 @@
         <div @click="showSettingDialog">设置</div>
       </div>
       <div class="navbar__menu-item">
-        <div @click="logout">退出登录</div>
+        <div @click="adminLogout">退出登录</div>
       </div>
     </div>
     <el-dialog
@@ -122,7 +122,7 @@
          this.$message({ type: 'error', message: response.data.msg });
        }
      },
-     async logout () {
+     async adminLogout () {
        const response = await api.post(config.logoutAPI, {});
        if (response.data.code === 0) {
          this.logout();
