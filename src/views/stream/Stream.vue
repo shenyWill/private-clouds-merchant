@@ -26,7 +26,7 @@
     </div>
 
     <div class="stream__compare">
-      <p class="compare-title">识别记录</p>
+      <p class="compare-title">人员识别</p>
       <div class="stream__compare-list" v-if="compareList.length > 0">
         <StreamCompare
           v-for="(item, index) in compareList"

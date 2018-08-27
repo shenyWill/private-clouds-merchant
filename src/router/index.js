@@ -71,7 +71,7 @@ export default new Router({
       path: '/recognize/index',
       component: Recognition,
       name: 'Recognition',
-      meta: { title: '识别记录', icon: '', cache: false }
+      meta: { title: '人员识别', icon: '', cache: false }
     }]
   }, {
     path: '/system',

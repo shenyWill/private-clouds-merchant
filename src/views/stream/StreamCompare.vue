@@ -46,9 +46,9 @@
           class="stream-compare__tag-red"
           v-if="item.libraryTypeName === '黑名单'"
           @click.native="showRecognitionDetail(item.personnelId, true)">
-          识别记录
+          人员识别
         </el-tag>
-        <el-tag v-else @click.native="showRecognitionDetail(item.personnelId, true)">识别记录</el-tag>
+        <el-tag v-else @click.native="showRecognitionDetail(item.personnelId, true)">人员识别</el-tag>
       </div>
     </div>
   </div>

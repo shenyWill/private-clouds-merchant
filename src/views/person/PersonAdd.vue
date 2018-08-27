@@ -329,9 +329,13 @@
      // 选择图片
      async checkImage () {
        if (this.addOrEdit === 1) {
-         await this.editImage(('data:image/png;base64,' + this.checkImageUrl), this.moreFacePosition);
+         if (this.checkImageUrl) {
+          await this.editImage(('data:image/png;base64,' + this.checkImageUrl), this.moreFacePosition);
+         }
        } else {
-         this.showImageUrl = this[this.moreFacePosition] = this.addPersonForm[this.moreFacePosition] = 'data:image/png;base64,' + this.checkImageUrl;
+         if (this.checkImageUrl) {
+          this.showImageUrl = this[this.moreFacePosition] = this.addPersonForm[this.moreFacePosition] = 'data:image/png;base64,' + this.checkImageUrl;
+         }
        }
        this.showForm = true;
      }
