@@ -25,7 +25,7 @@
             <span>
               <el-tag
                 v-for="(value, key) in searchResult"
-                v-if="key !== 'equipmentId'"
+                v-if="key !== 'equipmentId' && value"
                 :key="key"
                 closable
                 class="search-tag"
