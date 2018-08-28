@@ -60,8 +60,8 @@
       </div>
       <div v-for="item in recognitionList" :key="item.id" class="recognition-card-info">
         <div class="recognition-card-image">
-          <img :src="recognitionUrl + item.imageUrl2" alt="" :onerror="`src='${errorImage}'`">
-          <img :src="recognitionUrl + item.imageUrl1" alt="">
+          <img :src="item.imageUrl2 ? (recognitionUrl + item.imageUrl2) : ''" alt="" :onerror="`src='${errorImage}'`">
+          <img :src="item.imageUrl2 ? (recognitionUrl + item.imageUrl1) : ''" alt="">
         </div>
         <div class="recognition-card-content">
           <p class="recognition-card-detail">
@@ -167,8 +167,8 @@ export default {
         this.$message({type: 'error', message: '开始时间不能大于结束时间'});
         return;
       }
-      this.searchForm.startTime && (this.searchForm.startTime = parseTime(this.searchForm.startTime));
-      this.searchForm.endTime && (this.searchForm.endTime = parseTime(this.searchForm.endTime));
+      this.searchForm.startTime && (this.searchForm.startTime = parseTime(this.searchForm.startTime).replace(new RegExp(/-/gm), '/'));
+      this.searchForm.endTime && (this.searchForm.endTime = parseTime(this.searchForm.endTime).replace(new RegExp(/-/gm), '/'));
       this.searchResult = { ...this.searchForm };
     },
     // 请求
