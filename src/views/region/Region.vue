@@ -51,6 +51,7 @@
 
     <!-- Add Region Dialog -->
     <el-dialog
+      v-loading.fullscreen.lock="isLoading"
       class="region__dialog"
       :visible.sync="addRegionDialog"
       width="25%"
@@ -76,6 +77,7 @@
 
     <!-- Edit Region Dialog -->
     <el-dialog
+      v-loading.fullscreen.lock="isLoading"
       class="region__dialog"
       :visible.sync="editDialog"
       :before-close="beforeEditClose"
@@ -98,6 +100,7 @@
 
     <!-- Add Device Dialog -->
     <el-dialog
+      v-loading.fullscreen.lock="isLoading"
       class="region__dialog"
       title="添加设备"
       :visible.sync="addDeviceDialog"
@@ -112,7 +115,7 @@
           <el-input v-model="deviceForm.equipmentName" placeholder="请输入设备名称"></el-input>
         </el-form-item>
         <el-form-item label="设备种类" prop="equipmentType">
-          <el-select v-model="deviceForm.equipmentType" placeholder="请选择">
+          <el-select v-model="deviceForm['equipmentType']" placeholder="请选择">
             <el-option
               v-for="item in config.deviceType"
               :key="item.value"
@@ -201,6 +204,7 @@
    name: 'Region',
    data () {
      return {
+       isLoading: false,
        list: [], // region list data
        size: 0, // list total size
        offset: 0, // list offset
@@ -423,14 +427,24 @@
                port: this.deviceForm.deviceAddress === 'ip' ? this.deviceForm.port : '',
                url: this.deviceForm.deviceAddress === 'url' ? this.deviceForm.url : ''
              };
+             this.isLoading = true;
              const response = await api.post(config.device.add, data);
              this.addDeviceDialog = false;
              if (response.data.code === 0) {
+               this.deviceForm.ipAddress = '';
+               this.deviceForm.url = '';
+               this.deviceForm.port = null;
+               this.resetForm('addForm');
                this.$message({ type: 'success', message: '添加设备成功' });
                this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
              } else {
+               this.deviceForm.ipAddress = '';
+               this.deviceForm.url = '';
+               this.deviceForm.port = null;
+               this.resetForm('addForm');
                this.$message({ type: 'error', message: response.data.msg });
              }
+             this.isLoading = false;
            } catch (e) {
            }
          } else {
@@ -443,6 +457,7 @@
        this.$refs['editForm'].validate(async valid => {
          if (valid) {
            try {
+             this.isLoading = true;
              const response = await api.post(config.region.update, this.editForm);
              this.editDialog = false;
              if (response.data.code === 0) {
@@ -451,6 +466,7 @@
              } else {
                this.$message({ type: 'error', message: response.data.msg });
              }
+             this.isLoading = false;
            } catch (e) {
            }
          } else {
@@ -463,6 +479,7 @@
        this.$refs['addForm'].validate(async valid => {
          if (valid) {
            try {
+             this.isLoading = true;
              const response = await api.post(config.region.add, this.addForm);
              this.addRegionDialog = false;
              if (response.data.code === 0) {
@@ -471,6 +488,7 @@
              } else {
                this.$message({ type: 'error', message: response.data.msg });
              }
+             this.isLoading = false;
            } catch (e) {
            }
          } else {

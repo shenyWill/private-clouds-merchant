@@ -14,7 +14,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="设备类型" prop="equipmentType">
-              <el-select v-model="searchForm.equipmentType" placeholder="请选择">
+              <el-select v-model="searchForm['equipmentType']" placeholder="请选择">
                 <el-option
                   v-for="item in config.deviceType"
                   :key="item.value"
@@ -102,7 +102,7 @@
           <el-input v-model="addForm.equipmentName" placeholder="请填写设备名称"></el-input>
         </el-form-item>
         <el-form-item label="设备种类" prop="equipmentType">
-          <el-select v-model="addForm.equipmentType" placeholder="请选择">
+          <el-select v-model="addForm['equipmentType']" placeholder="请选择">
             <el-option
               v-for="item in config.deviceType"
               :key="item.value"
@@ -164,7 +164,7 @@
           <el-input v-model="editForm.equipmentName" placeholder="请填写设备名称"></el-input>
         </el-form-item>
         <el-form-item label="设备种类" prop="equipmentType">
-          <el-select v-model="editForm.equipmentType" placeholder="请选择">
+          <el-select v-model="editForm['equipmentType']" placeholder="请选择">
             <el-option
               v-for="item in config.deviceType"
               :key="item.value"
@@ -266,6 +266,7 @@
    },
    data () {
      return {
+       isLoading: false,
        emptyImage: require('@/assets/image/empty.png'),
        regionID: '',
        list: null, // deivce list
@@ -474,7 +475,8 @@
        this.showDialog('editDialog', 'editForm');
        this.editForm = {
          ...data,
-         deviceAddress: data.ipAddress && data.ipAddress !== '' ? 'ip' : 'url'
+         deviceAddress: data.ipAddress && data.ipAddress !== '' ? 'ip' : 'url',
+         port: data.ipAddress && data.ipAddress !== 'url' ? parseInt(data.port) : null
        };
        this.deviceDetail = data;
      },
@@ -555,9 +557,17 @@
              const response = await api.post(config.device.add, data);
              this.addDialog = false;
              if (response.data.code === 0) {
+               this.addForm.ipAddress = '';
+               this.addForm.port = null;
+               this.addForm.url = '';
+               this.resetForm('addForm');
                this.$message({ type: 'success', message: '添加成功' });
                this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
              } else {
+               this.addForm.ipAddress = '';
+               this.addForm.port = null;
+               this.addForm.url = '';
+               this.resetForm('addForm');
                this.$message({ type: 'error', message: response.data.msg });
              }
            } catch (e) {

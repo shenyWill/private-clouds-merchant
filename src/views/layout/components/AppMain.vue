@@ -55,15 +55,13 @@
            }
          });
        }, () => {
-         // this.disconnectSocket();
+         this.disconnectSocket();
          // socket connect error, reconnect
-         // this.initSocket(url);
+         this.initSocket(url);
        });
      }
    },
    watch: {
-     $route (newVal, oldVal) {
-     }
    },
    mounted () {
      this.initSocket(config.socketURL);

@@ -1,7 +1,7 @@
 const app = {
   state: {
     socketConnected: false,
-    blacklistAlert: false, // show blacklist alert dialog
+    blacklistAlert: true, // show blacklist alert dialog
     blacklistSound: false, // blacklist alert sound
     sidebarToggle: false,
     selectedRegion: '',

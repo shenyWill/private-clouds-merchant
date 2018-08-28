@@ -44,7 +44,8 @@
 <script>
  import api from '@/api';
  import config from '@/config';
- import { mapActions } from 'vuex';
+ import Socket from '@/api/Socket';
+ import { mapActions, mapGetters } from 'vuex';
  export default {
    name: 'Userpane',
    data () {
@@ -67,11 +68,18 @@
        }
      }
    },
+   computed: {
+     ...mapGetters([
+       'socketConnected'
+     ])
+   },
    methods: {
      ...mapActions([
        'logout',
        'setBlacklistAlert',
-       'setBlacklistSound'
+       'setBlacklistSound',
+       'disconnectSocket',
+       'delAllViews'
      ]),
      toggleMenu () {
        this.showMenu = !this.showMenu;
@@ -125,6 +133,12 @@
      async adminLogout () {
        const response = await api.post(config.logoutAPI, {});
        if (response.data.code === 0) {
+         this.delAllViews();
+         if (this.socketConnected) {
+           const socket = new Socket(config.socketURL);
+           socket.disconnect();
+         }
+         this.disconnectSocket();
          this.logout();
          this.$router.push('/login');
        } else {
