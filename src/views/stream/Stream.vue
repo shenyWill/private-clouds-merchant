@@ -259,29 +259,33 @@
        }
      },
      // 查看比对详情
-     async showRecognitionDetail (personnelId, tag) {
-       if (tag) {
-         this.recognitionOffset = 0;
-         this.recognitionDetail = {};
-         this.recognitionDetailId = personnelId;
-       }
-       const response = await api.post(config.recognition.compareDetail, {
-         personnelId: this.recognitionDetailId,
-         offset: this.recognitionOffset
-       });
-       if (Number(response.data.code) === 0) {
-         for (let item in response.data.data) {
-           this.$set(this.recognitionDetail, item, response.data.data[item]);
-         }
-         this.recognitionDetailUrl = response.data.url;
-         this.recognitionDetail = Object.assign(this.recognitionDetail, response.data.data);
-         this.recognitionOffset = response.data.offset;
-         this.dialogRecognitionDetail = true;
-         setTimeout(() => {
-           this.recognitionDetailTag = true;
-         }, 2000);
-       }
-     },
+    async showRecognitionDetail (personnelId, tag) {
+      if (tag) {
+        this.recognitionOffset = 0;
+        this.recognitionDetail = {};
+        this.recognitionDetailId = personnelId;
+      }
+      const response = await api.post(config.recognition.compareDetail, {personnelId: this.recognitionDetailId, offset: this.recognitionOffset});
+      if (Number(response.data.code) === 0) {
+        let responseObj = response.data.data;
+        for (let item in responseObj) {
+          // TODO
+          if (item.length > 1) {
+            if (Object.keys(this.recognitionDetail).indexOf(item) > -1) {
+              this.recognitionDetail[item] = this.recognitionDetail[item].concat(responseObj[item]);
+            } else {
+              this.$set(this.recognitionDetail, item, responseObj[item]);
+            }
+          }
+        }
+        this.recognitionDetailUrl = response.data.url;
+        this.recognitionOffset = response.data.offset;
+        this.dialogRecognitionDetail = true;
+        setTimeout(() => {
+          this.recognitionDetailTag = true;
+        }, 300);
+      }
+    },
      // 滚动条再次调用
      detailScroll () {
        document.getElementsByClassName('recognition-detail-show')[0].onscroll = () => {

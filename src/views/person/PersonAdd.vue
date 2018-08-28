@@ -366,8 +366,8 @@
              });
              this.showImageUrl = newVal.url + newVal.personnelImgList[0];
            };
-           let startTime = newVal.disStartTime ? new Date(newVal.disStartTime) : new Date();
-           let endTime = newVal.disEndTime ? new Date(newVal.disEndTime) : new Date();
+           let startTime = newVal.disStartTime ? new Date(newVal.disStartTime.replace(new RegExp(/-/gm), '/')) : new Date();
+           let endTime = newVal.disEndTime ? new Date(newVal.disEndTime.replace(new RegExp(/-/gm), '/')) : new Date();
            this.$set(this.addPersonForm, 'describe', newVal.personnelDescribe);
            this.$set(this.addPersonForm, 'disEndTime', endTime);
            this.$set(this.addPersonForm, 'disStartTime', startTime);

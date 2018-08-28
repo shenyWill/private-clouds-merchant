@@ -17,7 +17,7 @@
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "echarts": "^4.1.0",
-    "element-ui": "^2.4.4",
+    "element-ui": "2.4.4",
     "es6-promise": "^4.2.4",
     "mockjs": "^1.0.1-beta3",
     "node-sass": "^4.9.2",
