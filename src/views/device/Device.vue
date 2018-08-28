@@ -127,7 +127,7 @@
           <el-input v-model="addForm.mediaUrl" placeholder="请输入设备rtsp/rtmp地址"></el-input>
         </el-form-item>
         <el-form-item label="设备地址" prop="deviceAddress">
-          <el-select v-model="addForm.deviceAddress" placeholder="请选择" @change="changeAddressAddType">
+          <el-select v-model="addForm['deviceAddress']" placeholder="请选择" @change="changeAddressAddType">
             <el-option v-for="item in addressType" :key="item.key" :value="item.value" :label="item.key"></el-option>
           </el-select>
         </el-form-item>
@@ -194,7 +194,7 @@
           <el-input v-model="editForm.mediaUrl" placeholder="请输入设备rtsp/rtmp地址"></el-input>
         </el-form-item>
         <el-form-item label="设备地址" prop="deviceAddress">
-          <el-select v-model="editForm.deviceAddress" placeholder="请选择" @change="changeAddressEditType">
+          <el-select v-model="editForm['deviceAddress']" placeholder="请选择" @change="changeAddressEditType">
             <el-option v-for="item in addressType" :key="item.key" :value="item.value" :label="item.key"></el-option>
           </el-select>
         </el-form-item>
@@ -327,7 +327,8 @@
          ],
          port: [
            { required: true, message: '请填写端口号', trigger: 'blur' },
-           { type: 'number', message: '端口号必须为数字' }
+           { type: 'number', message: '端口号必须为数字' },
+           { validator: this.checkPort, trigger: 'blur' }
          ],
          loginName: [
            { required: true, message: '请填写登陆账号', trigger: 'blur' }
@@ -370,7 +371,8 @@
          ],
          port: [
            { required: true, message: '请填写端口号', trigger: 'blur' },
-           { type: 'number', message: '端口号必须为数字' }
+           { type: 'number', message: '端口号必须为数字' },
+           { validator: this.checkPort, trigger: 'blur' }
          ],
          loginName: [
            { required: true, message: '请填写登陆账号', trigger: 'blur' }
@@ -416,6 +418,14 @@
      },
      toggleAddButton () {
        this.showAddButton = !this.showAddButton;
+     },
+     checkPort (rule, value, callback) {
+       if (parseInt(value) && (parseInt(value) > 65535 || parseInt(value) < 0)) {
+         callback(new Error('请输入正确的端口号'));
+       } else if (parseInt(value) === 0) {
+         callback(new Error('请输入正确的端口号'));
+       }
+       callback();
      },
      checkDeviceMediaURL (rule, value, callback) {
        if (!value.startsWith('rtsp://') && !value.startsWith('rtmp://')) {
@@ -533,9 +543,15 @@
      // add device form submit button clicked
      addDevice () {
        this.$refs['addForm'].validate(async valid => {
-         const data = { ...this.addForm, areaId: this.regionID };
          if (valid) {
            try {
+             const data = {
+               ...this.addForm,
+               areaId: this.regionID,
+               ipAddress: this.addForm.deviceAddress === 'ip' ? this.addForm.ipAddress : '',
+               port: this.addForm.deviceAddress === 'ip' ? this.addForm.port : '',
+               url: this.addForm.deviceAddress === 'url' ? this.addForm.url : ''
+             };
              const response = await api.post(config.device.add, data);
              this.addDialog = false;
              if (response.data.code === 0) {

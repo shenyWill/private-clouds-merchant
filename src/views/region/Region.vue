@@ -140,7 +140,7 @@
           <el-input v-model="deviceForm.mediaUrl" placeholder="请输入设备rtsp/rtmp地址"></el-input>
         </el-form-item>
         <el-form-item label="设备地址" prop="deviceAddress">
-          <el-select v-model="deviceForm.deviceAddress" placeholder="请选择" @change="changeAddDeviceAddress">
+          <el-select v-model="deviceForm['deviceAddress']" placeholder="请选择" @change="changeAddDeviceAddress">
             <el-option
               v-for="item in config.deviceAddressType"
               :key="item.value"
@@ -260,7 +260,8 @@
          ],
          port: [
            { required: true, message: '请填写端口号', trigger: 'blur' },
-           { type: 'number', message: '端口号必须为数字' }
+           { type: 'number', message: '端口号必须为数字' },
+           { validator: this.checkPort, trigger: 'blur' }
          ],
          loginName: [
            { required: true, message: '请填写设备账号', trigger: 'blur' }
@@ -301,6 +302,14 @@
        this.currentPage = val;
        this.offset = (val - 1) * this.limit;
        this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
+     },
+     checkPort (rule, value, callback) {
+       if (parseInt(value) && (parseInt(value) > 65535 || parseInt(value) < 0)) {
+         callback(new Error('请输入正确的端口号'));
+       } else if (parseInt(value) === 0) {
+         callback(new Error('请输入正确的端口号'));
+       }
+       callback();
      },
      checkAddDeviceMediaURL (rule, value, callback) {
        if (!value.startsWith('rtsp://') && !value.startsWith('rtmp://')) {
@@ -408,7 +417,13 @@
        this.$refs['deviceForm'].validate(async valid => {
          if (valid) {
            try {
-             const response = await api.post(config.device.add, this.deviceForm);
+             const data = {
+               ...this.deviceForm,
+               ipAddress: this.deviceForm.deviceAddress === 'ip' ? this.deviceForm.ipAddress : '',
+               port: this.deviceForm.deviceAddress === 'ip' ? this.deviceForm.port : '',
+               url: this.deviceForm.deviceAddress === 'url' ? this.deviceForm.url : ''
+             };
+             const response = await api.post(config.device.add, data);
              this.addDeviceDialog = false;
              if (response.data.code === 0) {
                this.$message({ type: 'success', message: '添加设备成功' });
