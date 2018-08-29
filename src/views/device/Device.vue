@@ -138,7 +138,7 @@
           <el-input v-model="addForm.ipAddress" placeholder="请输入IP地址"></el-input>
         </el-form-item>
         <el-form-item label="端口号" prop="port" v-if="addForm.deviceAddress === 'ip'">
-          <el-input v-model.number="addForm.port" placeholder="请输入设备端口号"></el-input>
+          <el-input v-model="addForm.port" placeholder="请输入设备端口号"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -205,7 +205,7 @@
           <el-input v-model="editForm.ipAddress" placeholder="请输入IP地址"></el-input>
         </el-form-item>
         <el-form-item label="端口号" prop="port" v-if="editForm.deviceAddress === 'ip'">
-          <el-input v-model.number="editForm.port" placeholder="请填写设备端口号"></el-input>
+          <el-input v-model="editForm.port" placeholder="请填写设备端口号"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -328,7 +328,6 @@
          ],
          port: [
            { required: true, message: '请填写端口号', trigger: 'blur' },
-           { type: 'number', message: '端口号必须为数字' },
            { validator: this.checkPort, trigger: 'blur' }
          ],
          loginName: [
@@ -372,7 +371,6 @@
          ],
          port: [
            { required: true, message: '请填写端口号', trigger: 'blur' },
-           { type: 'number', message: '端口号必须为数字' },
            { validator: this.checkPort, trigger: 'blur' }
          ],
          loginName: [
@@ -421,7 +419,9 @@
        this.showAddButton = !this.showAddButton;
      },
      checkPort (rule, value, callback) {
-       if (parseInt(value) && (parseInt(value) > 65535 || parseInt(value) < 0)) {
+       if (isNaN(value)) {
+         callback(new Error('请输入正确的端口号'));
+       } else if (parseInt(value) && (parseInt(value) > 65535 || parseInt(value) < 0)) {
          callback(new Error('请输入正确的端口号'));
        } else if (parseInt(value) === 0) {
          callback(new Error('请输入正确的端口号'));

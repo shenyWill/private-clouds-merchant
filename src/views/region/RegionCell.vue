@@ -1,6 +1,9 @@
 <template>
   <div class="region-cell" @click="viewRegion" @mouseover.capture="showActionPane" @mouseout.capture="hideActionPane">
-    <img class="region-cell__cover" :src="cover" alt="cover" />
+    <!-- <img class="region-cell__cover" :src="cover" alt="cover" /> -->
+    <span class="region-cell__cover">
+      <i class="iconfont icon-quyu-lan region-cell__icon"></i>
+    </span>
     <div class="region-cell__info">
       <div class="region-cell__title">{{ region.areaName }}</div>
       <div class="region-cell__orga">{{ region.groupName }}</div>
@@ -68,10 +71,15 @@
      cursor: pointer;
    }
    .region-cell__cover {
+     display: inline-block;
      margin: 20px;
-     width: 80px;
-     height: 80px;
-     border-radius: 10px;
+     padding: 10px;
+     background-color: #2ec7c9;
+     border-radius: 20px;
+     .region-cell__icon {
+       font-size: 60px;
+       color: white;
+     }
    }
    .region-cell__info {
      position: absolute;

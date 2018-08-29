@@ -135,7 +135,7 @@
        if (response.data.code === 0) {
          this.delAllViews();
          if (this.socketConnected) {
-           const socket = new Socket(config.socketURL);
+           const socket = Socket.init(config.socketURL);
            socket.disconnect();
          }
          this.disconnectSocket();
