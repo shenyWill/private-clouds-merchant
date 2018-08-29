@@ -233,7 +233,7 @@
       width="25%"
       class="device__dialog-delete"
       :visible.sync="deleteDialog">
-      <span class="dialog__content">你确认要删除该设备吗？</span>
+      <span class="dialog__content">删除设备将删除该设备的所有信息，你确认要删除该设备吗？</span>
       <span slot="footer">
         <el-button @click="deleteDialog = false" type="primary">取消删除</el-button>
         <el-button @click="deleteDevice">确认删除</el-button>
@@ -652,7 +652,8 @@
    .device__list {
      position: relative;
      margin: 20px 35px 20px 35px;
-     border: 1px solid lightgray;
+    //  border: 1px solid lightgray;
+     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
      border-radius: 10px;
      background-color: white;
      .device__list-header {

@@ -88,6 +88,9 @@
    height: 120px;
    text-align: left;
    border-bottom: 1px solid lightgray;
+   &:last-child {
+     border-bottom: 0;
+   }
    overflow: hidden;
    .device-cell__info {
      min-width: 300px;

@@ -64,7 +64,6 @@
    width: 100%;
    text-align: left;
    border-radius: 20px;
-   border: 1px solid lightgray;
    overflow: hidden;
    background-color: white;
    &:hover {

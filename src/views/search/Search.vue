@@ -115,10 +115,10 @@
 
 <style lang="scss" scoped>
 .search {
-  margin: 35px;
+  margin: 35px 40px;
   // 搜索头部
   .search-title {
-    width: 1590px;
+    // width: 1590px;
     height: 60px;
     line-height: 50px;
     border-radius: 7px;
@@ -157,7 +157,7 @@
     transition: all 1s;
     overflow: hidden;
     max-height: 600px;
-    width: 1600px;
+    width: 1590px;
     border-radius: 0 0 7px 7px;
   }
   .hide-search-form {
