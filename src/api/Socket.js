@@ -2,37 +2,44 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
 class Socket {
-  static created = false;
-  static socket = null;
-  static connected = false;
+  static instance = null;
 
   constructor (socketURL) {
-    if (!Socket.created) {
-      const socket = new SockJS(socketURL);
-      Socket.socket = Stomp.over(socket);
-      Socket.socket.debug = null;
-      Socket.created = true;
+    this.socketJS = new SockJS(socketURL);
+    this.socket = Stomp.over(this.socketJS);
+    // this.socket.debug = null;
+    Socket.instance = null;
+  }
+
+  static init (socketURL) {
+    if (!Socket.instance) {
+      Socket.instance = new Socket(socketURL);
     }
-    return Socket.socket;
+    return Socket.instance;
   }
 
   connect (login, passcode, callback) {
-    Socket.connected = true;
-    this.connect(login, passcode, callback);
-    return Socket.socket;
+    this.connected = true;
+    this.socket.connect(login, passcode, callback);
+    return this;
   }
 
   subscribe (url, callback) {
-    this.subscribe(url, callback);
+    this.socket.subscribe(url, callback);
   }
 
   disconnect (callback) {
-    Socket.connected = false;
-    this.disconnect(callback);
+    this.connected = false;
+    Socket.instance = null;
+    this.socket.disconnect(callback);
+  }
+
+  unsubscribe () {
+    this.socket.unsubscribe();
   }
 
   isConnected () {
-    return Socket.connected;
+    return this.connected;
   }
 }
 

@@ -86,7 +86,7 @@
      // disconnect socket if connected
      disconnectSocket () {
        if (this.socketConnected) {
-         const socket = new Socket(config.socketURL);
+         const socket = Socket.init(config.socketURL);
          socket.disconnect();
        }
      },

@@ -187,7 +187,7 @@
      },
      // subscribe /face/recognition
      initSocket (url) {
-       this.socket = new Socket(url);
+       this.socket = Socket.init(url);
        this.socket.subscribe('/face/recognition', response => {
          const data = JSON.parse(response.body);
          this.captureList.unshift(data);
@@ -402,6 +402,7 @@
        overflow: hidden;
        white-space: nowrap;
        .stream__capture-item {
+         overflow: hidden;
          display: inline-block;
          box-sizing: border-box;
        }

@@ -40,7 +40,7 @@
    margin: 20px 8px;
    font-size: 14px;
    width: 160px;
-   height: 250px;
+   height: 180px;
    text-align: center;
    .stream__image {
      margin: 0 auto;
@@ -51,6 +51,7 @@
      border-radius: 10px;
    }
    .stream-capture__device {
+     height: 20px;
      text-align: left;
      margin-left: 15px;
      margin-bottom: 8px;

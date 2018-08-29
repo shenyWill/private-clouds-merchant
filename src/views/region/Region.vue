@@ -156,7 +156,7 @@
           <el-input v-model="deviceForm.ipAddress" placeholder="请输入设备IP地址"></el-input>
         </el-form-item>
         <el-form-item v-if="deviceForm.deviceAddress === 'ip'" label="设备端口号" prop="port">
-          <el-input v-model.number="deviceForm.port" placeholder="请填写设备端口号"></el-input>
+          <el-input v-model="deviceForm.port" placeholder="请填写设备端口号"></el-input>
         </el-form-item>
         <el-form-item v-if="deviceForm.deviceAddress === 'url'" label="URL地址" prop="url">
           <el-input v-model="deviceForm.url" placeholder="请输入设备URL地址"></el-input>
@@ -264,7 +264,6 @@
          ],
          port: [
            { required: true, message: '请填写端口号', trigger: 'blur' },
-           { type: 'number', message: '端口号必须为数字' },
            { validator: this.checkPort, trigger: 'blur' }
          ],
          loginName: [
@@ -308,7 +307,9 @@
        this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
      },
      checkPort (rule, value, callback) {
-       if (parseInt(value) && (parseInt(value) > 65535 || parseInt(value) < 0)) {
+       if (isNaN(value)) {
+         callback(new Error('请输入正确的端口号'));
+       } else if (parseInt(value) && (parseInt(value) > 65535 || parseInt(value) < 0)) {
          callback(new Error('请输入正确的端口号'));
        } else if (parseInt(value) === 0) {
          callback(new Error('请输入正确的端口号'));
