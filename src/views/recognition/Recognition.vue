@@ -242,7 +242,7 @@ export default {
       document.getElementsByClassName('recognition-detail-show')[0].onscroll = () => {
         let _self = document.getElementsByClassName('recognition-detail-show')[0];
         let distance = _self.scrollHeight - _self.scrollTop - _self.clientHeight;
-        if (distance < 100 && this.recognitionDetailTag === true) {
+        if (distance < 100 && this.recognitionDetailTag === true && this.recognitionOffset !== -1) {
           this.recognitionDetailTag = false;
           this.showRecognitionDetail(this.recognitionDetailId);
         }
