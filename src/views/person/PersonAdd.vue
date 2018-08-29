@@ -411,7 +411,7 @@
     height: 40px;
     text-align: center;
     line-height: 40px;
-    font-size: 16px;
+    // font-size: 16px;
     border-radius: 5px;
     background-color: #eeeeee;
     overflow: hidden;
