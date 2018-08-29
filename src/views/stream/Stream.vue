@@ -147,6 +147,9 @@
        if (response.data.code === 0) {
          const data = JSON.parse(response.data.data);
          this.changePlayerSrc(data.rtmp);
+       } else if (response.data.code === 400) {
+         this.cameraMonitorUrl = '';
+         this.$message({ type: 'error', message: response.data.msg });
        } else {
          this.$message({ type: 'error', message: response.data.msg });
        }
