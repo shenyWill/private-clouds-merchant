@@ -56,7 +56,7 @@
     </Search>
     <el-card class="recognition-card" v-if="recognitionList && recognitionList.length > 0">
       <div slot="header" class="clearfix">
-        <span>人员识别</span>
+        <span>识别记录</span>
       </div>
       <div v-for="item in recognitionList" :key="item.id" class="recognition-card-info">
         <div class="recognition-card-image">
@@ -383,6 +383,7 @@ export default {
      font-size: 28px;
      margin-left: 30px;
      cursor: pointer;
+     font-weight: normal;
    }
  }
 </style>

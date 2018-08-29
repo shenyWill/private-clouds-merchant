@@ -26,7 +26,7 @@
     </div>
 
     <div class="stream__compare">
-      <p class="compare-title">人员识别</p>
+      <p class="compare-title">识别记录</p>
       <div class="stream__compare-list" v-if="compareList.length > 0">
         <StreamCompare
           v-for="(item, index) in compareList"
@@ -309,6 +309,7 @@
        this.cameraMonitorUrl = this.cameraOption[0].id;
      }
      this.switchCamera(this.cameraMonitorUrl);
+     this.detailScroll();
    },
    beforeRouteLeave (to, from, next) {
      this.isSubscribed = false;
@@ -433,4 +434,45 @@
      }
    }
  }
+
+ .recognition-detail-show {
+   position: relative;
+   text-align: left;
+   border-radius: 15px;
+   height: 700px;
+   overflow-y: auto;
+   .el-dialog {
+     border-radius: 20px;
+   }
+ }
+ .recognition-dialog-detail {
+   .el-dialog {
+     position: relative;
+     .el-dialog__header {
+       position: sticky;
+       top: 0;
+       height: 30px;
+       background-color: #fff;
+       border-radius: 20px;
+       z-index: 1;
+     }
+     .el-dialog__title {
+       font-size: 20px;
+       font-weight: bold;
+     }
+     .el-dialog__close {
+       font-size: 32px;
+     }
+   }
+ }
+ .recognition .el-dialog__wrapper {
+   overflow: hidden;
+ }
+ .recognition__empty {
+   font-size: 20px;
+   font-weight: bold;
+   margin-top: 180px;
+   margin-bottom: 40px;
+ }
+
 </style>

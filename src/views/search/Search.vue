@@ -118,7 +118,7 @@
   margin: 35px;
   // 搜索头部
   .search-title {
-    width: 1600px;
+    width: 1590px;
     height: 60px;
     line-height: 50px;
     border-radius: 7px;

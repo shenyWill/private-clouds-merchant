@@ -4,7 +4,7 @@ export default [{
   icon: 'iconfont icon-shishijiankong-lan',
   children: []
 }, {
-  name: '人员识别',
+  name: '识别记录',
   path: '/recognize/index',
   icon: 'iconfont icon-renlianshibie',
   children: []
