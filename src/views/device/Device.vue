@@ -751,8 +751,8 @@
    .device__empty {
      font-size: 20px;
      font-weight: bold;
-     margin-top: 180px;
-     margin-bottom: 40px;
+     padding-top: 180px;
+     padding-bottom: 180px;
    }
  }
 </style>
