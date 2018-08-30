@@ -599,7 +599,7 @@
        padding-bottom: 50px;
      }
      .el-dialog__footer .el-button {
-       width: 50%;
+       width: 100px;
      }
      .el-form {
        margin: 0 auto;
@@ -612,5 +612,8 @@
        width: 25%;
      }
    }
+ }
+ .region .el-input__inner {
+   width: 250px;
  }
 </style>

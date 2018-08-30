@@ -483,9 +483,15 @@
  }
  .dialog-person-form {
    position: relative;
+   padding-bottom:20px;
    .dialog-confirm-button {
      position: absolute;
-     right: 10px;
+     right: 150px;
+   }
+ }
+ .dialog-person-add {
+   .el-input__inner {
+     width: 250px;
    }
  }
 </style>

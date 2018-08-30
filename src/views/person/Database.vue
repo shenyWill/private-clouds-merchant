@@ -460,4 +460,7 @@
      margin-left: 0;
    }
  }
+ .database .el-input__inner {
+   width: 250px;
+ }
 </style>

@@ -96,7 +96,7 @@
         :model="addForm"
         :rules="addRules"
         label-width="100px"
-        label-position="left"
+        label-position="right"
         class="device__form-add">
         <el-form-item label="设备名称" prop="equipmentName">
           <el-input v-model="addForm.equipmentName" placeholder="请填写设备名称"></el-input>
@@ -719,6 +719,7 @@
      font-weight: bold;
      margin: 0 auto;
      text-align: left;
+     width: 380px;
      .el-select {
        width: 100%;
      }
