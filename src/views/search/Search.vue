@@ -157,7 +157,7 @@
     transition: all 1s;
     overflow: hidden;
     max-height: 600px;
-    width: 1590px;
+    // width: 1590px;
     border-radius: 0 0 7px 7px;
   }
   .hide-search-form {

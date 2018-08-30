@@ -309,7 +309,7 @@
      if (Number(personTypeAPI.data.code) === 0) {
        this.personTypeList = personTypeAPI.data.data.dataList;
      }
-     let deviceListAPI = await api.post(config.device.list, {});
+     let deviceListAPI = await api.post(config.device.allList, {});
      if (Number(deviceListAPI.data.code) === 0) {
        this.deviceList = deviceListAPI.data.data.rows;
      }
