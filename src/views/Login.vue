@@ -73,7 +73,8 @@
    },
    methods: {
      ...mapActions([
-       'login'
+       'login',
+       'disconnectSocket'
      ]),
      request (url, data, cb) {
        const config = {
@@ -84,10 +85,11 @@
        return cb(url, Qs.stringify(data), config);
      },
      // disconnect socket if connected
-     disconnectSocket () {
+     adminDisconnectSocket () {
        if (this.socketConnected) {
          const socket = Socket.init(config.socketURL);
          socket.disconnect();
+         this.disconnectSocket();
        }
      },
      // submit login form
@@ -115,7 +117,7 @@
      }
    },
    mounted () {
-     this.disconnectSocket();
+     this.adminDisconnectSocket();
    }
  };
 </script>
