@@ -80,7 +80,7 @@
           <span><i class="iconfont icon-xiangsidu-lan"> 相似度：{{ item.confidence }}%</i></span>
         </div>
         <div class="recognition-card-date">
-          <span><i class="el-icon-time"> 比对时间：{{ item.createTime }}</i></span>
+          <span><i class="el-icon-time"> 比对时间：{{ item.recognitionTime }}</i></span>
         </div>
         <div class="recognition-card-operation">
           <i class="iconfont icon-chakan-lan" @click="showPersonDetail(item.personnelId)"></i>
