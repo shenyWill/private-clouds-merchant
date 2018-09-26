@@ -7,7 +7,7 @@ class Socket {
   constructor (socketURL) {
     this.socketJS = new SockJS(socketURL);
     this.socket = Stomp.over(this.socketJS);
-    this.socket.debug = null;
+    // this.socket.debug = null;
     Socket.instance = null;
   }
 

@@ -128,6 +128,7 @@ import config from '@/config';
 import { scollTop, parseTime } from '@/utils';
 import PersonDetail from '@/views/person/PersonDetail';
 import RecognitionDetail from '@/views/recognition/RecognitionDetail';
+import { mapGetters } from 'vuex';
 export default {
   name: 'Recognition',
   data () {
@@ -158,9 +159,16 @@ export default {
     PersonDetail,
     RecognitionDetail
   },
+  computed: {
+     ...mapGetters([
+       'parameterValue'
+     ])
+   },
   methods: {
     // 点击搜索
     searchSubmit () {
+      // console.log(this.parameterValue)
+
       const startTime = new Date(this.searchForm.startTime).getTime();
       const endTime = new Date(this.searchForm.endTime).getTime();
       if (startTime && endTime && (startTime > endTime)) {
@@ -192,6 +200,7 @@ export default {
       }
       requestObj.limit = 10;
       requestObj.offset = Num;
+      requestObj.confidence = this.parameterValue;
       this.responseAPI(requestObj);
       scollTop(80);
     },
@@ -215,7 +224,7 @@ export default {
         this.recognitionDetail = {};
         this.recognitionDetailId = personnelId;
       }
-      const response = await api.post(config.recognition.compareDetail, {personnelId: this.recognitionDetailId, offset: this.recognitionOffset});
+      const response = await api.post(config.recognition.compareDetail, {personnelId: this.recognitionDetailId, offset: this.recognitionOffset, confidence: this.parameterValue});
       if (Number(response.data.code) === 0) {
         let responseObj = response.data.data;
         for (let item in responseObj) {
@@ -250,7 +259,7 @@ export default {
     }
   },
   async mounted () {
-    this.responseAPI({limit: 10, offset: 0});
+    this.responseAPI({limit: 10, offset: 0, confidence: this.parameterValue});
     let response = await api.post(config.device.all, {});
     if (Number(response.data.code) === 0) {
       this.equipmentArr = response.data.data.rows;

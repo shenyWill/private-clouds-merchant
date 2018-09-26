@@ -36,6 +36,12 @@
             :inactive-color="inactiveColor">
           </el-switch>
         </el-form-item>
+        <el-form-item label="报警阈值大小">
+          <el-slider
+            @change="switchParameter"
+            v-model="alertParameter">
+          </el-slider>
+        </el-form-item>
       </el-form>
     </el-dialog>
   </div>
@@ -55,7 +61,8 @@
        activeColor: '#13ce66',
        inactiveColor: '#ff4949',
        alertDialog: true, // blacklist show alert dialog
-       alertSound: true // blacklist alert sound
+       alertSound: true, // blacklist alert sound
+       alertParameter: 73 // 分数阈值
      };
    },
    props: {
@@ -77,6 +84,7 @@
      ...mapActions([
        'logout',
        'setBlacklistAlert',
+       'setParameterValue',
        'setBlacklistSound',
        'disconnectSocket',
        'delAllViews'
@@ -110,6 +118,18 @@
          this.settingDialog = false;
        }
      },
+     async switchParameter (newVal) {
+       const data = { configureType: '4', parameterValue: newVal };
+       const response = await api.post(config.system.update, data);
+       if (response.data.code === 0) {
+         this.$message({ type: 'success', message: '更新成功' });
+         this.setParameterValue(newVal);
+         this.settingDialog = false;
+       } else {
+         this.$message({ type: 'error', message: response.data.msg });
+         this.settingDialog = false;
+       }
+     },
      async fetchConfig () {
        const response = await api.post(config.system.list);
        if (response.data.code === 0) {
@@ -124,6 +144,9 @@
            } else if (item.configureType === '3') {
              this.alertDialog = item.parameterValue === '1';
              this.setBlacklistAlert(this.alertDialog);
+           } else if (item.configureType === '4') {
+             this.alertParameter = Number(item.parameterValue);
+             this.setParameterValue(this.alertParameter);
            }
          });
        } else {

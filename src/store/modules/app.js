@@ -4,6 +4,7 @@ const app = {
     blacklistAlert: true, // show blacklist alert dialog
     blacklistSound: false, // blacklist alert sound
     sidebarToggle: false,
+    parameterValue: 73,
     selectedRegion: '',
     selectedPersonDatabase: '',
     selectedStreaming: '' // Stream module user selected streaming option
@@ -23,6 +24,9 @@ const app = {
     },
     SET_BLACKLIST_ALERT (state, value) {
       state.blacklistAlert = value;
+    },
+    SET_PARAMETER_VALUE (state, value) {
+      state.parameterValue = value;
     },
     SET_BLACKLIST_SOUND (state, value) {
       state.blacklistSound = value;
@@ -50,6 +54,9 @@ const app = {
     setBlacklistAlert ({ commit }, value) {
       commit('SET_BLACKLIST_ALERT', value);
     },
+    setParameterValue ({ commit }, value) {
+      commit('SET_PARAMETER_VALUE', value);
+    },
     setBlacklistSound ({ commit }, value) {
       commit('SET_BLACKLIST_SOUND', value);
     },
@@ -66,6 +73,7 @@ const app = {
     socketConnected: state => state.socketConnected,
     blacklistAlert: state => state.blacklistAlert,
     blacklistSound: state => state.blacklistSound,
+    parameterValue: state => state.parameterValue,
     selectedStreaming: state => state.selectedStreaming,
     selectedPersonDatabase: state => state.selectedPersonDatabase
   }

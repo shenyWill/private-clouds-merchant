@@ -124,7 +124,8 @@
    computed: {
      ...mapGetters([
        'socketConnected',
-       'selectedStreaming'
+       'selectedStreaming',
+       'parameterValue'
      ]),
      config: () => {
        return config;
@@ -178,7 +179,7 @@
        const response = await api.post(config.recognition.list, {
          limit: 4,
          timeType: '1',
-         confidence: this.miniScore});
+         confidence: this.parameterValue});
        if (response.data.code === 0) {
          const data = response.data.data.rows;
          const url = response.data.url;
@@ -194,7 +195,7 @@
        this.socket.subscribe('/face/recognition', response => {
          const data = JSON.parse(response.body);
          this.captureList.unshift(data);
-         if (data.timeType === '1' && Number(data.confidence) > this.miniScore) this.compareList.unshift(data);
+         if (data.timeType === '1' && Number(data.confidence) > this.parameterValue) this.compareList.unshift(data);
          if (this.captureList.length > 9) {
            this.captureList.pop();
          }
@@ -268,7 +269,7 @@
         this.recognitionDetail = {};
         this.recognitionDetailId = personnelId;
       }
-      const response = await api.post(config.recognition.compareDetail, {personnelId: this.recognitionDetailId, offset: this.recognitionOffset});
+      const response = await api.post(config.recognition.compareDetail, {personnelId: this.recognitionDetailId, offset: this.recognitionOffset, confidence: this.parameterValue});
       if (Number(response.data.code) === 0) {
         let responseObj = response.data.data;
         for (let item in responseObj) {

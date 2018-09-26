@@ -6,6 +6,7 @@
       </keep-alive>
     </transition>
     <BlackList v-if="showAlert" :object="alertData" @close="alertClose"></BlackList>
+    <MemoryList v-if="showMemory" :object="memoryData" @close="memoryClose"></MemoryList>
   </div>
 </template>
 
@@ -14,6 +15,7 @@
  import Socket from '@/api/Socket';
  import config from '@/config';
  import BlackList from '@/views/components/BlackList';
+ import MemoryList from '@/views/components/MemoryList';
  export default {
    name: 'AppMain',
    data () {
@@ -21,18 +23,22 @@
        socket: null,
        showAlert: false,
        alertData: null,
-       blackList: []
+       blackList: [],
+       memoryData: null,
+       showMemory: false
      };
    },
    components: {
-     BlackList
+     BlackList,
+     MemoryList
    },
    computed: {
      ...mapGetters([
        'user',
        'isCollapse',
        'cachedViews',
-       'blacklistAlert'
+       'blacklistAlert',
+       'parameterValue'
      ])
    },
    methods: {
@@ -43,16 +49,25 @@
      alertClose () {
        this.showAlert = false;
      },
+     memoryClose () {
+       this.showMemory = false;
+     },
      initSocket (url) {
        this.socket = Socket.init(url);
        this.socket.connect('guest', 'guest', frame => {
          this.connectSocket();
          this.socket.subscribe('/face/blacklist', response => {
            const data = JSON.parse(response.body);
-           if (this.blacklistAlert) {
+           if (this.blacklistAlert && this.parameterValue < data.confidence) {
              this.showAlert = true;
              this.alertData = data;
            }
+         });
+         // 内存不足提示
+         this.socket.subscribe('/face/memoryWarn', response => {
+           const data = JSON.parse(response.body);
+           this.memoryData = data;
+           this.showMemory = true;
          });
        }, () => {
          this.disconnectSocket();
