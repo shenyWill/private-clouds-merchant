@@ -4,7 +4,7 @@
     <div class="stream-capture__device">{{ item.equipmentName }}</div>
     <div class="stream-capture__content">
       <span class="stream-capture__type">{{ config.deviceType2String[item.equipmentType] }}</span>
-      <span class="stream-capture__time">{{ item.createTime.split(' ')[1] }}</span>
+      <span class="stream-capture__time">{{ item.recognitionTime.split(' ')[1]}}</span>
     </div>
   </div>
 </template>

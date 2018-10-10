@@ -33,7 +33,7 @@
         <span> | </span>
         <span class="strem-compare__desc">{{ item.describe }}</span>
       </div>
-      <div class="stream-compare__time">识别时间:{{ item.createTime.split(' ')[1] }}</div>
+      <div class="stream-compare__time">识别时间:{{ item.recognitionTime.split(' ')[1] }}</div>
       <div class="stream-compare__tag">
         <el-tag
           class="stream-compare__tag-red"
