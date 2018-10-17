@@ -24,7 +24,7 @@ service.interceptors.request.use(config => {
  *
  **/
 service.interceptors.response.use(response => {
-  if (response.data.code === 401) {
+  if (Number(response.data.code) === 401) {
     router.push('/login');
   }
   NProgress.done();

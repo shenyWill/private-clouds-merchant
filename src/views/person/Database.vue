@@ -155,7 +155,7 @@
    methods: {
      async responseAPI (data = {}) {
        let response = await api.post(config.database.list, data);
-       if (Number(response.data.code) === 0) {
+       if (Number(response.data.code) === 200) {
          this.databaseArr = response.data.data.dataList;
          this.count = response.data.data.totalCount;
        } else {
@@ -167,7 +167,7 @@
      },
      async responseTypeAPI (data = {}) {
        let response = await api.post(config.database.typeList, data);
-       if (Number(response.data.code) === 0) {
+       if (Number(response.data.code) === 200) {
          this.databaseTypeArr = response.data.data.dataList;
        }
      },
@@ -211,7 +211,7 @@
              editAddPage = this.currentPage;
            }
            let response = await api.post(apiUrl, {...this.addForm});
-           if (Number(response.data.code) === 0) {
+           if (Number(response.data.code) === 200) {
              this.responseAPI({page: editAddPage, pageSize: 9});
              this.currentPage = editAddPage;
              this.$message({
@@ -237,7 +237,7 @@
      // 删除人员库打开
      deleteDatabase (val) {
        this.dialogDeleteDatabase = true;
-       if (Number(val.personnelCount) === 0) {
+       if (Number(val.personnelCount) === 200) {
          this.deleteDatabaseCondition = true;
          this.deleteDatabaseId = val.libraryId;
        } else {
@@ -249,7 +249,7 @@
        let msgType;
        let id = this.deleteDatabaseId;
        let response = await api.post(config.database.delete, {libraryId: id});
-       if (Number(response.data.code) === 0) {
+       if (Number(response.data.code) === 200) {
          msgType = 'success';
        } else {
          msgType = 'error';
@@ -295,7 +295,7 @@
      // 获取所有库的总人数
      async fetchTotalNum () {
        const response = await api.post(config.person.totalNum, {});
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          return response.data.data.personnelTotalCount;
        }
      }
@@ -306,11 +306,11 @@
      this.iconObj = icon;
      this.personTotal = await this.fetchTotalNum();
      let personTypeAPI = await api.post(config.database.list, {});
-     if (Number(personTypeAPI.data.code) === 0) {
+     if (Number(personTypeAPI.data.code) === 200) {
        this.personTypeList = personTypeAPI.data.data.dataList;
      }
      let deviceListAPI = await api.post(config.device.allList, {});
-     if (Number(deviceListAPI.data.code) === 0) {
+     if (Number(deviceListAPI.data.code) === 200) {
        this.deviceList = deviceListAPI.data.data.rows;
      }
    }

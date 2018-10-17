@@ -388,7 +388,7 @@
       * */
      async canDeleteRegion (areaId) {
        const response = await api.post(config.region.devices, {areaId});
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          const total = response.data.data.total;
          if (total > 0) {
            return false;
@@ -410,7 +410,7 @@
        const id = this.selectedRegion.id;
        const response = await api.post(config.region.delete, {id});
        this.deviceRegionDialog = false;
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          this.$message({ type: 'success', message: '删除区域成功' });
          this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
        } else {
@@ -431,7 +431,7 @@
              this.isLoading = true;
              const response = await api.post(config.device.add, data);
              this.addDeviceDialog = false;
-             if (response.data.code === 0) {
+             if (Number(response.data.code) === 200) {
                this.deviceForm.ipAddress = '';
                this.deviceForm.url = '';
                this.deviceForm.port = null;
@@ -461,7 +461,7 @@
              this.isLoading = true;
              const response = await api.post(config.region.update, this.editForm);
              this.editDialog = false;
-             if (response.data.code === 0) {
+             if (Number(response.data.code) === 200) {
                this.$message({ type: 'success', message: '修改成功' });
                this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
              } else {
@@ -483,7 +483,7 @@
              this.isLoading = true;
              const response = await api.post(config.region.add, this.addForm);
              this.addRegionDialog = false;
-             if (response.data.code === 0) {
+             if (Number(response.data.code) === 200) {
                this.$message({ type: 'success', message: '添加成功' });
                this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
              } else {
@@ -506,7 +506,7 @@
      async fetchData (payload) {
        try {
          const response = await api.post(config.region.list, payload);
-         if (response.data.code === 0) {
+         if (Number(response.data.code) === 200) {
            this.list = response.data.data.rows;
            this.size = response.data.data.total;
          } else {

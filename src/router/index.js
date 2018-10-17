@@ -27,6 +27,9 @@ import Recognition from '@/views/recognition/Recognition';
 // Region Modules
 import Region from '@/views/region/Region';
 
+// 个人中心
+import PersonCenter from '@/views/personCenter/PersonCenter';
+
 Vue.use(Router);
 
 export default new Router({
@@ -117,6 +120,15 @@ export default new Router({
       component: Stream,
       name: 'Stream',
       meta: { title: '视频管理', icon: '', cache: false }
+    }]
+  }, {
+    path: '/personCenter',
+    component: Layout,
+    children: [{
+      path: '/personCenter',
+      component: PersonCenter,
+      name: 'PersonCenter',
+      meta: { title: '个人中心', icon: '', cache: false }
     }]
   }]
 });

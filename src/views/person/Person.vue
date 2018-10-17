@@ -185,7 +185,7 @@
        !data.page && (data.page = 1);
        let requestObj = {...data, ...this.searchResult};
        const response = await api.post(config.person.list, requestObj);
-       if (Number(response.data.code) === 0) {
+       if (Number(response.data.code) === 200) {
          this.count = response.data.data.totalCount;
          this.personList = response.data.data.dataList;
        }
@@ -199,7 +199,7 @@
      // 查看详情
      async showPersonDetail (id) {
        const response = await api.post(config.person.detail, {personnelId: id});
-       if (Number(response.data.code) === 0) {
+       if (Number(response.data.code) === 200) {
          this.personDetail = response.data.data;
          this.dialogPersonDetail = true;
        }
@@ -212,7 +212,7 @@
          type: 'warning'
        }).then(async () => {
          let response = await api.post(config.person.delete, {personnelIdList: [id]});
-         if (Number(response.data.code) === 0) {
+         if (Number(response.data.code) === 200) {
            this.$message({
              type: 'success',
              message: response.data.msg
@@ -297,7 +297,7 @@
        }
        this.isLoading = true;
        const response = await api.post(config.person[requestUrl], subObj);
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          this.$message({type: 'success', message: response.data.msg});
        }
        await this.responseAPI({page: this.currentPage});
@@ -325,11 +325,11 @@
      this.checkCanAccess(this.databaseID);
      this.responseAPI();
      let personTypeAPI = await api.post(config.database.list, {});
-     if (Number(personTypeAPI.data.code) === 0) {
+     if (Number(personTypeAPI.data.code) === 200) {
        this.personTypeList = personTypeAPI.data.data.dataList;
      }
      let deviceListAPI = await api.post(config.device.all, {});
-     if (Number(deviceListAPI.data.code) === 0) {
+     if (Number(deviceListAPI.data.code) === 200) {
        this.deviceList = deviceListAPI.data.data.rows;
      }
    },

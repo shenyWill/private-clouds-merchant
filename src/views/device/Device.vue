@@ -528,7 +528,7 @@
              }
              const response = await api.post(config.device.update, this.editForm);
              this.editDialog = false;
-             if (response.data.code === 0) {
+             if (Number(response.data.code) === 200) {
                this.$message({ type: 'success', message: '修改成功' });
                this.fetchData({ offset: this.offset, limt: this.limit, ...this.searchForm });
              } else {
@@ -556,7 +556,7 @@
              };
              const response = await api.post(config.device.add, data);
              this.addDialog = false;
-             if (response.data.code === 0) {
+             if (Number(response.data.code) === 200) {
                this.addForm.ipAddress = '';
                this.addForm.port = null;
                this.addForm.url = '';
@@ -589,7 +589,7 @@
        const id = this.deviceDetail.id;
        const response = await api.post(config.device.delete, {id});
        this.deleteDialog = false;
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          this.$message({ type: 'success', message: response.data.msg });
          this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
        } else {
@@ -598,7 +598,7 @@
      },
      async fetchData (payload) {
        const response = await api.post(config.device.list, {areaId: this.regionID, ...payload});
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          this.list = response.data.data.rows;
          this.size = response.data.data.total;
          this.areaList = response.data.arealist;

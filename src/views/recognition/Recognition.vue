@@ -182,7 +182,7 @@ export default {
     // 请求
     async responseAPI (data = {}) {
       const response = await api.post(config.recognition.list, data);
-      if (Number(response.data.code) === 0) {
+      if (Number(response.data.code) === 200) {
         this.count = response.data.data.total;
         this.recognitionList = response.data.data.rows;
         this.recognitionUrl = response.data.url;
@@ -207,7 +207,7 @@ export default {
     // 查看个人详情
     async showPersonDetail (id) {
       const response = await api.post(config.person.detail, {personnelId: id});
-      if (Number(response.data.code) === 0) {
+      if (Number(response.data.code) === 200) {
         this.personDetail = response.data.data;
         this.dialogPersonDetail = true;
       } else {
@@ -225,7 +225,7 @@ export default {
         this.recognitionDetailId = personnelId;
       }
       const response = await api.post(config.recognition.compareDetail, {personnelId: this.recognitionDetailId, offset: this.recognitionOffset, confidence: this.parameterValue});
-      if (Number(response.data.code) === 0) {
+      if (Number(response.data.code) === 200) {
         let responseObj = response.data.data;
         for (let item in responseObj) {
           // TODO
@@ -261,11 +261,11 @@ export default {
   async mounted () {
     this.responseAPI({limit: 10, offset: 0, confidence: this.parameterValue});
     let response = await api.post(config.device.all, {});
-    if (Number(response.data.code) === 0) {
+    if (Number(response.data.code) === 200) {
       this.equipmentArr = response.data.data.rows;
     }
     let databaseRes = await api.post(config.database.typeList, {});
-    if (Number(databaseRes.data.code) === 0) {
+    if (Number(databaseRes.data.code) === 200) {
       this.databaseArr = databaseRes.data.data.dataList;
     }
     this.detailScroll();

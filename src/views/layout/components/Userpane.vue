@@ -5,7 +5,10 @@
       <span>{{ user.username }}</span>
     </div>
     <div class="navbar__menu-arrow" v-if="showMenu" @mouseover="toggleMenu()" @mouseout="toggleMenu()"></div>
-    <div v-if="showMenu" class="navbar__menu" @mouseover="toggleMenu()" @mouseout="toggleMenu()">
+    <div v-if="showMenu" class="navbar__menu" @mouseover="toggleMenu()" @mouseout="toggleMenu()" @click="showPersonCenter">
+      <div class="navbar__menu-item">
+        <div @click="showPersonCenter">个人中心</div>
+      </div>
       <div class="navbar__menu-item">
         <div @click="showSettingDialog">设置</div>
       </div>
@@ -96,7 +99,7 @@
        // parameterValue 1: on 2: off
        const data = { configureType: '2', parameterValue: newVal ? '1' : '2' };
        const response = await api.post(config.system.update, data);
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          this.$message({ type: 'success', message: '更新成功' });
          this.setBlacklistSound(newVal);
          this.settingDialog = false;
@@ -109,7 +112,7 @@
        // parameterValue 1: on 2: off
        const data = { configureType: '3', parameterValue: newVal ? '1' : '2' };
        const response = await api.post(config.system.update, data);
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          this.$message({ type: 'success', message: '更新成功' });
          this.setBlacklistAlert(newVal);
          this.settingDialog = false;
@@ -121,7 +124,7 @@
      async switchParameter (newVal) {
        const data = { configureType: '4', parameterValue: newVal };
        const response = await api.post(config.system.update, data);
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          this.$message({ type: 'success', message: '更新成功' });
          this.setParameterValue(newVal);
          this.settingDialog = false;
@@ -132,7 +135,7 @@
      },
      async fetchConfig () {
        const response = await api.post(config.system.list);
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          const data = response.data.configure;
          data.forEach(item => {
            // configure type
@@ -155,7 +158,7 @@
      },
      async adminLogout () {
        const response = await api.post(config.logoutAPI, {});
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          this.delAllViews();
          if (this.socketConnected) {
            const socket = Socket.init(config.socketURL);
@@ -170,6 +173,9 @@
      },
      showSettingDialog () {
        this.settingDialog = true;
+     },
+     showPersonCenter () {
+       this.$router.push('/personCenter');
      }
    },
    mounted () {

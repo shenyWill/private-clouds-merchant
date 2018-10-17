@@ -145,10 +145,10 @@
      async switchCamera (newVal) {
        this.setSelectedStreaming(newVal);
        const response = await api.post(config.stream.streamingURL, {id: newVal});
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          const data = JSON.parse(response.data.data);
          this.changePlayerSrc(data.rtmp);
-       } else if (response.data.code === 400) {
+       } else if (Number(response.data.code) === 400) {
          this.cameraMonitorUrl = '';
          this.$message({ type: 'error', message: response.data.msg });
        } else {
@@ -158,7 +158,7 @@
      // fetch camera list
      async fetchCameraList () {
        const response = await api.post(config.device.all, {});
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          return response.data.data.rows;
        } else {
          this.$message({ type: 'error', message: response.data.msg });
@@ -166,7 +166,7 @@
      },
      async fetchNewestCaptureData () {
        const response = await api.post(config.recognition.list, {limit: 9, timeType: '1'});
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          const data = response.data.data.rows;
          const url = response.data.url;
          data.forEach(item => {
@@ -180,7 +180,7 @@
          limit: 4,
          timeType: '1',
          confidence: this.parameterValue});
-       if (response.data.code === 0) {
+       if (Number(response.data.code) === 200) {
          const data = response.data.data.rows;
          const url = response.data.url;
          data.forEach(item => {
@@ -257,7 +257,7 @@
      },
      async showPersonDetail (id) {
        const response = await api.post(config.person.detail, {personnelId: id});
-       if (Number(response.data.code) === 0) {
+       if (Number(response.data.code) === 200) {
          this.personDetail = response.data.data;
          this.dialogPersonDetail = true;
        }
@@ -270,7 +270,7 @@
         this.recognitionDetailId = personnelId;
       }
       const response = await api.post(config.recognition.compareDetail, {personnelId: this.recognitionDetailId, offset: this.recognitionOffset, confidence: this.parameterValue});
-      if (Number(response.data.code) === 0) {
+      if (Number(response.data.code) === 200) {
         let responseObj = response.data.data;
         for (let item in responseObj) {
           // TODO

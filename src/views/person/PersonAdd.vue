@@ -204,7 +204,7 @@
            var response = await api.post(config.person.checkImage, {
              image: data.split(',')[1]
            });
-           if (Number(response.data.code) === 0) {
+           if (Number(response.data.code) === 200) {
              this.$message({
                type: 'error',
                message: response.data.msg
@@ -243,7 +243,7 @@
          imageList: images
        };
        let imageResponse = await api.post(config.person.updateImage, data);
-       if (imageResponse.data.code === 0) {
+       if (imageResponse.data.code === 200) {
          this[imgIndex] = this.addPersonForm[imgIndex] = this.showImageUrl = imgUrl;
          this.imageList[index] = imgUrl;
          this.$message({

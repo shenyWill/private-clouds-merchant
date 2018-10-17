@@ -47,6 +47,9 @@ export default {
   stream: {
     streamingURL: '/equipment/info/getMediaUrl'
   },
+  personCenter: {
+    list: '/sys/user/getUser'
+  },
   deviceType: [{
     value: '1',
     label: '人证比对机'

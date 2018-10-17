@@ -100,7 +100,7 @@
              this.disabled = true;
              const response = await this.request(config.loginAPI, this.form, api.post);
              this.disabled = false;
-             if (response.data.code === 0) {
+             if (Number(response.data.code) === 200) {
                this.login(response.data.user);
                this.$router.push('/stream/index');
              } else {
