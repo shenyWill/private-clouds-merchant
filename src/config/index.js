@@ -48,7 +48,8 @@ export default {
     streamingURL: '/equipment/info/getMediaUrl'
   },
   personCenter: {
-    list: '/sys/user/getUser'
+    list: '/sys/user/getUser',
+    editPwd: '/sys/user/resetPwd'
   },
   deviceType: [{
     value: '1',

@@ -5,16 +5,16 @@
       <span>{{ user.username }}</span>
     </div>
     <div class="navbar__menu-arrow" v-if="showMenu" @mouseover="toggleMenu()" @mouseout="toggleMenu()"></div>
-    <div v-if="showMenu" class="navbar__menu" @mouseover="toggleMenu()" @mouseout="toggleMenu()" @click="showPersonCenter">
+    <div v-if="showMenu" class="navbar__menu" @mouseover="toggleMenu()" @mouseout="toggleMenu()">
       <div class="navbar__menu-item">
         <div @click="showPersonCenter">个人中心</div>
       </div>
       <div class="navbar__menu-item">
         <div @click="showSettingDialog">设置</div>
       </div>
-      <div class="navbar__menu-item">
+      <!-- <div class="navbar__menu-item">
         <div @click="adminLogout">退出登录</div>
-      </div>
+      </div> -->
     </div>
     <el-dialog
       class="alert-dialog"
@@ -53,7 +53,7 @@
 <script>
  import api from '@/api';
  import config from '@/config';
- import Socket from '@/api/Socket';
+//  import Socket from '@/api/Socket';
  import { mapActions, mapGetters } from 'vuex';
  export default {
    name: 'Userpane',
@@ -156,21 +156,21 @@
          this.$message({ type: 'error', message: response.data.msg });
        }
      },
-     async adminLogout () {
-       const response = await api.post(config.logoutAPI, {});
-       if (Number(response.data.code) === 200) {
-         this.delAllViews();
-         if (this.socketConnected) {
-           const socket = Socket.init(config.socketURL);
-           socket.disconnect();
-         }
-         this.disconnectSocket();
-         this.logout();
-         this.$router.push('/login');
-       } else {
-         this.$message({ type: 'error', message: response.data.msg });
-       }
-     },
+    //  async adminLogout () {
+    //    const response = await api.post(config.logoutAPI, {});
+    //    if (Number(response.data.code) === 200) {
+    //      this.delAllViews();
+    //      if (this.socketConnected) {
+    //        const socket = Socket.init(config.socketURL);
+    //        socket.disconnect();
+    //      }
+    //      this.disconnectSocket();
+    //      this.logout();
+    //      this.$router.push('/login');
+    //    } else {
+    //      this.$message({ type: 'error', message: response.data.msg });
+    //    }
+    //  },
      showSettingDialog () {
        this.settingDialog = true;
      },

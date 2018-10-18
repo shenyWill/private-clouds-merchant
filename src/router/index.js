@@ -30,6 +30,9 @@ import Region from '@/views/region/Region';
 // 个人中心
 import PersonCenter from '@/views/personCenter/PersonCenter';
 
+// 账号管理
+import Account from '@/views/account/Account';
+
 Vue.use(Router);
 
 export default new Router({
@@ -129,6 +132,15 @@ export default new Router({
       component: PersonCenter,
       name: 'PersonCenter',
       meta: { title: '个人中心', icon: '', cache: false }
+    }]
+  }, {
+    path: '/account',
+    component: Layout,
+    children: [{
+      path: '/account/index',
+      component: Account,
+      name: 'Account',
+      meta: { title: '账号管理', icon: '', cache: false }
     }]
   }]
 });
