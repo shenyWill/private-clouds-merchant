@@ -51,6 +51,11 @@ export default {
     list: '/sys/user/getUser',
     editPwd: '/sys/user/resetPwd'
   },
+  account: {
+    list: '/sys/user/list',
+    getEquipmentRole: '/sys/user/getEquipmentRole',
+    save: 'sys/user/save'
+  },
   deviceType: [{
     value: '1',
     label: '人证比对机'

@@ -67,7 +67,7 @@
 import { mapGetters, mapActions } from 'vuex';
 import api from '@/api';
 import config from '@/config';
- import Socket from '@/api/Socket';
+import Socket from '@/api/Socket';
 export default {
     data () {
         return {
