@@ -1,7 +1,7 @@
 <template>
     <div class="account-operate">
         <img :src="userImg" alt="">
-        <el-form class="operate-account" ref="operate-account-form" :rules="rules" :model="accountObj" label-width="100px">
+        <el-form class="operate-account" ref="operate-account-form" :rules="rules" :model="accountObj">
             <el-form-item label="姓名" prop="name">
                 <el-input v-model="accountObj.name" placeholder="请输入人员姓名"></el-input>
             </el-form-item>
@@ -14,8 +14,8 @@
             <el-form-item label="电话" prop="mobile">
                 <el-input v-model="accountObj.mobile" placeholder="请输入联系电话"></el-input>
             </el-form-item>
-            <el-form-item label="选择库" prop="equipmentId">
-                <el-select v-model="accountObj.equipmentId" placeholder="请选择设备" multiple>
+            <el-form-item label="权限" prop="equipmentId">
+                <el-select v-model="accountObj.equipmentId" placeholder="请选择设备" multiple size="small">
                     <el-option :label="item.equipmentName" :value="item.equipmentId" v-for="item in user.equipmentList" :key="item.equipmentId">
                     </el-option>
                 </el-select>
@@ -45,9 +45,9 @@ export default {
           { required: true, message: '请输入对应密码', trigger: 'blur' },
           { min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'blur' }
         ],
-        mobile: [
-          { required: true, validator: this.checkMobile, trigger: 'blur' }
-        ],
+        // mobile: [
+        //   { required: true, validator: this.checkMobile, trigger: 'blur' }
+        // ],
         equipmentId: [
           { required: true, validator: this.checkEquipmentId, trigger: 'change' }
         ]
@@ -93,6 +93,40 @@ export default {
   img {
     width: 130px;
     height: 130px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+  }
+  .operate-account {
+      width: 300px;
+      margin: 0 auto;
+  }
+  .el-form-item__content {
+      margin-left: 60px;
+  }
+  .el-form-item__label {
+      font-weight: bold;
+  }
+  .el-input__inner {
+      background-color: #eeeeee;
+      border-radius: 10px;
+      color: #666;
+  }
+  .el-form-item {
+      margin-bottom: 30px;
+  }
+  .edit-password-submit {
+      width: 120px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      background-color: #008aff;
+      color: #fff;
+      border-radius: 10px;
+      margin: 30px auto;
+      cursor: pointer;
+      &:hover {
+          background-color: #0066ff;
+      }
   }
 }
 </style>

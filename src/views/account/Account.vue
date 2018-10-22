@@ -13,7 +13,7 @@
                     <span class="account-list-info-organization">组织: {{item.deptName}}</span>
                 </p>
                 <i class="iconfont icon-bianji-lan" @click="accountEdit(item)"></i>
-                <i class="iconfont icon-qingkongsousuolanicon-lan"></i>
+                <i class="iconfont icon-qingkongsousuolanicon-lan" @click="accountRemove(item.userId)"></i>
             </div>
             <div class="account-empty"  v-if="!userList.length">
                 <img :src="emptyImage">
@@ -24,8 +24,14 @@
         <el-pagination :page-size="10" v-if="count > 10" :current-page.sync="currentPage" background layout="prev,pager,next" :total="count" @current-change="handleCurrentChange">
         </el-pagination>
         <!-- 账号增加和编辑 -->
-        <el-dialog :visible.sync="accountVisible" class="account-dialog" :title=" Object.keys(accountObj).length ? '账号编辑':'添加新账号'">
+        <el-dialog :visible.sync="accountVisible" class="account-dialog" :title=" Object.keys(accountObj).length > 1 ? '账号编辑':'添加新账号'">
             <AccountAdd @accountOperate="accountOperate" :accountObj="accountObj" ref="account-operate"></AccountAdd>
+        </el-dialog>
+        <!-- 账号删除 -->
+        <el-dialog :visible.sync="removeAccountVisible" class="account-remove-dialog" title="提示">
+            <p class="account-remove-info">你确定要删除该账号么</p>
+            <span class="cancel-remove">取消删除</span>
+            <span class="sure-remove" @click="accountRemoveSure">确认删除</span>
         </el-dialog>
     </div>
 </template>
@@ -44,7 +50,9 @@ export default {
       count: 0,
       currentPage: 1,
       accountVisible: false, // 是否打开账号弹出窗
-      accountObj: {}
+      removeAccountVisible: false, // 账号删除弹窗
+      accountObj: {},
+      removeUserId: null // 删除的userId
     };
   },
   methods: {
@@ -84,7 +92,9 @@ export default {
             data.forEach(element => {
                 this.accountObj.equipmentId.push(element.equipmentId);
             });
-            this.$refs['account-operate'] && this.$refs['account-operate'].passwordClearValidate('operate-account-form');
+            this.$nextTick(() => {
+                this.$refs['account-operate'] && this.$refs['account-operate'].passwordClearValidate('operate-account-form');
+            });
             this.accountVisible = true;
         } else {
             this.$message({
@@ -96,7 +106,9 @@ export default {
     // 账号增加
     accountAdd () {
         this.accountObj = {equipmentId: []};
-        this.$refs['account-operate'] && this.$refs['account-operate'].passwordClearValidate('operate-account-form');
+        this.$nextTick(() => {
+            this.$refs['account-operate'] && this.$refs['account-operate'].passwordClearValidate('operate-account-form');
+        });
         this.accountVisible = true;
     },
     // 保存
@@ -112,6 +124,28 @@ export default {
             });
             this.currentPage = 1;
             this.responseAPI();
+        } else {
+            this.$message({
+                type: 'error',
+                message: response.data.msg
+            });
+        }
+    },
+    // 删除弹出层
+    accountRemove (val) {
+        this.removeAccountVisible = true;
+        this.removeUserId = val;
+    },
+    // 确定删除
+    async accountRemoveSure () {
+        const response = await api.post(config.account.remove, {userId: this.removeUserId});
+        if (Number(response.data.code) === 200) {
+            this.$message({
+                type: 'success',
+                message: response.data.msg
+            });
+            this.removeAccountVisible = false;
+            this.responseAPI({offset: (this.currentPage - 1) * 10});
         } else {
             this.$message({
                 type: 'error',
@@ -220,10 +254,40 @@ $ftcolor: #fff;
       padding: 50px;
   }
 }
+.page-account {
+    .account-remove-info {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 35px auto;
+    }
+    .cancel-remove,.sure-remove {
+        display: inline-block;
+        width: 120px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        background-color: #008aff;
+        color: #fff;
+        border-radius: 10px;
+        margin-left: 10px;
+        cursor: pointer;
+        border: 1px solid #008aff;
+    }
+    .sure-remove {
+        background-color: #fff;
+        color: #999;
+        border-color: #999;
+    }
+}
+
 </style>
 <style lang="css">
 .page-account .el-dialog__header {
     text-align: left;
+    padding: 10px 40px;
+    margin: 0;
+    border-bottom: 1px solid #e5e5e5;
+    font-weight: bold;
 }
 .page-account .el-dialog {
     width: 500px;

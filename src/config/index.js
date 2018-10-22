@@ -54,7 +54,8 @@ export default {
   account: {
     list: '/sys/user/list',
     getEquipmentRole: '/sys/user/getEquipmentRole',
-    save: 'sys/user/save'
+    save: 'sys/user/save',
+    remove: 'sys/user/remove'
   },
   deviceType: [{
     value: '1',
