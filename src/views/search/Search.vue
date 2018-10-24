@@ -86,7 +86,7 @@
          let obj = [];
          this.searchResult.equipmentId.forEach(id => {
            this.equipmentArr.forEach(item => {
-             if (id === item.equipmentCode) {
+             if (id === item.equipmentId) {
                obj.push(item.equipmentName);
              }
            });
@@ -95,7 +95,7 @@
        } else {
          let obj = '';
          this.equipmentArr && this.equipmentArr.forEach(item => {
-           if (item.id === this.searchResult.equipmentId) {
+           if (item.equipmentId === this.searchResult.equipmentId) {
              obj = item.equipmentName;
            }
          });

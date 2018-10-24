@@ -7,9 +7,9 @@
           v-model="cameraMonitorUrl">
           <el-option
             v-for="item in cameraOption"
-            :key="item.id"
+            :key="item.equipmentId"
             :label="item.equipmentName"
-            :value="item.id">
+            :value="item.equipmentId">
           </el-option>
         </el-select>
         <i class="iconfont icon-zhankaiquanping-lan stream__fullscreen" @click="toggleFullscreen"></i>
@@ -125,7 +125,8 @@
      ...mapGetters([
        'socketConnected',
        'selectedStreaming',
-       'parameterValue'
+       'parameterValue',
+       'user'
      ]),
      config: () => {
        return config;
@@ -137,6 +138,23 @@
      PersonDetail,
      RecognitionDetail
    },
+   watch: {
+    user: {
+        handler (newVal) {
+          this.cameraOption = newVal.equipmentList;
+          this.fetchNewestCaptureData();
+          this.fetchNewestCompareData();
+          if (this.selectedStreaming && this.selectedStreaming !== '') {
+            this.cameraMonitorUrl = this.selectedStreaming;
+          } else if (this.cameraOption && this.cameraOption.length > 0) {
+            this.cameraMonitorUrl = this.cameraOption[0].equipmentId;
+          }
+          this.switchCamera(this.cameraMonitorUrl);
+          this.detailScroll();
+        },
+        deep: true
+    }
+  },
    methods: {
      ...mapActions([
        'setSelectedStreaming'
@@ -151,15 +169,6 @@
        } else if (Number(response.data.code) === 400) {
          this.cameraMonitorUrl = '';
          this.$message({ type: 'error', message: response.data.msg });
-       } else {
-         this.$message({ type: 'error', message: response.data.msg });
-       }
-     },
-     // fetch camera list
-     async fetchCameraList () {
-       const response = await api.post(config.device.all, {});
-       if (Number(response.data.code) === 200) {
-         return response.data.data.rows;
        } else {
          this.$message({ type: 'error', message: response.data.msg });
        }
@@ -305,13 +314,14 @@
    },
    async mounted () {
      this.initPlayer({ techOrder: ['flash', 'html5'] });
-     this.cameraOption = await this.fetchCameraList();
+     if (!this.user) return;
+     this.cameraOption = this.user.equipmentList;
      this.fetchNewestCaptureData();
      this.fetchNewestCompareData();
      if (this.selectedStreaming && this.selectedStreaming !== '') {
        this.cameraMonitorUrl = this.selectedStreaming;
      } else if (this.cameraOption && this.cameraOption.length > 0) {
-       this.cameraMonitorUrl = this.cameraOption[0].id;
+       this.cameraMonitorUrl = this.cameraOption[0].equipmentId;
      }
      this.switchCamera(this.cameraMonitorUrl);
      this.detailScroll();

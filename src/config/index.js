@@ -57,6 +57,9 @@ export default {
     save: 'sys/user/save',
     remove: 'sys/user/remove'
   },
+  witness: {
+    list: 'equipment/comparisonRecord/list'
+  },
   deviceType: [{
     value: '1',
     label: '人证比对机'

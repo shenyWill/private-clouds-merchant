@@ -11,6 +11,12 @@ export default [{
   children: [],
   jurisdiction: 0
 }, {
+  name: '人证比对',
+  path: '/witness/index',
+  icon: 'iconfont icon-shibiejilu-lan',
+  children: [],
+  jurisdiction: 0
+}, {
   name: '人员管理',
   path: '/person/database',
   icon: 'iconfont icon-renyuanguanli-lan',

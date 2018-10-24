@@ -25,9 +25,9 @@
               <el-select v-model="searchForm.equipmentId" size="small">
                 <el-option
                   :label="item.equipmentName"
-                  :value="item.id"
+                  :value="item.equipmentId"
                   v-for="item in deviceList"
-                  :key="item.id">
+                  :key="item.equipmentId">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -167,7 +167,8 @@
    },
    computed: {
      ...mapGetters([
-       'selectedPersonDatabase'
+       'selectedPersonDatabase',
+       'user'
      ])
    },
    methods: {
@@ -333,10 +334,7 @@
      if (Number(personTypeAPI.data.code) === 200) {
        this.personTypeList = personTypeAPI.data.data.dataList;
      }
-     let deviceListAPI = await api.post(config.device.all, {});
-     if (Number(deviceListAPI.data.code) === 200) {
-       this.deviceList = deviceListAPI.data.data.rows;
-     }
+      this.user && (this.deviceList = this.user.equipmentList);
    },
    watch: {
      searchResult: {
@@ -346,7 +344,13 @@
          this.currentPage = 1;
        },
        deep: true
-     }
+     },
+     user: {
+        handler (newVal) {
+            this.deviceList = newVal.equipmentList;
+        },
+        deep: true
+    }
    }
  };
 </script>

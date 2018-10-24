@@ -114,6 +114,7 @@
  import icon from '@/config/icon.js';
  import { scollTop } from '@/utils';
  import PersonAdd from '@/views/person/PersonAdd';
+ import { mapGetters } from 'vuex';
  export default {
    name: 'Database',
    data () {
@@ -151,6 +152,19 @@
    },
    components: {
      PersonAdd
+   },
+   computed: {
+    ...mapGetters([
+      'user'
+      ])
+  },
+  watch: {
+     user: {
+        handler (newVal) {
+            this.deviceList = newVal.equipmentList;
+        },
+        deep: true
+    }
    },
    methods: {
      async responseAPI (data = {}) {
@@ -237,7 +251,7 @@
      // 删除人员库打开
      deleteDatabase (val) {
        this.dialogDeleteDatabase = true;
-       if (Number(val.personnelCount) === 200) {
+       if (Number(val.personnelCount) === 0) {
          this.deleteDatabaseCondition = true;
          this.deleteDatabaseId = val.libraryId;
        } else {
@@ -284,9 +298,10 @@
      // 提交添加人员
      async addSumbit (val) {
        let subObj = {...val};
+       subObj.status = 0;
        subObj.libraryId = this.currentLibraryId;
        this.isLoading = true;
-       await api.post(config.person.add, subObj);
+       await api.post(config.person.edit, subObj);
        await this.responseAPI({page: 1, pageSize: 9});
        this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
        this.isLoading = false;
@@ -309,10 +324,7 @@
      if (Number(personTypeAPI.data.code) === 200) {
        this.personTypeList = personTypeAPI.data.data.dataList;
      }
-     let deviceListAPI = await api.post(config.device.allList, {});
-     if (Number(deviceListAPI.data.code) === 200) {
-       this.deviceList = deviceListAPI.data.data.rows;
-     }
+     this.user && (this.deviceList = this.user.equipmentList);
    }
  };
 </script>

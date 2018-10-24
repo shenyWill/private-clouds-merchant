@@ -1,19 +1,11 @@
 <template>
-  <div class="recognition">
-    <Search :searchResult='searchResult' :equipmentArr='equipmentArr' :databaseArr='databaseArr'>
+  <div class="witness">
+    <Search :searchResult='searchResult' :equipmentArr='equipmentArr'>
       <el-form ref="search-form" :model="searchForm" slot="search-form" label-width="80px" class="search-form-box">
         <el-row>
           <el-col :span="5">
             <el-form-item label="姓名">
               <el-input v-model="searchForm.personnelName" size="small"></el-input>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="5" :offset="3">
-            <el-form-item label="库类型">
-              <el-select v-model="searchForm.libraryTypeId" size="small">
-                <el-option v-for="item in databaseArr" :key="item.id" :label="item.libraryTypeName" :value="item.id"></el-option>
-              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -54,41 +46,35 @@
         </el-row>
       </el-form>
     </Search>
-    <el-card class="recognition-card" v-if="recognitionList && recognitionList.length > 0">
+    <el-card class="witness-card" v-if="witnessList && witnessList.length > 0">
       <div slot="header" class="clearfix">
-        <span>识别记录</span>
+        <span>比对记录</span>
       </div>
-      <div v-for="item in recognitionList" :key="item.id" class="recognition-card-info">
-        <div class="recognition-card-image">
-          <img :src="item.imageUrl2 ? (recognitionUrl + item.imageUrl2) : ''" alt="" :onerror="`src='${errorImage}'`">
-          <img :src="item.imageUrl1 ? (recognitionUrl + item.imageUrl1) : ''" alt="">
+      <div v-for="item in witnessList" :key="item.id" class="witness-card-info">
+        <div class="witness-card-image">
+          <img :src="item.imageUrl2 ? (witnessUrl + item.imageUrl2) : ''" alt="" :onerror="`src='${errorImage}'`">
+          <img :src="item.imageUrl1 ? (witnessUrl + item.imageUrl1) : ''" alt="" :onerror="`src='${errorImage}'`">
         </div>
-        <div class="recognition-card-content">
-          <p class="recognition-card-detail">
+        <div class="witness-card-content">
+          <p class="witness-card-detail">
             <span class="detail-name">{{ item.personnelName }}</span>
-            <span class="detail-position">{{ item.describe }}</span>
+            <span class="detail-position">{{ item.personnelSex }}</span>
           </p>
-          <p class="recognition-card-tag">
-            <el-tag type="warning">{{ equipmentTypeName[item.equipmentType] }}</el-tag>
-            <el-tag :type="item.libraryTypeName=='黑名单' ? 'danger' : 'success'">{{ item.libraryTypeName }}</el-tag>
+          <p class="witness-card-id">
+              <span class="id-info">身份证号：{{item.personnelIdnum}}</span>
           </p>
-          <p class="recognition-card-equipment">
-            <span class="equipment-name">设备名称： {{ item.equipmentName }}</span>
+          <p class="witness-card-result">
+            <span class="result-success">比对结果：<span :class="item.recognitionType==0 ? 'is-success': 'is-error'">{{ item.recognitionType == 0 ? '比对成功' : '比对失败' }}</span> </span>
+            <span class="result-equipment">设备名称： {{item.equipmentName}}</span>
+            <span class="result-time">比对时间：{{item.recognitionTime}}</span>
           </p>
         </div>
-        <div class="recognition-card-simi">
-          <span><i class="iconfont icon-xiangsidu-lan"> 相似度：{{ item.confidence }}%</i></span>
-        </div>
-        <div class="recognition-card-date">
-          <span><i class="el-icon-time"> 比对时间：{{ item.recognitionTime }}</i></span>
-        </div>
-        <div class="recognition-card-operation">
+        <div class="witness-card-operation">
           <i class="iconfont icon-chakan-lan" @click="showPersonDetail(item.personnelId)"></i>
-          <i class="iconfont icon-shibiejilu-lan" @click="showRecognitionDetail(item.personnelId, true)"></i>
         </div>
       </div>
     </el-card>
-    <div v-else class="recognition__empty">
+    <div v-else class="witness__empty">
       <img :src="emptyImage">
       <div>
         暂无数据
@@ -106,17 +92,6 @@
     </el-pagination>
     <!-- 显示详情 -->
     <el-dialog :visible.sync="dialogPersonDetail" width="25%" custom-class="person-detail-show">
-      <PersonDetail :personDetail="personDetail"></PersonDetail>
-    </el-dialog>
-    <!-- 比对详情 -->
-    <el-dialog
-      class="recognition-dialog-detail"
-      :visible.sync="dialogRecognitionDetail"
-      width="31%"
-      custom-class="recognition-detail-show"
-      title="比对详情"
-      :lock-scroll="true">
-      <RecognitionDetail :recognitionDetail="recognitionDetail" :recognitionDetailUrl="recognitionDetailUrl"></RecognitionDetail>
     </el-dialog>
   </div>
 </template>
@@ -126,8 +101,6 @@ import Search from '@/views/search/Search';
 import api from '@/api';
 import config from '@/config';
 import { scollTop, parseTime } from '@/utils';
-import PersonDetail from '@/views/person/PersonDetail';
-import RecognitionDetail from '@/views/recognition/RecognitionDetail';
 import { mapGetters } from 'vuex';
 export default {
   name: 'Recognition',
@@ -137,39 +110,21 @@ export default {
       errorImage: require('@/assets/image/timg.jpg'),
       searchForm: {},
       searchResult: {},
-      recognitionList: [],
+      witnessList: [],
       count: 0,
       personDetail: {}, // 个人详情
       dialogPersonDetail: false, // 个人详情框是否显示,
-      recognitionDetail: {}, // 比对详情
-      dialogRecognitionDetail: false, // 比对详情框是否显示
-      equipmentTypeName: ['人证比对机', '摄像头', '人脸识别门禁平板', '闸机', '门'], // 设备类型名称
       equipmentArr: [], // 设备集合
       currentPage: 1, // 当前页码
-      databaseArr: [], // 库集合
-      recognitionDetailTag: true, // 滚动的tag
-      recognitionDetailId: '', // 当前对比详情ID
-      recognitionOffset: 0, // 当前对比详情偏移量
-      recognitionUrl: '', // 当前url
-      recognitionDetailUrl: '' // 比对详情url
+      witnessUrl: '' // 当前url
     };
   },
   components: {
-    Search,
-    PersonDetail,
-    RecognitionDetail
+    Search
   },
-  computed: {
-     ...mapGetters([
-       'parameterValue',
-       'user'
-     ])
-   },
   methods: {
     // 点击搜索
     searchSubmit () {
-      // console.log(this.parameterValue)
-
       const startTime = new Date(this.searchForm.startTime).getTime();
       const endTime = new Date(this.searchForm.endTime).getTime();
       if (startTime && endTime && (startTime > endTime)) {
@@ -182,11 +137,11 @@ export default {
     },
     // 请求
     async responseAPI (data = {}) {
-      const response = await api.post(config.recognition.list, data);
+      const response = await api.post(config.witness.list, data);
       if (Number(response.data.code) === 200) {
         this.count = response.data.data.total;
-        this.recognitionList = response.data.data.rows;
-        this.recognitionUrl = response.data.url;
+        this.witnessList = response.data.data.rows;
+        this.witnessUrl = response.data.url;
       }
     },
     // 分页
@@ -201,72 +156,16 @@ export default {
       }
       requestObj.limit = 10;
       requestObj.offset = Num;
-      requestObj.confidence = this.parameterValue;
       this.responseAPI(requestObj);
       scollTop(80);
     },
     // 查看个人详情
     async showPersonDetail (id) {
-      const response = await api.post(config.person.detail, {personnelId: id});
-      if (Number(response.data.code) === 200) {
-        this.personDetail = response.data.data;
-        this.dialogPersonDetail = true;
-      } else {
-        this.$message({
-          type: 'error',
-          message: response.data.msg
-        });
-      }
-    },
-    // 查看比对详情
-    async showRecognitionDetail (personnelId, tag) {
-      if (tag) {
-        this.recognitionOffset = 0;
-        this.recognitionDetail = {};
-        this.recognitionDetailId = personnelId;
-      }
-      const response = await api.post(config.recognition.compareDetail, {personnelId: this.recognitionDetailId, offset: this.recognitionOffset, confidence: this.parameterValue});
-      if (Number(response.data.code) === 200) {
-        let responseObj = response.data.data;
-        for (let item in responseObj) {
-          // TODO
-          if (item.length > 1) {
-            if (Object.keys(this.recognitionDetail).indexOf(item) > -1) {
-              this.recognitionDetail[item] = this.recognitionDetail[item].concat(responseObj[item]);
-            } else {
-              this.$set(this.recognitionDetail, item, responseObj[item]);
-            }
-          }
-        }
-        this.recognitionDetailUrl = response.data.url;
-        this.recognitionOffset = response.data.offset;
-        this.dialogRecognitionDetail = true;
-        setTimeout(() => {
-          this.recognitionDetailTag = true;
-        }, 300);
-      }
-    },
-    // 滚动条再次调用
-    detailScroll () {
-      if (!document.getElementsByClassName('recognition-detail-show')[0]) return;
-      document.getElementsByClassName('recognition-detail-show')[0].onscroll = () => {
-        let _self = document.getElementsByClassName('recognition-detail-show')[0];
-        let distance = _self.scrollHeight - _self.scrollTop - _self.clientHeight;
-        if (distance < 100 && this.recognitionDetailTag === true && this.recognitionOffset !== -1) {
-          this.recognitionDetailTag = false;
-          this.showRecognitionDetail(this.recognitionDetailId);
-        }
-      };
     }
   },
   async mounted () {
-    this.responseAPI({limit: 10, offset: 0, confidence: this.parameterValue});
+    this.responseAPI({limit: 10, offset: 0});
     this.user && (this.equipmentArr = this.user.equipmentList);
-    let databaseRes = await api.post(config.database.typeList, {});
-    if (Number(databaseRes.data.code) === 200) {
-      this.databaseArr = databaseRes.data.data.dataList;
-    }
-    this.detailScroll();
   },
   watch: {
     searchResult: {
@@ -296,6 +195,11 @@ export default {
         },
         deep: true
     }
+  },
+  computed: {
+  ...mapGetters([
+      'user'
+      ])
   }
 };
 </script>
@@ -304,7 +208,7 @@ export default {
  .search-form-box {
    margin: 30px 40px;
  }
- .recognition-card {
+ .witness-card {
    text-align: left;
    margin: 30px 40px;
    .clearfix {
@@ -315,14 +219,14 @@ export default {
      color: #555;
    }
  }
- .recognition-card-info {
+ .witness-card-info {
    height: 159px;
    box-sizing: border-box;
    border-bottom: 1px solid #dcdcdc;
    overflow: hidden;
    padding: 20px;
  }
- .recognition-card-image {
+ .witness-card-image {
    height: 100%;
    width: 260px;
    overflow: hidden;
@@ -333,20 +237,20 @@ export default {
      border-radius: 10px;
    }
  }
- .recognition-card-content {
+ .witness-card-content {
    height: 100%;
-   width: 400px;
    float: left;
    margin-left: 20px;
    p {
      margin: 8px 0 0px 0;
    }
-   .recognition-card-detail {
+   .witness-card-detail {
      height: 21px;
      line-height: 21px;
      font-size: 21px;
      color: #333;
      font-weight: bold;
+     margin-bottom: 30px;
    }
    .detail-name {
      display: inline-block;
@@ -366,28 +270,24 @@ export default {
    .detail-position {
      font-size: 18px;
    }
-   .recognition-card-equipment {
+   .witness-card-result,.witness-card-id {
      height: 18px;
      line-height: 18px;
      color: #666;
      font-size: 16px;
      margin-top: 15px;
    }
+   .witness-card-result>span {
+       margin-right: 90px;
+   }
+   .is-success {
+       color: #00cc66;
+   }
+   .is-error {
+       color: #ff0000;
+   }
  }
- .recognition-card-simi,.recognition-card-date,.recognition-card-operation {
-   height: 100%;
-   width: 200px;
-   float: left;
-   margin-left: 20px;
-   line-height: 120px;
-   overflow: hidden;
-   font-size: 16px;
-   color: #666;
- }
- .recognition-card-date {
-   width: 380px;
- }
- .recognition-card-operation {
+ .witness-card-operation {
    color: #008aff;
    font-weight: bold;
    font-size: 30px;
@@ -402,11 +302,11 @@ export default {
 </style>
 
 <style lang="scss">
- .recognition-card .el-card__body {
+ .witness-card .el-card__body {
    padding: 0;
    margin: 0;
  }
- .recognition-detail-show {
+ .witness-detail-show {
    position: relative;
    text-align: left;
    border-radius: 15px;
@@ -416,7 +316,7 @@ export default {
      border-radius: 20px;
    }
  }
- .recognition-dialog-detail {
+ .witness-dialog-detail {
    .el-dialog {
      position: relative;
      .el-dialog__header {
@@ -436,10 +336,10 @@ export default {
      }
    }
  }
- .recognition .el-dialog__wrapper {
+ .witness .el-dialog__wrapper {
    overflow: hidden;
  }
- .recognition__empty {
+ .witness__empty {
    font-size: 20px;
    font-weight: bold;
    margin-top: 180px;

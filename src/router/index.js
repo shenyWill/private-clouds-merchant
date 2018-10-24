@@ -33,6 +33,9 @@ import PersonCenter from '@/views/personCenter/PersonCenter';
 // 账号管理
 import Account from '@/views/account/Account';
 
+// 人证比对
+import Witness from '@/views/witness/Witness';
+
 Vue.use(Router);
 
 export default new Router({
@@ -141,6 +144,15 @@ export default new Router({
       component: Account,
       name: 'Account',
       meta: { title: '账号管理', icon: '', cache: false }
+    }]
+  }, {
+    path: '/witness',
+    component: Layout,
+    children: [{
+      path: '/witness/index',
+      component: Witness,
+      name: 'Witness',
+      meta: { title: '人证比对', icon: '', cache: false }
     }]
   }]
 });
