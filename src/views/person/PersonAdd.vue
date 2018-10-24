@@ -204,24 +204,24 @@
            var response = await api.post(config.person.checkImage, {
              image: data.split(',')[1]
            });
-           if (Number(response.data.code) === 200) {
+           if (Number(response.data.code) !== 200) {
              this.$message({
                type: 'error',
                message: response.data.msg
              });
            }
            // image has one face
-           if (Number(response.data.code) === 1) {
-             if (Number(this.addOrEdit) === 1) {
-               await this.editImage(data, val);
-             } else {
+           if (Number(response.data.data.faceNum) === 1) {
+            //  if (Number(this.addOrEdit) === 1) {
+            //    await this.editImage(data, val);
+            //  } else {
                this[val] = this.addPersonForm[val] = this.showImageUrl = data;
-             }
+            //  }
            }
            // image has more than one face
-           if (Number(response.data.code) > 1) {
+           if (Number(response.data.data.faceNum) > 1) {
              this.mainImg = data;
-             this.moreFaceObj = { ...response.data.data.faceImgData };
+             this.moreFaceObj = { ...response.data.data };
              delete this.moreFaceObj.faceNum;
              this.showForm = false;
              this.moreFacePosition = val;
@@ -231,32 +231,32 @@
        };
      },
      // 编辑时修改图片
-     async editImage (imgUrl, imgIndex) {
-       const index = Number(imgIndex.substring(5)) - 1;
-       let images = ['', '', '']; // edit person three images
-       this.imageList.forEach((item, index) => {
-         if (item && item !== '') images[index] = item;
-       });
-       images[index] = imgUrl;
-       let data = {
-         personnelId: this.imagePersonnelId,
-         imageList: images
-       };
-       let imageResponse = await api.post(config.person.updateImage, data);
-       if (imageResponse.data.code === 200) {
-         this[imgIndex] = this.addPersonForm[imgIndex] = this.showImageUrl = imgUrl;
-         this.imageList[index] = imgUrl;
-         this.$message({
-           type: 'success',
-           message: imageResponse.data.msg
-         });
-       } else {
-         this.$message({
-           type: 'error',
-           message: imageResponse.data.msg
-         });
-       }
-     },
+    //  async editImage (imgUrl, imgIndex) {
+    //    const index = Number(imgIndex.substring(5)) - 1;
+    //    let images = ['', '', '']; // edit person three images
+    //    this.imageList.forEach((item, index) => {
+    //      if (item && item !== '') images[index] = item;
+    //    });
+    //    images[index] = imgUrl;
+    //    let data = {
+    //      personnelId: this.imagePersonnelId,
+    //      imageList: images
+    //    };
+    //    let imageResponse = await api.post(config.person.updateImage, data);
+    //    if (imageResponse.data.code === 200) {
+    //      this[imgIndex] = this.addPersonForm[imgIndex] = this.showImageUrl = imgUrl;
+    //      this.imageList[index] = imgUrl;
+    //      this.$message({
+    //        type: 'success',
+    //        message: imageResponse.data.msg
+    //      });
+    //    } else {
+    //      this.$message({
+    //        type: 'error',
+    //        message: imageResponse.data.msg
+    //      });
+    //    }
+    //  },
      checkIsImage (name) {
        if (!isImage(name)) return false;
        return true;
@@ -312,6 +312,10 @@
              obj.disSwitch = 2;
            }
            this.isSubmit = false;
+           obj.imageList = [obj.image1 || '', obj.image2 || '', obj.image3 || ''];
+           delete obj.image1;
+           delete obj.image2;
+           delete obj.image3;
            this.$emit('addSumbit', obj);
          }
        });
@@ -328,15 +332,15 @@
      },
      // 选择图片
      async checkImage () {
-       if (this.addOrEdit === 1) {
-         if (this.checkImageUrl) {
-          await this.editImage(('data:image/png;base64,' + this.checkImageUrl), this.moreFacePosition);
-         }
-       } else {
+      //  if (this.addOrEdit === 1) {
+      //    if (this.checkImageUrl) {
+      //     await this.editImage(('data:image/png;base64,' + this.checkImageUrl), this.moreFacePosition);
+      //    }
+      //  } else {
          if (this.checkImageUrl) {
           this.showImageUrl = this[this.moreFacePosition] = this.addPersonForm[this.moreFacePosition] = 'data:image/png;base64,' + this.checkImageUrl;
          }
-       }
+      //  }
        this.showForm = true;
      }
    },
@@ -360,7 +364,7 @@
            }
            if (newVal.personnelImgList.length > 0) {
              newVal.personnelImgList.forEach((item, index) => {
-               this.$set(this.addPersonForm, `image${index + 1}`, newVal.url + item);
+               this.$set(this.addPersonForm, `image${index + 1}`, item);
                this[`image${index + 1}`] = newVal.url + item;
                this.imageList.push(item);
              });

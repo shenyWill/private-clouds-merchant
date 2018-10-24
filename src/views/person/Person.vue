@@ -285,25 +285,30 @@
      // 提交添加人员
      async addSumbit (val) {
        let subObj = {...val};
-       let requestUrl = 'edit';
+      //  let requestUrl = 'edit';
        if (this.addOrEdit === 0) {
          subObj.libraryId = this.databaseID;
          this.currentPage = 1;
-         requestUrl = 'add';
-       } else {
-         delete subObj.image1;
-         delete subObj.image2;
-         delete subObj.image3;
        }
+        //  requestUrl = 'add';
+      //  } else {
+        //  delete subObj.image1;
+        //  delete subObj.image2;
+        //  delete subObj.image3;
+      //  }
+      // console.log(subObj)
        this.isLoading = true;
-       const response = await api.post(config.person[requestUrl], subObj);
+       subObj.status = this.addOrEdit;
+       const response = await api.post(config.person.edit, subObj);
        if (Number(response.data.code) === 200) {
-         this.$message({type: 'success', message: response.data.msg});
+          this.$message({type: 'success', message: response.data.msg});
+       } else {
+         this.$message({type: 'error', message: response.data.msg});
        }
-       await this.responseAPI({page: this.currentPage});
-       this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
-       this.isLoading = false;
-       this.dialogPersonAdd = false;
+        await this.responseAPI({page: this.currentPage});
+        this.$refs['person-add'] && this.$refs['person-add'].removePersonAddForm();
+        this.isLoading = false;
+        this.dialogPersonAdd = false;
      },
      checkCanAccess (id) {
        // check person database id or push to database

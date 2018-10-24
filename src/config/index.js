@@ -22,8 +22,8 @@ export default {
     detail: '/libraryPersonnel/personnelDetail',
     delete: '/libraryPersonnel/delPersonnel',
     deleteAll: '/libraryPersonnel/delPersonnel',
-    add: '/libraryPersonnel/savePersonnel',
-    edit: '/libraryPersonnel/modifyPersonnel',
+    // add: '/libraryPersonnel/savePersonnel',
+    edit: '/libraryPersonnel/savePersonnel',
     checkImage: '/libraryPersonnel/checkPersonnelImage',
     updateImage: '/libraryPersonnel/modifyPersonnelImg',
     totalNum: '/library/personnelTotalCount'
