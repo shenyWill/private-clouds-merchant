@@ -70,7 +70,7 @@
           </p>
         </div>
         <div class="witness-card-operation">
-          <i class="iconfont icon-chakan-lan" @click="showPersonDetail(item.personnelId)"></i>
+          <i class="iconfont icon-xiangyou-lan" @click="showWintessDetail(item)"></i>
         </div>
       </div>
     </el-card>
@@ -91,7 +91,8 @@
       @current-change="handleCurrentChange">
     </el-pagination>
     <!-- 显示详情 -->
-    <el-dialog :visible.sync="dialogPersonDetail" width="25%" custom-class="person-detail-show">
+    <el-dialog :visible.sync="dialogWitnessDetail" width="25%" title="人员详情">
+      <WitnessDetail :witnessDetail="witnessDetail" :witnessUrl="witnessUrl"></WitnessDetail>
     </el-dialog>
   </div>
 </template>
@@ -102,6 +103,7 @@ import api from '@/api';
 import config from '@/config';
 import { scollTop, parseTime } from '@/utils';
 import { mapGetters } from 'vuex';
+import WitnessDetail from '@/views/witness/WitnessDetail';
 export default {
   name: 'Recognition',
   data () {
@@ -113,14 +115,16 @@ export default {
       witnessList: [],
       count: 0,
       personDetail: {}, // 个人详情
-      dialogPersonDetail: false, // 个人详情框是否显示,
+      dialogWitnessDetail: false, // 个人详情框是否显示,
       equipmentArr: [], // 设备集合
       currentPage: 1, // 当前页码
-      witnessUrl: '' // 当前url
+      witnessUrl: '', // 当前url
+      witnessDetail: null
     };
   },
   components: {
-    Search
+    Search,
+    WitnessDetail
   },
   methods: {
     // 点击搜索
@@ -160,7 +164,9 @@ export default {
       scollTop(80);
     },
     // 查看个人详情
-    async showPersonDetail (id) {
+    async showWintessDetail (val) {
+      this.dialogWitnessDetail = true;
+      this.witnessDetail = val;
     }
   },
   async mounted () {
@@ -288,10 +294,11 @@ export default {
    }
  }
  .witness-card-operation {
-   color: #008aff;
+   color: #999;
    font-weight: bold;
    font-size: 30px;
    text-align: right;
+   margin-top: 40px;
    i {
      font-size: 28px;
      margin-left: 30px;
@@ -299,50 +306,28 @@ export default {
      font-weight: normal;
    }
  }
-</style>
-
-<style lang="scss">
- .witness-card .el-card__body {
-   padding: 0;
-   margin: 0;
- }
- .witness-detail-show {
-   position: relative;
-   text-align: left;
-   border-radius: 15px;
-   height: 700px;
-   overflow-y: auto;
-   .el-dialog {
-     border-radius: 20px;
-   }
- }
- .witness-dialog-detail {
-   .el-dialog {
-     position: relative;
-     .el-dialog__header {
-       position: sticky;
-       top: 0;
-       height: 30px;
-       background-color: #fff;
-       border-radius: 20px;
-       z-index: 1;
-     }
-     .el-dialog__title {
-       font-size: 20px;
-       font-weight: bold;
-     }
-     .el-dialog__close {
-       font-size: 32px;
-     }
-   }
- }
- .witness .el-dialog__wrapper {
-   overflow: hidden;
- }
  .witness__empty {
    font-size: 20px;
    font-weight: bold;
    margin-top: 180px;
    margin-bottom: 40px;
  }
+</style>
+
+<style lang="scss">
+.witness .el-dialog {
+    border-radius: 20px;
+    width: 500px;
+    /* height: 300px; */
+}
+.witness .el-dialog__header {
+    font-weight: bold;
+    height: 60px;
+    box-sizing: border-box;
+    padding: 0 40px;
+    line-height: 60px;
+    border-bottom: 1px solid #e5e5e5;
+    text-align: left;
+
+}
 </style>

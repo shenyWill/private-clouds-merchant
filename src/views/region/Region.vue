@@ -104,6 +104,7 @@
       class="region__dialog"
       title="添加设备"
       :visible.sync="addDeviceDialog"
+      :close-on-click-modal="false"
       :fullscreen="true"
       width="25%">
       <el-form ref="deviceForm"

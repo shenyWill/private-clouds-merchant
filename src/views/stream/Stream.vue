@@ -142,6 +142,7 @@
     user: {
         handler (newVal) {
           this.cameraOption = newVal.equipmentList;
+          if (!this.cameraOption.length) return;
           this.fetchNewestCaptureData();
           this.fetchNewestCompareData();
           if (this.selectedStreaming && this.selectedStreaming !== '') {
@@ -316,6 +317,7 @@
      this.initPlayer({ techOrder: ['flash', 'html5'] });
      if (!this.user) return;
      this.cameraOption = this.user.equipmentList;
+     if (!this.cameraOption.length) return;
      this.fetchNewestCaptureData();
      this.fetchNewestCompareData();
      if (this.selectedStreaming && this.selectedStreaming !== '') {

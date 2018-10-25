@@ -89,6 +89,7 @@
       class="device__dialog-add"
       title="添加设备"
       :visible.sync="addDialog"
+      :close-on-click-modal="false"
       :fullscreen="true"
       width="25%">
       <el-form
@@ -150,6 +151,7 @@
     <el-dialog
       class="device__dialog-add"
       :visible.sync="editDialog"
+      :close-on-click-modal="false"
       width="25%"
       :fullscreen="true"
       title="修改设备">
