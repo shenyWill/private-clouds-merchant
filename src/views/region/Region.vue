@@ -204,6 +204,7 @@
  import RegionCell from './RegionCell';
  import Search from '@/views/search/Search';
  import { isValidIP } from '@/utils';
+ import { mapActions } from 'vuex';
  export default {
    name: 'Region',
    data () {
@@ -308,6 +309,9 @@
      Search
    },
    methods: {
+     ...mapActions([
+      'login'
+    ]),
      handleCurrentChange (val) {
        this.currentPage = val;
        this.offset = (val - 1) * this.limit;
@@ -455,6 +459,10 @@
                this.resetForm('addForm');
                this.$message({ type: 'success', message: '添加设备成功' });
                this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
+               const response = await api.post(config.personCenter.list, {});
+               if (Number(response.data.code) === 200) {
+                  this.login(response.data.user);
+               }
              } else {
                this.deviceForm.ipAddress = '';
                this.deviceForm.url = '';

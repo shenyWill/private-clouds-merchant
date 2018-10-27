@@ -418,7 +418,8 @@
    },
    methods: {
      ...mapActions([
-       'setSelectedRegion'
+       'setSelectedRegion',
+       'login'
      ]),
      resetForm (name) {
        if (!name) return;
@@ -601,6 +602,10 @@
                this.resetForm('addForm');
                this.$message({ type: 'success', message: '添加成功' });
                this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
+               const response = await api.post(config.personCenter.list, {});
+               if (Number(response.data.code) === 200) {
+                  this.login(response.data.user);
+               }
              } else {
                this.addForm.ipAddress = '';
                this.addForm.port = null;
