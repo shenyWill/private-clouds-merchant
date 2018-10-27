@@ -128,22 +128,22 @@
         <el-form-item label="所属区域" prop="areaName">
           <el-input v-model="deviceForm.areaName" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="设备账号" prop="loginName">
+        <el-form-item label="设备账号" prop="loginName" v-if="deviceForm['equipmentType'] == 2">
           <el-input v-model="deviceForm.loginName" placeholder="请输入设备账号"></el-input>
         </el-form-item>
-        <el-form-item label="设备密码" prop="loginPsw">
+        <el-form-item label="设备密码" prop="loginPsw" v-if="deviceForm['equipmentType'] == 2">
           <el-input v-model="deviceForm.loginPsw" placeholder="请输入与设备密码" type="password"></el-input>
         </el-form-item>
-        <el-form-item label="品牌名称" prop="brand">
+        <el-form-item label="品牌名称" prop="brand" v-if="deviceForm['equipmentType'] == 2">
           <el-input v-model="deviceForm.brand" placeholder="请输入设备类型"></el-input>
         </el-form-item>
-        <el-form-item label="型号系列" prop="brandseries">
+        <el-form-item label="型号系列" prop="brandseries" v-if="deviceForm['equipmentType'] == 2">
           <el-input v-model="deviceForm.brandseries" placeholder="请输入设备型号系列"></el-input>
         </el-form-item>
-        <el-form-item label="播放地址" prop="mediaUrl">
+        <el-form-item label="播放地址" prop="mediaUrl" v-if="deviceForm['equipmentType'] == 2">
           <el-input v-model="deviceForm.mediaUrl" placeholder="请输入设备rtsp/rtmp地址"></el-input>
         </el-form-item>
-        <el-form-item label="设备地址" prop="deviceAddress">
+        <el-form-item label="设备地址" prop="deviceAddress" v-if="deviceForm['equipmentType'] == 2">
           <el-select v-model="deviceForm['deviceAddress']" placeholder="请选择" @change="changeAddDeviceAddress">
             <el-option
               v-for="item in config.deviceAddressType"
@@ -153,14 +153,17 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="deviceForm.deviceAddress === 'ip'" label="IP地址" prop="ipAddress">
+        <el-form-item v-if="deviceForm.deviceAddress === 'ip' && deviceForm['equipmentType'] == 2" label="IP地址" prop="ipAddress">
           <el-input v-model="deviceForm.ipAddress" placeholder="请输入设备IP地址"></el-input>
         </el-form-item>
-        <el-form-item v-if="deviceForm.deviceAddress === 'ip'" label="设备端口号" prop="port">
+        <el-form-item v-if="deviceForm.deviceAddress === 'ip' && deviceForm['equipmentType'] == 2" label="设备端口号" prop="port">
           <el-input v-model="deviceForm.port" placeholder="请填写设备端口号"></el-input>
         </el-form-item>
-        <el-form-item v-if="deviceForm.deviceAddress === 'url'" label="URL地址" prop="url">
+        <el-form-item v-if="deviceForm.deviceAddress === 'url' && deviceForm['equipmentType'] == 2" label="URL地址" prop="url">
           <el-input v-model="deviceForm.url" placeholder="请输入设备URL地址"></el-input>
+        </el-form-item>
+        <el-form-item label="SN码" prop="serialNo" v-if="deviceForm['equipmentType'] == 1">
+          <el-input v-model="deviceForm.serialNo" placeholder="请填写SN码"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -272,6 +275,9 @@
          ],
          loginPsw: [
            { required: true, message: '请填写设备密码', trigger: 'blur' }
+         ],
+         serialNo: [
+           { required: true, message: '请填写SN码', trigger: 'blur' }
          ]
        },
        addRules: {
@@ -423,12 +429,22 @@
        this.$refs['deviceForm'].validate(async valid => {
          if (valid) {
            try {
-             const data = {
-               ...this.deviceForm,
-               ipAddress: this.deviceForm.deviceAddress === 'ip' ? this.deviceForm.ipAddress : '',
-               port: this.deviceForm.deviceAddress === 'ip' ? this.deviceForm.port : '',
-               url: this.deviceForm.deviceAddress === 'url' ? this.deviceForm.url : ''
-             };
+             let data;
+             if (Number(this.deviceForm.equipmentType) === 1) {
+               data = {
+                 equipmentName: this.deviceForm.equipmentName,
+                 equipmentType: this.deviceForm.equipmentType,
+                 areaId: this.deviceForm.areaId,
+                 serialNo: this.deviceForm.serialNo
+               };
+             } else {
+               data = {
+                ...this.deviceForm,
+                ipAddress: this.deviceForm.deviceAddress === 'ip' ? this.deviceForm.ipAddress : '',
+                port: this.deviceForm.deviceAddress === 'ip' ? this.deviceForm.port : '',
+                url: this.deviceForm.deviceAddress === 'url' ? this.deviceForm.url : ''
+              };
+             }
              this.isLoading = true;
              const response = await api.post(config.device.add, data);
              this.addDeviceDialog = false;

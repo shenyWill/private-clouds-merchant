@@ -30,7 +30,7 @@
         <!-- 账号删除 -->
         <el-dialog :visible.sync="removeAccountVisible" class="account-remove-dialog" title="提示">
             <p class="account-remove-info">你确定要删除该账号么</p>
-            <span class="cancel-remove">取消删除</span>
+            <span class="cancel-remove" @click="accountRemoveCancel">取消删除</span>
             <span class="sure-remove" @click="accountRemoveSure">确认删除</span>
         </el-dialog>
     </div>
@@ -152,6 +152,10 @@ export default {
                 message: response.data.msg
             });
         }
+    },
+    // 取消删除
+    accountRemoveCancel () {
+        this.removeAccountVisible = false;
     }
   },
   async mounted () {

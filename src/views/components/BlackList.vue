@@ -198,8 +198,6 @@
          .blacklist__key {
            font-weight: bold;
          }
-         .blacklist__value {
-         }
        }
      }
    }

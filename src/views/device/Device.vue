@@ -112,34 +112,37 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="设备账号" prop="loginName">
+        <el-form-item label="设备账号" prop="loginName" v-if="addForm['equipmentType'] == 2">
           <el-input v-model="addForm.loginName" placeholder="请输入账号"></el-input>
         </el-form-item>
-        <el-form-item label="设备密码" prop="loginPsw">
+        <el-form-item label="设备密码" prop="loginPsw" v-if="addForm['equipmentType'] == 2">
           <el-input v-model="addForm.loginPsw" placeholder="请输入密码" type="password"></el-input>
         </el-form-item>
-        <el-form-item label="品牌名称" prop="brand">
+        <el-form-item label="品牌名称" prop="brand" v-if="addForm['equipmentType'] == 2">
           <el-input v-model="addForm.brand" placeholder="请输入设备类型"></el-input>
         </el-form-item>
-        <el-form-item label="型号系列" prop="brandseries">
+        <el-form-item label="型号系列" prop="brandseries" v-if="addForm['equipmentType'] == 2">
           <el-input v-model="addForm.brandseries" placeholder="请输入设备型号系列"></el-input>
         </el-form-item>
-        <el-form-item label="播放地址" prop="mediaUrl">
+        <el-form-item label="播放地址" prop="mediaUrl" v-if="addForm['equipmentType'] == 2">
           <el-input v-model="addForm.mediaUrl" placeholder="请输入设备rtsp/rtmp地址"></el-input>
         </el-form-item>
-        <el-form-item label="设备地址" prop="deviceAddress">
+        <el-form-item label="设备地址" prop="deviceAddress" v-if="addForm['equipmentType'] == 2">
           <el-select v-model="addForm['deviceAddress']" placeholder="请选择" @change="changeAddressAddType">
             <el-option v-for="item in addressType" :key="item.key" :value="item.value" :label="item.key"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="URL地址" prop="url" v-if="addForm.deviceAddress === 'url'">
+        <el-form-item label="URL地址" prop="url" v-if="addForm.deviceAddress === 'url' && addForm['equipmentType'] == 2">
           <el-input v-model="addForm.url" placeholder="请输入设备URL地址"></el-input>
         </el-form-item>
-        <el-form-item label="IP地址" prop="ipAddress" v-if="addForm.deviceAddress === 'ip'">
+        <el-form-item label="IP地址" prop="ipAddress" v-if="addForm.deviceAddress === 'ip' && addForm['equipmentType'] == 2">
           <el-input v-model="addForm.ipAddress" placeholder="请输入IP地址"></el-input>
         </el-form-item>
-        <el-form-item label="端口号" prop="port" v-if="addForm.deviceAddress === 'ip'">
+        <el-form-item label="端口号" prop="port" v-if="addForm.deviceAddress === 'ip' && addForm['equipmentType'] == 2">
           <el-input v-model="addForm.port" placeholder="请输入设备端口号"></el-input>
+        </el-form-item>
+        <el-form-item label="SN码" prop="serialNo" v-if="addForm['equipmentType'] == 1">
+          <el-input v-model="addForm.serialNo" placeholder="请填写SN码"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -180,34 +183,37 @@
             <el-option v-for="item in areaList" :key="item.id" :value="item.id" :label="item.areaName"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="设备账号" prop="loginName">
+        <el-form-item label="设备账号" prop="loginName" v-if="editForm['equipmentType'] == 2">
           <el-input v-model="editForm.loginName" placeholder="请填写设备账号"></el-input>
         </el-form-item>
-        <el-form-item label="设备密码" prop="loginPsw">
+        <el-form-item label="设备密码" prop="loginPsw" v-if="editForm['equipmentType'] == 2">
           <el-input v-model="editForm.loginPsw" placeholder="请填写设备密码" type="password"></el-input>
         </el-form-item>
-        <el-form-item label="品牌名称" prop="brand">
+        <el-form-item label="品牌名称" prop="brand" v-if="editForm['equipmentType'] == 2">
           <el-input v-model="editForm.brand" placeholder="请输入设备类型"></el-input>
         </el-form-item>
-        <el-form-item label="型号系列" prop="brandseries">
+        <el-form-item label="型号系列" prop="brandseries" v-if="editForm['equipmentType'] == 2">
           <el-input v-model="editForm.brandseries" placeholder="请输入设备型号系列"></el-input>
         </el-form-item>
-        <el-form-item label="播放地址" prop="mediaUrl">
+        <el-form-item label="播放地址" prop="mediaUrl" v-if="editForm['equipmentType'] == 2">
           <el-input v-model="editForm.mediaUrl" placeholder="请输入设备rtsp/rtmp地址"></el-input>
         </el-form-item>
-        <el-form-item label="设备地址" prop="deviceAddress">
+        <el-form-item label="设备地址" prop="deviceAddress" v-if="editForm['equipmentType'] == 2">
           <el-select v-model="editForm['deviceAddress']" placeholder="请选择" @change="changeAddressEditType">
             <el-option v-for="item in addressType" :key="item.key" :value="item.value" :label="item.key"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="URL地址" prop="url" v-if="editForm.deviceAddress === 'url'">
+        <el-form-item label="URL地址" prop="url" v-if="editForm.deviceAddress === 'url' && editForm['equipmentType'] == 2">
           <el-input v-model="editForm.url" placeholder="请输入设备URL地址"></el-input>
         </el-form-item>
-        <el-form-item label="IP地址" prop="ipAddress" v-if="editForm.deviceAddress === 'ip'">
+        <el-form-item label="IP地址" prop="ipAddress" v-if="editForm.deviceAddress === 'ip' && editForm['equipmentType'] == 2">
           <el-input v-model="editForm.ipAddress" placeholder="请输入IP地址"></el-input>
         </el-form-item>
-        <el-form-item label="端口号" prop="port" v-if="editForm.deviceAddress === 'ip'">
+        <el-form-item label="端口号" prop="port" v-if="editForm.deviceAddress === 'ip' && editForm['equipmentType'] == 2">
           <el-input v-model="editForm.port" placeholder="请填写设备端口号"></el-input>
+        </el-form-item>
+        <el-form-item label="SN码" prop="serialNo" v-if="editForm['equipmentType'] == 1">
+          <el-input v-model="editForm.serialNo" placeholder="请填写SN码"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -337,6 +343,9 @@
          ],
          loginPsw: [
            { required: true, message: '请填写登陆密码', trigger: 'blur' }
+         ],
+         serialNo: [
+           { required: true, message: '请填写SN码', trigger: 'blur' }
          ]
        },
        editRules: {
@@ -380,6 +389,9 @@
          ],
          loginPsw: [
            { required: true, message: '请填写登陆密码', trigger: 'blur' }
+         ],
+         serialNo: [
+           { required: true, message: '请填写SN码', trigger: 'blur' }
          ]
        },
        showAddButton: false,
@@ -528,7 +540,21 @@
                this.editForm.ipAddress = '';
                this.editForm.port = '';
              }
-             const response = await api.post(config.device.update, this.editForm);
+             let response;
+             if (Number(this.editForm.equipmentType) === 1) {
+               let data = {
+                 equipmentName: this.editForm.equipmentName,
+                 equipmentType: this.editForm.equipmentType,
+                 areaName: this.editForm.areaName,
+                 areaId: this.editForm.areaId,
+                 serialNo: this.editForm.serialNo,
+                 id: this.editForm.id
+               };
+               response = await api.post(config.device.update, data);
+             } else {
+               delete this.editForm.serialNo;
+               response = await api.post(config.device.update, this.editForm);
+             }
              this.editDialog = false;
              if (Number(response.data.code) === 200) {
                this.$message({ type: 'success', message: '修改成功' });
@@ -549,13 +575,23 @@
        this.$refs['addForm'].validate(async valid => {
          if (valid) {
            try {
-             const data = {
-               ...this.addForm,
-               areaId: this.regionID,
-               ipAddress: this.addForm.deviceAddress === 'ip' ? this.addForm.ipAddress : '',
-               port: this.addForm.deviceAddress === 'ip' ? this.addForm.port : '',
-               url: this.addForm.deviceAddress === 'url' ? this.addForm.url : ''
-             };
+             let data;
+             if (Number(this.addForm.equipmentType) === 1) {
+               data = {
+                 equipmentName: this.addForm.equipmentName,
+                 equipmentType: this.addForm.equipmentType,
+                 areaId: this.regionID,
+                 serialNo: this.addForm.serialNo
+               };
+             } else {
+               data = {
+                ...this.addForm,
+                areaId: this.regionID,
+                ipAddress: this.addForm.deviceAddress === 'ip' ? this.addForm.ipAddress : '',
+                port: this.addForm.deviceAddress === 'ip' ? this.addForm.port : '',
+                url: this.addForm.deviceAddress === 'url' ? this.addForm.url : ''
+              };
+             }
              const response = await api.post(config.device.add, data);
              this.addDialog = false;
              if (Number(response.data.code) === 200) {

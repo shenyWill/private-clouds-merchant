@@ -38,7 +38,7 @@
         </p>
         <p class="witness-detail-info">
             <span class="witness-detail-info-key">住　　址：</span>
-            <span class="witness-detail-info-val">{{witnessDetail.personnelNation}}</span>
+            <span class="witness-detail-info-val">{{witnessDetail.personnelAddress}}</span>
         </p>
     </div>
 </template>
