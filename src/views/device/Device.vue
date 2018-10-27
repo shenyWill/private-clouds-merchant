@@ -36,6 +36,7 @@
           </el-select>
           <el-input class="device__search-input" v-if="addressSearchType === 'ip'" v-model="searchForm.ipAddress" placeholder="请填写设备IP地址"></el-input>
           <el-input class="device__search-input" v-if="addressSearchType === 'url'" v-model="searchForm.url" placeholder="请填写设备URL地址"></el-input>
+          <el-input class="device__search-input" v-if="addressSearchType === 'SN'" v-model="searchForm.serialNo" placeholder="请填写设备SN码"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSearch">搜索</el-button>
@@ -292,6 +293,9 @@
        }, {
          key: 'URL地址',
          value: 'url'
+       }, {
+         key: 'SN码',
+         value: 'SN'
        }],
        addDialog: false,
        editDialog: false,
@@ -524,10 +528,15 @@
            ...this.searchForm,
            url: ''
          };
-       } else {
+       } else if (val === 'url') {
          this.searchForm = {
            ...this.searchForm,
            ipAddress: ''
+         };
+       } else {
+         this.searchForm = {
+           ...this.searchForm,
+           serialNo: ''
          };
        }
      },

@@ -9,7 +9,7 @@
       </span>
       <div class="device-cell__area">
         <i class="el-icon-location"></i>
-        <span>{{ device.ipAddress ? 'IP: ' + device.ipAddress : 'URL:' + device.url }}</span>
+        <span>{{ device.ipAddress ? 'IP: ' + device.ipAddress : (device.url ? 'URL:' + device.url : 'SN码:' + device.serialNo) }}</span>
       </div>
     </div>
     <div class="device-cell__action">

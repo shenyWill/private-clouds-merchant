@@ -7,6 +7,7 @@ export default {
   describe: '描述',
   url: '设备URL地址',
   ipAddress: '设备IP地址',
+  serialNo: '设备SN码',
   confidence: '相似度',
   startTime: '起始时间',
   endTime: '终止时间',
