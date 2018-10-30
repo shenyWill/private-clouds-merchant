@@ -5,15 +5,15 @@
                 <span class="account-title-text">账号管理</span>
                 <span class="account-add-btn" @click="accountAdd">添加账号</span>
             </div>
-            <div class="account-list" v-for="item in userList" :key="item.userId">
+            <div class="account-list" v-for="item in userList" :key="item.userId" @click="showAccountDetail(item)">
                 <img class="account-list-image" :src="userImg" alt="">
                 <p class="account-list-name">{{item.name}}</p>
                 <p class="account-list-info">
                     <span class="account-list-info-number">账号: {{item.username}}</span>
                     <span class="account-list-info-organization">组织: {{item.deptName}}</span>
                 </p>
-                <i class="iconfont icon-bianji-lan" @click="accountEdit(item)"></i>
-                <i class="iconfont icon-qingkongsousuolanicon-lan" @click="accountRemove(item.userId)"></i>
+                <i class="iconfont icon-bianji-lan" @click.stop="accountEdit(item)"></i>
+                <i class="iconfont icon-qingkongsousuolanicon-lan" @click.stop="accountRemove(item.userId)"></i>
             </div>
             <div class="account-empty"  v-if="!userList.length">
                 <img :src="emptyImage">
@@ -33,6 +33,10 @@
             <span class="cancel-remove" @click="accountRemoveCancel">取消删除</span>
             <span class="sure-remove" @click="accountRemoveSure">确认删除</span>
         </el-dialog>
+        <!-- 账号详情 -->
+        <el-dialog :visible.sync="showAccountDetailVisible" class="account-detail-dialog" title="账号详情">
+            <AccountDetail :accountDetailObj="accountDetailObj"></AccountDetail>
+        </el-dialog>
     </div>
 </template>
 
@@ -40,6 +44,7 @@
 import api from '@/api';
 import config from '@/config';
 import AccountAdd from '@/views/account/AccountAdd';
+import AccountDetail from '@/views/account/AccountDetail';
 import { mapGetters } from 'vuex';
 export default {
   data () {
@@ -53,7 +58,9 @@ export default {
       removeAccountVisible: false, // 账号删除弹窗
       accountObj: {},
       removeUserId: null, // 删除的userId
-      addOrEditTitle: 'add' // 增加还是编辑标题
+      addOrEditTitle: 'add', // 增加还是编辑标题
+      showAccountDetailVisible: false, // 账号详情弹窗
+      accountDetailObj: {} // 账号详情
     };
   },
   methods: {
@@ -159,13 +166,28 @@ export default {
     // 取消删除
     accountRemoveCancel () {
         this.removeAccountVisible = false;
+    },
+    // 账号详情
+    async showAccountDetail (val) {
+        const response = await api.post(config.account.getEquipmentRole, {userId: val.userId});
+        if (Number(response.data.code) === 200) {
+            this.showAccountDetailVisible = true;
+            val.equipmentArrList = response.data.data;
+            this.accountDetailObj = {...val};
+        } else {
+            this.$message({
+                type: 'error',
+                message: response.data.msg
+            });
+        }
     }
   },
   async mounted () {
     this.responseAPI();
   },
   components: {
-      AccountAdd
+      AccountAdd,
+      AccountDetail
   },
   computed: {
       ...mapGetters([
