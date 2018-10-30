@@ -240,7 +240,14 @@ export default {
         }
         this.recognitionDetailUrl = response.data.url;
         this.recognitionOffset = response.data.offset;
-        this.dialogRecognitionDetail = true;
+        if (Object.keys(this.recognitionDetail).length > 0) {
+          this.dialogRecognitionDetail = true;
+        } else {
+          this.$message({
+            type: 'error',
+            message: '暂无识别记录！'
+          });
+        }
         setTimeout(() => {
           this.recognitionDetailTag = true;
         }, 300);
@@ -260,7 +267,7 @@ export default {
     }
   },
   async mounted () {
-    this.responseAPI({limit: 10, offset: 0, confidence: this.parameterValue});
+    this.parameterValue && this.responseAPI({limit: 10, offset: 0, confidence: this.parameterValue});
     this.user && (this.equipmentArr = this.user.equipmentList);
     let databaseRes = await api.post(config.database.typeList, {});
     if (Number(databaseRes.data.code) === 200) {
@@ -283,6 +290,9 @@ export default {
         if (!requestObj.startTime && requestObj.endTime) {
           requestObj.startTime = parseTime(new Date(1970));
         }
+        if (!requestObj.confidence) {
+          requestObj.confidence = this.parameterValue;
+        }
         requestObj.limit = 10;
         requestObj.offset = 0;
         this.currentPage = 1;
@@ -295,7 +305,13 @@ export default {
             this.equipmentArr = newVal.equipmentList;
         },
         deep: true
-    }
+    },
+    parameterValue: {
+      handler (newVal) {
+        this.responseAPI({limit: 10, offset: 0, confidence: this.parameterValue});
+      }
+    },
+    deep: true
   }
 };
 </script>

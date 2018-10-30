@@ -325,6 +325,10 @@
      } else if (this.cameraOption && this.cameraOption.length > 0) {
        this.cameraMonitorUrl = this.cameraOption[0].equipmentId;
      }
+     if (!this.cameraOption.some(item => item.equipmentId === this.cameraMonitorUrl)) {
+       this.cameraMonitorUrl = '';
+       return;
+     };
      this.switchCamera(this.cameraMonitorUrl);
      this.detailScroll();
    },

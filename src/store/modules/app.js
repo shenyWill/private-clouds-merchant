@@ -4,7 +4,7 @@ const app = {
     blacklistAlert: true, // show blacklist alert dialog
     blacklistSound: false, // blacklist alert sound
     sidebarToggle: false,
-    parameterValue: 73,
+    parameterValue: null,
     selectedRegion: '',
     selectedPersonDatabase: '',
     selectedStreaming: '' // Stream module user selected streaming option

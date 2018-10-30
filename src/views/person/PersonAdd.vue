@@ -293,15 +293,15 @@
          this.$message({type: 'error', message: '请上传人员头像'});
          return false;
        }
-       const startTime = new Date(this.addPersonForm.disStartTime).getTime();
-       const endTime = new Date(this.addPersonForm.disEndTime).getTime();
-       if (this.addPersonForm.disSwitch && startTime > endTime) {
-         this.$message({type: 'error', message: '起始时间不能大于结束时间'});
-         return false;
-       }
        this.isSubmit = true;
        this.$refs[formName].validate(valid => {
          if (valid) {
+           const startTime = new Date(this.addPersonForm.disStartTime).getTime();
+           const endTime = new Date(this.addPersonForm.disEndTime).getTime();
+           if (this.addPersonForm.disSwitch && startTime > endTime) {
+             this.$message({type: 'error', message: '起始时间不能大于结束时间'});
+             return false;
+           }
            let obj = { ...this.addPersonForm };
            obj.disStartTime && (obj.disStartTime = parseTime(obj.disStartTime));
            obj.disEndTime && (obj.disEndTime = parseTime(obj.disEndTime));

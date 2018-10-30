@@ -27,7 +27,7 @@ export default [{
   path: '/region/index',
   icon: 'iconfont icon-guanyushebei-lan',
   children: [],
-  jurisdiction: 0
+  jurisdiction: 1
 }, {
   name: '账号管理',
   path: '/account/index',

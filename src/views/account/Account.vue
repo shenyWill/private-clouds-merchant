@@ -24,7 +24,7 @@
         <el-pagination :page-size="10" v-if="count > 10" :current-page.sync="currentPage" background layout="prev,pager,next" :total="count" @current-change="handleCurrentChange">
         </el-pagination>
         <!-- 账号增加和编辑 -->
-        <el-dialog :visible.sync="accountVisible" class="account-dialog" :title=" Object.keys(accountObj).length > 1 ? '账号编辑':'添加新账号'">
+        <el-dialog :visible.sync="accountVisible" class="account-dialog" :title="addOrEditTitle == 'add' ? '添加新账号' : '账号编辑'">
             <AccountAdd @accountOperate="accountOperate" :accountObj="accountObj" ref="account-operate"></AccountAdd>
         </el-dialog>
         <!-- 账号删除 -->
@@ -52,7 +52,8 @@ export default {
       accountVisible: false, // 是否打开账号弹出窗
       removeAccountVisible: false, // 账号删除弹窗
       accountObj: {},
-      removeUserId: null // 删除的userId
+      removeUserId: null, // 删除的userId
+      addOrEditTitle: 'add' // 增加还是编辑标题
     };
   },
   methods: {
@@ -95,6 +96,7 @@ export default {
             this.$nextTick(() => {
                 this.$refs['account-operate'] && this.$refs['account-operate'].passwordClearValidate('operate-account-form');
             });
+            this.addOrEditTitle = 'edit';
             this.accountVisible = true;
         } else {
             this.$message({
@@ -109,6 +111,7 @@ export default {
         this.$nextTick(() => {
             this.$refs['account-operate'] && this.$refs['account-operate'].passwordClearValidate('operate-account-form');
         });
+        this.addOrEditTitle = 'add';
         this.accountVisible = true;
     },
     // 保存

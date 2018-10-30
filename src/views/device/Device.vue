@@ -28,7 +28,7 @@
         <el-form-item label="设备IP/URL">
           <el-select @change="changeAddressSearchType" v-model="addressSearchType" placeholder="请选择">
             <el-option
-              v-for="item in addressType"
+              v-for="item in searchAddressType"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -113,6 +113,9 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="SN码" prop="serialNo" v-if="addForm['equipmentType'] == 1">
+          <el-input v-model="addForm.serialNo" placeholder="请填写SN码"></el-input>
+        </el-form-item>
         <el-form-item label="设备账号" prop="loginName" v-if="addForm['equipmentType'] == 2">
           <el-input v-model="addForm.loginName" placeholder="请输入账号"></el-input>
         </el-form-item>
@@ -142,9 +145,6 @@
         <el-form-item label="端口号" prop="port" v-if="addForm.deviceAddress === 'ip' && addForm['equipmentType'] == 2">
           <el-input v-model="addForm.port" placeholder="请输入设备端口号"></el-input>
         </el-form-item>
-        <el-form-item label="SN码" prop="serialNo" v-if="addForm['equipmentType'] == 1">
-          <el-input v-model="addForm.serialNo" placeholder="请填写SN码"></el-input>
-        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="addDevice">确定</el-button>
@@ -170,7 +170,7 @@
           <el-input v-model="editForm.equipmentName" placeholder="请填写设备名称"></el-input>
         </el-form-item>
         <el-form-item label="设备种类" prop="equipmentType">
-          <el-select v-model="editForm['equipmentType']" placeholder="请选择">
+          <el-select v-model="editForm['equipmentType']" placeholder="请选择" @change="changeEquipmentEditType">
             <el-option
               v-for="item in config.deviceType"
               :key="item.value"
@@ -183,6 +183,9 @@
           <el-select v-model="editForm.areaId" placeholder="请选择所属区域">
             <el-option v-for="item in areaList" :key="item.id" :value="item.id" :label="item.areaName"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="SN码" prop="serialNo" v-if="editForm['equipmentType'] == 1">
+          <el-input v-model="editForm.serialNo" placeholder="请填写SN码"></el-input>
         </el-form-item>
         <el-form-item label="设备账号" prop="loginName" v-if="editForm['equipmentType'] == 2">
           <el-input v-model="editForm.loginName" placeholder="请填写设备账号"></el-input>
@@ -212,9 +215,6 @@
         </el-form-item>
         <el-form-item label="端口号" prop="port" v-if="editForm.deviceAddress === 'ip' && editForm['equipmentType'] == 2">
           <el-input v-model="editForm.port" placeholder="请填写设备端口号"></el-input>
-        </el-form-item>
-        <el-form-item label="SN码" prop="serialNo" v-if="editForm['equipmentType'] == 1">
-          <el-input v-model="editForm.serialNo" placeholder="请填写SN码"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -288,6 +288,13 @@
        areaList: [],
        addressSearchType: 'ip',
        addressType: [{
+         key: 'IP地址',
+         value: 'ip'
+       }, {
+         key: 'URL地址',
+         value: 'url'
+       }],
+       searchAddressType: [{
          key: 'IP地址',
          value: 'ip'
        }, {
@@ -520,6 +527,9 @@
      // edit device form el-select change event
      changeAddressEditType (val) {
        this.$refs['editForm'].clearValidate(['ipAddress', 'url', 'port']);
+     },
+     changeEquipmentEditType () {
+       this.$refs['editForm'].clearValidate(['serialNo']);
      },
      // search form el-select change event
      changeAddressSearchType (val) {

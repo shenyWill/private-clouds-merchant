@@ -11,6 +11,9 @@
         <i class="el-icon-location"></i>
         <span>{{ device.ipAddress ? 'IP: ' + device.ipAddress : (device.url ? 'URL:' + device.url : 'SN码:' + device.serialNo) }}</span>
       </div>
+      <div class="device-cell__status">
+        <span>{{ device.status == 1 ? '启用' : '禁用' }}</span>
+      </div>
     </div>
     <div class="device-cell__action">
       <i @click="showDeviceDetail" class="device-cell__button el-icon-view"></i>
@@ -109,6 +112,16 @@
        position: absolute;
        top: 50px;
        left: 400px;
+       font-size: 16px;
+       overflow: hidden;
+       text-overflow: ellipsis;
+       white-space: nowrap;
+       width: 500px;
+     }
+     .device-cell__status {
+       position: absolute;
+       top: 50px;
+       left: 1000px;
        font-size: 16px;
        overflow: hidden;
        text-overflow: ellipsis;
