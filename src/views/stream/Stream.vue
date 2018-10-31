@@ -47,7 +47,7 @@
       </div>
     </div>
     <div class="stream__capture">
-      <p class="stream__capture-title">实时抓拍</p>
+      <p class="stream__capture-title"></p>
       <div class="stream__capture-list" v-if="captureList.length > 0">
         <StreamCapture
           class="stream__capture-item"
@@ -215,7 +215,7 @@
          if (this.captureList.length > 9) {
            this.captureList.pop();
          }
-         if (this.compareList.length > 4) {
+         if (this.compareList.length > 3) {
            this.compareList.pop();
          }
        });
@@ -361,8 +361,9 @@
    overflow: hidden;
    .stream__video-wrapper {
      margin-bottom: 15px;
-     width: 1080px;
-     height: 685px;
+     margin-left: 30px;
+     width: 1060px;
+     height: 675px;
      overflow: hidden;
      background-image: url(../../assets/image/background-door.png);
      background-size: 100% 100%;
@@ -389,7 +390,7 @@
      overflow: hidden;
      left: 45px;
      top: 90px;
-     width: 990px;
+     width: 970px;
      height: 570px;
    }
    .video-js {
@@ -405,9 +406,9 @@
    .stream__compare {
      position: absolute;
      right: 0;
-     left: 1100px;
-     width: 750px;
-     height: 685px;
+     left: 1110px;
+     width: 725px;
+     height: 675px;
      box-sizing: border-box;
      padding: 45px;
      background-image: url(../../assets/image/recognition-record.png);
@@ -430,14 +431,15 @@
    .stream__capture {
      height: 280px;
      display: block;
+     margin-left: 30px;
      clear: both;
-     background-color: #fff;
-     border-radius: 10px;
+     width: 1806px;
+     background-image: url(../../assets/image/stream-capture.png);
+     background-size: 100% 100%;
      overflow: hidden;
      .stream__capture-title {
        height: 60px;
        line-height: 60px;
-       border-bottom: 1px solid #dcdcdc;
        font-size: 20px;
        color: #333;
        text-indent: 20px;
@@ -448,6 +450,8 @@
        height: 220px;
        overflow: hidden;
        white-space: nowrap;
+       margin-left: 24px;
+       margin-top: 5px;
        .stream__capture-item {
          overflow: hidden;
          display: inline-block;
@@ -460,6 +464,7 @@
      text-align: center;
      font-weight: bold;
      font-size: 24px;
+     color: #00ffff;
    }
  }
  .stream__dialog-detail {

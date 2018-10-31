@@ -48,7 +48,7 @@
   //  transition: all .2s;
   padding-top: 10px;
    .bg-image {
-     width: 98%;
+     width: 96%;
    }
    .navbar__btn {
      position: relative;

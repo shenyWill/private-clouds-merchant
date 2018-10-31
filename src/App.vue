@@ -19,6 +19,7 @@ export default {
   color: #2c3e50;
   height: 100%;
   background-color: #0b0d26;
+  font-size: 0;
 }
 html {
   background-color: #eeeeee;

@@ -59,7 +59,7 @@
          this.socket.subscribe('/face/blacklist', response => {
            const data = JSON.parse(response.body);
            if (this.blacklistAlert && this.parameterValue < data.confidence) {
-             this.showAlert = true;
+            //  this.showAlert = true;
              this.alertData = data;
            }
          });

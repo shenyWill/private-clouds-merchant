@@ -1,11 +1,14 @@
 <template>
   <div class="stream-capture">
-    <img class="stream__image" :src="item.url + item.imageUrl1" alt="capture-image" :onerror="`src='${errorImage}'`"/>
-    <div class="stream-capture__device">{{ item.equipmentName }}</div>
-    <div class="stream-capture__content">
-      <span class="stream-capture__type">{{ config.deviceType2String[item.equipmentType] }}</span>
-      <span class="stream-capture__time">{{ item.recognitionTime.split(' ')[1]}}</span>
+    <div class="stream-compare-image">
+      <img :src="item.url + item.imageUrl1" alt="">
+      <div class="img-bg"></div>
     </div>
+    <p class="stream-equipmentName">{{item.equipmentName}}</p>
+    <p class="stream-info">
+      <span class="info-equipment">{{ config.deviceType2String[item.equipmentType] }}</span>
+      <span class="info-time">{{ item.recognitionTime.split(' ')[1]}}</span>
+    </p>
   </div>
 </template>
 
@@ -39,43 +42,45 @@
 
 <style lang="scss">
  .stream-capture {
-   margin: 20px 8px;
+   margin: 20px 22px;
    font-size: 14px;
-   width: 160px;
+   width: 132px;
    height: 180px;
-   text-align: center;
-   .stream__image {
-     margin: 0 auto;
-     display: block;
-     width: 128px;
-     height: 128px;
-     margin-bottom: 10px;
-     border-radius: 10px;
+   color: #00ffff;
+   p {
+     margin: 2px 0;
    }
-   .stream-capture__device {
-     height: 20px;
-     text-align: left;
-     margin-left: 15px;
-     margin-bottom: 8px;
-   }
-   .stream-capture__content {
+   .stream-compare-image {
+     width: 130px;
+     height: 130px;
      position: relative;
-     font-size: 12px;
-     .stream-capture__type {
-       position: absolute;
-       left: 15px;
-       top: 0;
-       overflow: hidden;
-       line-height: 15px;
-       text-overflow: ellipsis;
-       white-space: nowrap;
+     overflow: hidden;
+     margin-right: 15px;
+     img {
+       width: 130px;
+       height: 130px;
      }
-     .stream-capture__time {
-       position: absolute;
-       right: 15px;
-       top: 0;
-       line-height: 15px;
-     }
+   }
+   .img-bg {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 130px;
+     height: 130px;
+     background-image: url(../../assets/image/img-bg.png);
+     background-size: 100% 100%;
+   }
+   .info-time {
+     float: right;
+   }
+   .info-equipment {
+     float: left;
+   }
+   .stream-info {
+    //  overflow: hidden;
+     line-height: 25px;
+     height: 25px;
+     clear: both;
    }
  }
 </style>
