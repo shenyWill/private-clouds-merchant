@@ -91,6 +91,7 @@
  $selected: #409eff;
  $hover: #409eff;
  .tagsview {
+   display: none;
    padding: 2px;
    margin-left: 250px;
    height: 40px;

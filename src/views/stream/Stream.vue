@@ -14,7 +14,8 @@
         </el-select>
         <i class="iconfont icon-zhankaiquanping-lan stream__fullscreen" @click="toggleFullscreen"></i>
       </div>
-      <video
+      <div class="video-box">
+        <video
         id="player"
         class="video-js vjs-default-skin vjs-fluid"
         preload
@@ -23,10 +24,11 @@
         height="720"
         data-setup="{}">
       </video>
+      </div>
     </div>
 
     <div class="stream__compare">
-      <p class="compare-title">识别记录</p>
+      <p class="compare-title"></p>
       <div class="stream__compare-list" v-if="compareList.length > 0">
         <StreamCompare
           v-for="(item, index) in compareList"
@@ -95,6 +97,7 @@
    data () {
      return {
        emptyImage: require('@/assets/image/empty.png'),
+       bgDoorImage: require('@/assets/image/background-door.png'),
        socket: null,
        player: null,
        playerConfig: {
@@ -109,7 +112,7 @@
        compareList: [], // compare data list
        isSubscribed: false,
        cameraOption: [],
-       cameraMonitorUrl: '',
+       cameraMonitorUrl: '218c211dd33449e980d26fffafe6913e',
        personDetail: {}, // 个人详情
        dialogPersonDetail: false, // 详情框是否显示
        recognitionDetailTag: true, // 滚动的tag
@@ -146,9 +149,11 @@
           this.fetchNewestCaptureData();
           this.fetchNewestCompareData();
           if (this.selectedStreaming && this.selectedStreaming !== '') {
-            this.cameraMonitorUrl = this.selectedStreaming;
+            // this.cameraMonitorUrl = this.selectedStreaming;
+             this.cameraMonitorUrl = '218c211dd33449e980d26fffafe6913e';
           } else if (this.cameraOption && this.cameraOption.length > 0) {
-            this.cameraMonitorUrl = this.cameraOption[0].equipmentId;
+            // this.cameraMonitorUrl = this.cameraOption[0].equipmentId;
+            this.cameraMonitorUrl = '218c211dd33449e980d26fffafe6913e';
           }
           this.switchCamera(this.cameraMonitorUrl);
           this.detailScroll();
@@ -168,14 +173,15 @@
          const data = JSON.parse(response.data.data);
          this.changePlayerSrc(data.rtmp);
        } else if (Number(response.data.code) === 400) {
-         this.cameraMonitorUrl = '';
+        //  this.cameraMonitorUrl = '';
+         this.cameraMonitorUrl = '218c211dd33449e980d26fffafe6913e';
          this.$message({ type: 'error', message: response.data.msg });
        } else {
          this.$message({ type: 'error', message: response.data.msg });
        }
      },
      async fetchNewestCaptureData () {
-       const response = await api.post(config.recognition.list, {limit: 9, timeType: '1'});
+       const response = await api.post(config.recognition.list, {limit: 10, timeType: '1'});
        if (Number(response.data.code) === 200) {
          const data = response.data.data.rows;
          const url = response.data.url;
@@ -187,7 +193,7 @@
      },
      async fetchNewestCompareData () {
        const response = await api.post(config.recognition.list, {
-         limit: 4,
+         limit: 3,
          timeType: '1',
          confidence: this.parameterValue});
        if (Number(response.data.code) === 200) {
@@ -321,14 +327,16 @@
      this.fetchNewestCaptureData();
      this.fetchNewestCompareData();
      if (this.selectedStreaming && this.selectedStreaming !== '') {
-       this.cameraMonitorUrl = this.selectedStreaming;
+      //  this.cameraMonitorUrl = this.selectedStreaming;
+       this.cameraMonitorUrl = '218c211dd33449e980d26fffafe6913e';
      } else if (this.cameraOption && this.cameraOption.length > 0) {
-       this.cameraMonitorUrl = this.cameraOption[0].equipmentId;
+      //  this.cameraMonitorUrl = this.cameraOption[0].equipmentId;
+      this.cameraMonitorUrl = '218c211dd33449e980d26fffafe6913e';
      }
-     if (!this.cameraOption.some(item => item.equipmentId === this.cameraMonitorUrl)) {
-       this.cameraMonitorUrl = '';
-       return;
-     };
+    //  if (!this.cameraOption.some(item => item.equipmentId === this.cameraMonitorUrl)) {
+    //   //  this.cameraMonitorUrl = '';
+    //    return;
+    //  };
      this.switchCamera(this.cameraMonitorUrl);
      this.detailScroll();
    },
@@ -353,10 +361,12 @@
    overflow: hidden;
    .stream__video-wrapper {
      margin-bottom: 15px;
-     width: 1035px;
-     border-radius: 10px;
-     background-color: #fff;
+     width: 1080px;
+     height: 685px;
      overflow: hidden;
+     background-image: url(../../assets/image/background-door.png);
+     background-size: 100% 100%;
+     position: relative;
      float: left;
      .stream__fullscreen {
        float: right;
@@ -372,20 +382,36 @@
      height: 60px;
      box-sizing: border-box;
      padding: 5px 20px;
+     display: none;
+   }
+   .video-box {
+     position: absolute;
+     overflow: hidden;
+     left: 45px;
+     top: 90px;
+     width: 990px;
+     height: 570px;
    }
    .video-js {
-     width: 1035px;
-     height: 581px;
+    //  display: none;
+    //  width: 80%;
+    //  height: 80%;
+    //  height: 561px;
      object-fit:fill;
+    //  position: absolute;
+    //  left: 40px;
+    //  top: 80px;
    }
    .stream__compare {
      position: absolute;
      right: 0;
-     left: 1050px;
-     min-width: 500px;
-     height: 641px;
-     background-color: #fff;
-     border-radius: 10px;
+     left: 1100px;
+     width: 750px;
+     height: 685px;
+     box-sizing: border-box;
+     padding: 45px;
+     background-image: url(../../assets/image/recognition-record.png);
+     background-size: 100% 100%;
      overflow: hidden;
      .compare-title {
        height: 60px;

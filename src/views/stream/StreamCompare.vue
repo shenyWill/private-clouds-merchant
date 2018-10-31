@@ -10,8 +10,10 @@
       <img
         v-if="item.libraryTypeName === '黑名单'"
         :src="item.url + item.imageUrl2"
-        class="stream-compare__image border-red" />
-      <img v-else :src="item.url + item.imageUrl2" class="stream-compare__image" />
+        class="stream-compare__image border-red"
+        :onerror="`src='${errorImage}'`"
+         />
+      <img v-else :src="item.url + item.imageUrl2" class="stream-compare__image" :onerror="`src='${errorImage}'`"/>
     </span>
     <span class="stream-compare__image-wrapper">
       <span
@@ -23,8 +25,10 @@
       <img
         v-if="item.libraryTypeName === '黑名单'"
         :src="item.url + item.imageUrl1"
-        class="stream-compare__image border-red" />
-      <img v-else :src="item.url + item.imageUrl1" class="stream-compare__image" />
+        class="stream-compare__image border-red"
+        :onerror="`src='${errorImage}'`"
+         />
+      <img v-else :src="item.url + item.imageUrl1" class="stream-compare__image" :onerror="`src='${errorImage}'`"/>
     </span>
     <div class="stream-compare__content">
       <div class="stream-compare__device">{{ item.equipmentName }}</div>
@@ -34,22 +38,6 @@
         <span class="strem-compare__desc">{{ item.describe }}</span>
       </div>
       <div class="stream-compare__time">识别时间:{{ item.recognitionTime.split(' ')[1] }}</div>
-      <div class="stream-compare__tag">
-        <el-tag
-          class="stream-compare__tag-red"
-          v-if="item.libraryTypeName === '黑名单'"
-          @click.native="showPersonDetail(item.personnelId)">
-          人员信息
-        </el-tag>
-        <el-tag v-else @click.native="showPersonDetail(item.personnelId)">人员信息</el-tag>
-        <el-tag
-          class="stream-compare__tag-red"
-          v-if="item.libraryTypeName === '黑名单'"
-          @click.native="showRecognitionDetail(item.personnelId, true)">
-          识别记录
-        </el-tag>
-        <el-tag v-else @click.native="showRecognitionDetail(item.personnelId, true)">识别记录</el-tag>
-      </div>
     </div>
   </div>
 </template>
@@ -67,6 +55,7 @@ export default {
   },
   data () {
     return {
+      errorImage: require('@/assets/image/timg.jpg')
     };
   },
   methods: {
@@ -84,9 +73,14 @@ export default {
 <style lang="scss">
  .stream-compare {
    position: relative;
-   padding-bottom: 8px;
-   border-top: 1px solid lightgray;
+   padding-bottom: 35px;
+   border-top: 1px solid #00ffff;
    overflow: hidden;
+   padding-top: 20px;
+   &:first-child {
+     border: 0;
+     padding-top: 0;
+   }
    .stream-compare__image-wrapper {
      margin-top: 20px;
      position: relative;

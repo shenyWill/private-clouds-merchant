@@ -86,7 +86,7 @@
 
 <style lang="scss">
  .app-main {
-   margin-left: 250px;
+  //  margin-left: 250px;
    transition: all .2s;
  }
  .app-main__collapse {

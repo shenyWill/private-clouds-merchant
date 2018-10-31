@@ -1,12 +1,13 @@
 <template>
   <div :class="['navbar', isCollapse ? 'navbar__collapse' : '']">
-    <el-menu mode="horizontal">
+    <!-- <el-menu mode="horizontal">
       <i class="iconfont icon-zhediecaidanlan-lan navbar__btn" @click="toggleMenu" v-if="isCollapse"></i>
       <i class="iconfont icon-zhankaicaidanlan-lan navbar__btn" @click="toggleMenu" v-else></i>
       <div class="navbar__userpane">
         <Userpane></Userpane>
       </div>
-    </el-menu>
+    </el-menu> -->
+    <img :src="bgTopImage" alt="" class="bg-image">
   </div>
 </template>
 
@@ -19,7 +20,9 @@
      Userpane
    },
    data () {
-     return {};
+     return {
+       bgTopImage: require('@/assets/image/bg-top.png')
+     };
    },
    computed: {
      ...mapGetters([
@@ -37,15 +40,16 @@
 <style lang="scss" scoped>
  .navbar {
    position: relative;
-   height: 60px;
-   max-height: 60px;
-   line-height: 60px;
-   margin-left: 250px;
-   text-align: left;
+  //  margin-left: 250px;
+  //  text-align: center;
 
-   background-color: #3b3b3b;
+  //  background-color: #3b3b3b;
    z-index: 999;
-   transition: all .2s;
+  //  transition: all .2s;
+  padding-top: 10px;
+   .bg-image {
+     width: 98%;
+   }
    .navbar__btn {
      position: relative;
      left: 20px;

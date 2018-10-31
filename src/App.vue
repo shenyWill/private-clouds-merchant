@@ -18,6 +18,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   height: 100%;
+  background-color: #0b0d26;
 }
 html {
   background-color: #eeeeee;

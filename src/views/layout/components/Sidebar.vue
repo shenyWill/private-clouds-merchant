@@ -46,6 +46,7 @@
 
 <style lang="scss">
  .sidebar {
+   display: none;
    position: fixed;
    top: 0;
    bottom: 0;
