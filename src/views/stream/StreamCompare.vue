@@ -1,44 +1,6 @@
 <template>
-  <div class="stream-compare">
-    <span class="stream-compare__image-wrapper">
-      <span
-        v-if="item.libraryTypeName === '黑名单'"
-        class="stream-compare__image-type background-red stream-compare__image-score-red">
-        {{ item.libraryTypeName }}
-      </span>
-      <span v-else class="stream-compare__image-type">{{ item.libraryTypeName }}</span>
-      <img
-        v-if="item.libraryTypeName === '黑名单'"
-        :src="item.url + item.imageUrl2"
-        class="stream-compare__image border-red"
-        :onerror="`src='${errorImage}'`"
-         />
-      <img v-else :src="item.url + item.imageUrl2" class="stream-compare__image" :onerror="`src='${errorImage}'`"/>
-    </span>
-    <span class="stream-compare__image-wrapper">
-      <span
-        v-if="item.libraryTypeName === '黑名单'"
-        class="stream-compare__image-score background-red stream-compare__image-score-red">
-        {{ parseInt(item.confidence) }}%
-      </span>
-      <span v-else class="stream-compare__image-score">{{ parseInt(item.confidence) }}%</span>
-      <img
-        v-if="item.libraryTypeName === '黑名单'"
-        :src="item.url + item.imageUrl1"
-        class="stream-compare__image border-red"
-        :onerror="`src='${errorImage}'`"
-         />
-      <img v-else :src="item.url + item.imageUrl1" class="stream-compare__image" :onerror="`src='${errorImage}'`"/>
-    </span>
-    <div class="stream-compare__content">
-      <div class="stream-compare__device">{{ item.equipmentName }}</div>
-      <div class="stream-compare__person">
-        <span class="stream-compare__name">{{ item.personnelName }}</span>
-        <span> | </span>
-        <span class="strem-compare__desc">{{ item.describe }}</span>
-      </div>
-      <div class="stream-compare__time">识别时间:{{ item.recognitionTime.split(' ')[1] }}</div>
-    </div>
+  <div :class="['stream-compare', item.libraryTypeName=='黑名单' ? 'readColor' : '']">
+    {{item}}
   </div>
 </template>
 
@@ -80,90 +42,6 @@ export default {
    &:first-child {
      border: 0;
      padding-top: 0;
-   }
-   .stream-compare__image-wrapper {
-     margin-top: 20px;
-     position: relative;
-     display: inline-block;
-     width: 108px;
-     height: 108px;
-     margin-left: 20px;
-     .stream-compare__image {
-       display: inline-block;
-       width: 108px;
-       height: 108px;
-       border-radius: 10px;
-     }
-     .stream-compare__image-type {
-       position: absolute;
-       padding: 5px;
-       min-width: 40px;
-       top: 0;
-       right: 0;
-       font-size: 14px;
-       color: white;
-       text-align: right;
-       border-radius: 0 10px 0 10px;
-       background-color: rgba(74, 73, 72, 0.5);
-     }
-     .stream-compare__image-score {
-       position: absolute;
-       padding: 5px;
-       min-width: 40px;
-       top: 0;
-       right: 0;
-       font-size: 14px;
-       color: white;
-       text-align: right;
-       border-radius: 0 10px 0 10px;
-       background-color: rgba(74, 73, 72, 0.5);
-     }
-     .stream-compare__image-score-red {
-       right: -3px;
-     }
-     .background-red {
-       background-color: #ff0000;
-       opacity: 0.8;
-     }
-     .border-red {
-       border: 2px solid #ff0000;
-     }
-   }
-   .stream-compare__content {
-     position: absolute;
-     top: 20px;
-     left: 280px;
-     display: inline-block;
-     font-size: 14px;
-     .stream-compare__device {
-       font-weight: bold;
-       margin-bottom: 5px;
-     }
-     .stream-compare__person {
-       margin-bottom: 8px;
-       .stream-compare__name {
-         font-weight: bold;
-       }
-     }
-     .stream-compare__tag .el-tag {
-       background-color: #008aff;
-       color: white;
-       &:hover {
-         cursor: pointer;
-       }
-     }
-     .stream-compare__tag .stream-compare__tag-red {
-       background-color: #ff0000;
-       border: none;
-     }
-     .stream-compare__time {
-       margin-bottom: 5px;
-       .el-tag {
-         &:hover {
-           cursor: pointer;
-         }
-       }
-     }
    }
  }
 </style>
