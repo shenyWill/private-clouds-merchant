@@ -116,7 +116,7 @@
           <el-input v-model="deviceForm.equipmentName" placeholder="请输入设备名称"></el-input>
         </el-form-item>
         <el-form-item label="设备种类" prop="equipmentType">
-          <el-select v-model="deviceForm['equipmentType']" placeholder="请选择">
+          <el-select v-model="deviceForm['equipmentType']" placeholder="请选择"  @change="changeEquipmentAddType">
             <el-option
               v-for="item in config.deviceType"
               :key="item.value"
@@ -477,6 +477,9 @@
            return false;
          }
        });
+     },
+     changeEquipmentAddType () {
+       this.$refs['deviceForm'].clearValidate(['serialNo', 'ipAddress', 'url', 'port', 'loginName']);
      },
      // edit region request
      editRegion () {

@@ -104,7 +104,7 @@
           <el-input v-model="addForm.equipmentName" placeholder="请填写设备名称"></el-input>
         </el-form-item>
         <el-form-item label="设备种类" prop="equipmentType">
-          <el-select v-model="addForm['equipmentType']" placeholder="请选择">
+          <el-select v-model="addForm['equipmentType']" placeholder="请选择"  @change="changeEquipmentAddType">
             <el-option
               v-for="item in config.deviceType"
               :key="item.value"
@@ -529,7 +529,10 @@
        this.$refs['editForm'].clearValidate(['ipAddress', 'url', 'port']);
      },
      changeEquipmentEditType () {
-       this.$refs['editForm'].clearValidate(['serialNo']);
+       this.$refs['editForm'].clearValidate(['serialNo', 'ipAddress', 'url', 'port', 'loginName']);
+     },
+     changeEquipmentAddType () {
+       this.$refs['addForm'].clearValidate(['serialNo', 'ipAddress', 'url', 'port', 'loginName']);
      },
      // search form el-select change event
      changeAddressSearchType (val) {

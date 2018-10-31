@@ -58,7 +58,6 @@ export default {
     }
     .detail-info-key {
         font-weight: bold;
-        font-size: 16px;
         position: absolute;
         left: 0;
     }
