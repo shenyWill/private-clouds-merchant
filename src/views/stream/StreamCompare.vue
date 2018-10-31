@@ -15,6 +15,7 @@
       </p>
       <p class="stream-compare-confidence">相 似 度：{{item.confidence.substring(0,2)}}%</p>
       <p class="stream-compare-confidence">人员类型：{{item.libraryTypeName}}</p>
+      <p class="stream-compare-time">{{ item.recognitionTime.split(' ')[1]}}</p>
     </div>
   </div>
 </template>
@@ -82,7 +83,7 @@ export default {
      background-size: 100% 100%;
    }
    .stream-compare-info {
-     width: 300px;
+     width: 350px;
      height: 125px;
      position: relative;
      float: left;
@@ -104,6 +105,12 @@ export default {
    }
    .stream-compare-confidence {
      margin: 9px 0;
+   }
+   .stream-compare-time {
+     position: absolute;
+     right: 0;
+     top: 5px;
+     margin: 0;
    }
  }
 </style>
