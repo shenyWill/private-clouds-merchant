@@ -356,7 +356,7 @@
 <style lang="scss">
  .stream {
    position: relative;
-   margin: 30px;
+   margin: 30px 30px 20px 30px;
    text-align: left;
    overflow: hidden;
    .stream__video-wrapper {

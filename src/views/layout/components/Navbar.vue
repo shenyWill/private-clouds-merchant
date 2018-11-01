@@ -46,7 +46,7 @@
   //  background-color: #3b3b3b;
    z-index: 999;
   //  transition: all .2s;
-  padding-top: 10px;
+  padding-top: 5px;
    .bg-image {
      width: 96%;
    }

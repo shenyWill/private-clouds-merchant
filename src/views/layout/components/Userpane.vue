@@ -126,7 +126,7 @@
        const response = await api.post(config.system.update, data);
        if (Number(response.data.code) === 200) {
          this.$message({ type: 'success', message: '更新成功' });
-         this.setParameterValue(newVal);
+         this.setParameterValue(73);
          this.settingDialog = false;
        } else {
          this.$message({ type: 'error', message: response.data.msg });
@@ -149,7 +149,7 @@
              this.setBlacklistAlert(this.alertDialog);
            } else if (item.configureType === '4') {
              this.alertParameter = Number(item.parameterValue);
-             this.setParameterValue(this.alertParameter);
+             this.setParameterValue(73);
            }
          });
        } else {

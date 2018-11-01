@@ -22,6 +22,6 @@ export default {
   font-size: 0;
 }
 html {
-  background-color: #eeeeee;
+  background-color: #0b0d26;
 }
 </style>
