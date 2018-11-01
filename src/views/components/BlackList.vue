@@ -110,7 +110,7 @@
    },
    mounted () {
      this.startTimer();
-     if (this.blacklistSound) this.$refs['audio'].play();
+    //  if (this.blacklistSound) this.$refs['audio'].play();
    }
  };
 </script>

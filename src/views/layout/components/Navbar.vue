@@ -1,12 +1,12 @@
 <template>
   <div :class="['navbar', isCollapse ? 'navbar__collapse' : '']">
-    <!-- <el-menu mode="horizontal">
+    <el-menu mode="horizontal" style="display:none">
       <i class="iconfont icon-zhediecaidanlan-lan navbar__btn" @click="toggleMenu" v-if="isCollapse"></i>
       <i class="iconfont icon-zhankaicaidanlan-lan navbar__btn" @click="toggleMenu" v-else></i>
       <div class="navbar__userpane">
         <Userpane></Userpane>
       </div>
-    </el-menu> -->
+    </el-menu>
     <img :src="bgTopImage" alt="" class="bg-image">
   </div>
 </template>
