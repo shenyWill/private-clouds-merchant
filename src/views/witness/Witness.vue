@@ -64,7 +64,7 @@
               <span class="id-info">身份证号：{{item.personnelIdnum}}</span>
           </p>
           <p class="witness-card-result">
-            <span class="result-success">比对结果：<span :class="item.recognitionType==0 ? 'is-success': 'is-error'">{{ item.recognitionType == 0 ? '比对成功' : '比对失败' }}</span> </span>
+            <span class="result-success">比对结果：<span :class="item.recognitionType==1 ? 'is-success': 'is-error'">{{ item.recognitionType == 1 ? '比对成功' : '比对失败' }}</span> </span>
             <span class="result-equipment">设备名称： {{item.equipmentName}}</span>
             <span class="result-time">比对时间：{{item.recognitionTime}}</span>
           </p>

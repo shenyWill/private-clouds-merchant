@@ -657,6 +657,10 @@
        if (Number(response.data.code) === 200) {
          this.$message({ type: 'success', message: response.data.msg });
          this.fetchData({ offset: this.offset, limit: this.limit, ...this.searchForm });
+         const getUserResponse = await api.post(config.personCenter.list, {});
+         if (Number(getUserResponse.data.code) === 200) {
+          this.login(getUserResponse.data.user);
+         }
        } else {
          this.$message({ type: 'error', message: response.data.msg });
        }

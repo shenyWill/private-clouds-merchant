@@ -13,8 +13,8 @@
         </p>
         <p class="witness-detail-areaName">{{witnessDetail.areaName}}</p>
         <p class="witness-detail-recognitionTime">{{witnessDetail.recognitionTime}}</p>
-        <p :class="witnessDetail.recognitionType == 0 ? 'witness-detail-success': 'witness-detail-error'">
-            <i :class="witnessDetail.recognitionType == 0 ? 'el-icon-success' : 'el-icon-error'">{{witnessDetail.recognitionType == 0 ? ' 比对成功' : ' 比对失败'}}</i>
+        <p :class="witnessDetail.recognitionType == 1 ? 'witness-detail-success': 'witness-detail-error'">
+            <i :class="witnessDetail.recognitionType == 1 ? 'el-icon-success' : 'el-icon-error'">{{witnessDetail.recognitionType == 1 ? ' 比对成功' : ' 比对失败'}}</i>
         </p>
         <p class="witness-detail-info">
             <span class="witness-detail-info-key">姓　　名：</span>
@@ -27,6 +27,10 @@
         <p class="witness-detail-info">
             <span class="witness-detail-info-key">名　　族：</span>
             <span class="witness-detail-info-val">{{witnessDetail.personnelNation}}</span>
+        </p>
+        <p class="witness-detail-info">
+            <span class="witness-detail-info-key">设备名称：</span>
+            <span class="witness-detail-info-val">{{witnessDetail.equipmentName}}</span>
         </p>
         <p class="witness-detail-info">
             <span class="witness-detail-info-key">出生年月：</span>

@@ -209,6 +209,7 @@
                type: 'error',
                message: response.data.msg
              });
+             this.fullscreenLoading = false;
            }
            // image has one face
            if (Number(response.data.data.faceNum) === 1) {

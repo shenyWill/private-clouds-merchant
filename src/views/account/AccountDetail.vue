@@ -10,6 +10,10 @@
             <span class="detail-info-key">账号:</span>
             <span class="detail-info-val">{{accountDetailObj.username}}</span>
         </p>
+        <p class="account-detail-info" v-if="accountDetailObj.mobile">
+            <span class="detail-info-key">电话:</span>
+            <span class="detail-info-val">{{accountDetailObj.mobile}}</span>
+        </p>
         <p class="account-detail-info">
             <span class="detail-info-key">密码:</span>
             <span class="detail-info-val">{{accountDetailObj.realPassword}}</span>
