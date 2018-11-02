@@ -1,5 +1,6 @@
  <template>
   <div class="stream">
+    <img :src="bgTopImage" alt="" class="bg-image">
     <div class="stream__video-wrapper">
       <div class="camera-title">
         <el-select
@@ -96,6 +97,7 @@
    name: 'Stream',
    data () {
      return {
+       bgTopImage: require('@/assets/image/bg-top.png'),
        emptyImage: require('@/assets/image/empty.png'),
        bgDoorImage: require('@/assets/image/background-door.png'),
        socket: null,
@@ -356,9 +358,14 @@
 <style lang="scss">
  .stream {
    position: relative;
-   margin: 30px 30px 20px 30px;
+   margin: 0 30px 20px 30px;
    text-align: left;
    overflow: hidden;
+   .bg-image {
+     width: 96%;
+     display: block;
+     margin: 5px auto 30px auto;
+   }
    .stream__video-wrapper {
      margin-bottom: 15px;
      margin-left: 30px;
