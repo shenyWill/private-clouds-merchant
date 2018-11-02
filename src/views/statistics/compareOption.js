@@ -42,7 +42,7 @@ export default {
     series: [{
       name: '蒸发量',
       type: 'bar',
-      data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4],
+      data: [60235, 30212, 21250, 36012, 58210, 36520, 25820, 36952, 18250, 42512, 32652],
       markPoint: {
         data: [{
             type: 'max',
@@ -57,7 +57,8 @@ export default {
       barWidth: 12
     }],
     grid: {
-      top: '30px'
+      top: '30px',
+      left: '45px'
     }
   }
 };

@@ -62,7 +62,7 @@ export default {
         }
       },
       data: [{
-          value: [97, 42, 88, 94, 90],
+          value: [38, 96, 88, 35, 8],
           name: '舍普琴科'
         }
       ]

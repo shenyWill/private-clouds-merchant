@@ -55,7 +55,6 @@ export default {
     },
     subscribeSocket () {
       if (this.socketConnected) {
-        // socket connected
         this.initSocket(config.socketURL);
       } else {
         this.$store.subscribe((mutation, state) => {
@@ -71,6 +70,15 @@ export default {
          const data = JSON.parse(response.body);
          this.snapTotal = data.snapTotal;
          this.compareTotal = data.compareTotal;
+         var randomNum = parseInt(Math.random() * 10);
+         if (randomNum < 3) {
+             compareOption.option.series[0].data[0] += 1;
+         } else if (randomNum < 6) {
+             compareOption.option.series[0].data[4] += 1;
+         } else {
+             compareOption.option.series[0].data[randomNum] += 1;
+         }
+         this.drawMap('compare-map', compareOption.option);
        });
      }
   },
@@ -120,11 +128,11 @@ export default {
     background-image: url(../../assets/image/compare-bg.png);
   }
   .recognition-map {
-    width: 485px;
+    width: 465px;
     height: 380px;
   }
   .compare-map {
-    width: 475px;
+    width: 470px;
     height: 370px;
   }
   .age-map {

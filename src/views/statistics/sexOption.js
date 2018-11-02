@@ -35,11 +35,11 @@ export default {
       radius: '65%',
       center: ['45%', '50%'],
       data: [{
-          value: 39,
+          value: 49,
           name: '白名单'
         },
         {
-          value: 10,
+          value: 8,
           name: '黑名单'
         },
         {
@@ -47,11 +47,11 @@ export default {
           name: '其他'
         },
         {
-          value: 20,
+          value: 50,
           name: '访客'
         },
         {
-          value: 22,
+          value: 12,
           name: 'VIP'
         }
       ],
