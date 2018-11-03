@@ -76,7 +76,8 @@
            '品牌名称': this.device.brand,
            '型号系列': this.device.brandseries,
            '播放地址': this.device.mediaUrl,
-           '设备URL': this.device.url
+           '设备URL': this.device.url,
+           'SN码': this.device.serialNo
          };
        }
      }

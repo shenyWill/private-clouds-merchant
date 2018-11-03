@@ -267,7 +267,7 @@ export default {
     }
   },
   async mounted () {
-    this.parameterValue && this.responseAPI({limit: 10, offset: 0, confidence: this.parameterValue});
+    (this.parameterValue !== null) && this.responseAPI({limit: 10, offset: 0, confidence: this.parameterValue});
     this.user && (this.equipmentArr = this.user.equipmentList);
     let databaseRes = await api.post(config.database.typeList, {});
     if (Number(databaseRes.data.code) === 200) {

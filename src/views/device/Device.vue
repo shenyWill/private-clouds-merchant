@@ -229,7 +229,7 @@
       width="25%"
       :visible.sync="detailDialog">
       <div class="dialog__content">
-        <div class="dialog__content-item" v-for="(value, key) in deviceDetail" :key="key">
+        <div class="dialog__content-item" v-for="(value, key) in deviceDetail" :key="key" v-if="value">
           <span class="dialog__content-key">{{ key }}:</span>
           <span :title="value" class="dialog__content-value">{{ value }}</span>
         </div>
