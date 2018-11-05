@@ -114,7 +114,7 @@
        compareList: [], // compare data list
        isSubscribed: false,
        cameraOption: [],
-       cameraMonitorUrl: '218c211dd33449e980d26fffafe6913e',
+       cameraMonitorUrl: '66de5e6295334dc9ac556242abab5a45',
        personDetail: {}, // 个人详情
        dialogPersonDetail: false, // 详情框是否显示
        recognitionDetailTag: true, // 滚动的tag
@@ -152,10 +152,10 @@
           this.fetchNewestCompareData();
           if (this.selectedStreaming && this.selectedStreaming !== '') {
             // this.cameraMonitorUrl = this.selectedStreaming;
-             this.cameraMonitorUrl = '218c211dd33449e980d26fffafe6913e';
+             this.cameraMonitorUrl = '66de5e6295334dc9ac556242abab5a45';
           } else if (this.cameraOption && this.cameraOption.length > 0) {
             // this.cameraMonitorUrl = this.cameraOption[0].equipmentId;
-            this.cameraMonitorUrl = '218c211dd33449e980d26fffafe6913e';
+            this.cameraMonitorUrl = '66de5e6295334dc9ac556242abab5a45';
           }
           this.switchCamera(this.cameraMonitorUrl);
           this.detailScroll();
@@ -176,7 +176,7 @@
          this.changePlayerSrc(data.rtmp);
        } else if (Number(response.data.code) === 400) {
         //  this.cameraMonitorUrl = '';
-         this.cameraMonitorUrl = '218c211dd33449e980d26fffafe6913e';
+         this.cameraMonitorUrl = '66de5e6295334dc9ac556242abab5a45';
          this.$message({ type: 'error', message: response.data.msg });
        } else {
          this.$message({ type: 'error', message: response.data.msg });
@@ -213,10 +213,10 @@
        this.socket.subscribe('/face/recognition', response => {
          const data = JSON.parse(response.body);
          this.captureList.unshift(data);
-         if (data.timeType === '1' && Number(data.confidence) > this.parameterValue) this.compareList.unshift(data);
-         if (this.captureList.length > 9) {
+         if (this.captureList.length > 10) {
            this.captureList.pop();
          }
+         if (data.timeType === '1' && Number(data.confidence) > this.parameterValue) this.compareList.unshift(data);
          if (this.compareList.length > 3) {
            this.compareList.pop();
          }
@@ -323,23 +323,23 @@
    },
    async mounted () {
      this.initPlayer({ techOrder: ['flash', 'html5'] });
+     this.switchCamera(this.cameraMonitorUrl);
      if (!this.user) return;
      this.cameraOption = this.user.equipmentList;
      if (!this.cameraOption.length) return;
      this.fetchNewestCaptureData();
      this.fetchNewestCompareData();
-     if (this.selectedStreaming && this.selectedStreaming !== '') {
-      //  this.cameraMonitorUrl = this.selectedStreaming;
-       this.cameraMonitorUrl = '218c211dd33449e980d26fffafe6913e';
-     } else if (this.cameraOption && this.cameraOption.length > 0) {
-      //  this.cameraMonitorUrl = this.cameraOption[0].equipmentId;
-      this.cameraMonitorUrl = '218c211dd33449e980d26fffafe6913e';
-     }
-    //  if (!this.cameraOption.some(item => item.equipmentId === this.cameraMonitorUrl)) {
+    //  if (this.selectedStreaming && this.selectedStreaming !== '') {
+    //   //  this.cameraMonitorUrl = this.selectedStreaming;
+    //    this.cameraMonitorUrl = '66de5e6295334dc9ac556242abab5a45';
+    //  } else if (this.cameraOption && this.cameraOption.length > 0) {
+    //   //  this.cameraMonitorUrl = this.cameraOption[0].equipmentId;
+    //   this.cameraMonitorUrl = '66de5e6295334dc9ac556242abab5a45';
+    //  }
+    // //  if (!this.cameraOption.some(item => item.equipmentId === this.cameraMonitorUrl)) {
     //   //  this.cameraMonitorUrl = '';
     //    return;
     //  };
-     this.switchCamera(this.cameraMonitorUrl);
      this.detailScroll();
    },
    beforeRouteLeave (to, from, next) {
