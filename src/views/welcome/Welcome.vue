@@ -58,7 +58,7 @@ export default {
     initPlayer (config) {
       videojs.options.flash.swf = require('@/assets/VideoJS.swf');
       this.player = videojs('player', config);
-      this.player.src('rtmp://172.16.19.150:1935/live/5444b20a0bc499a5');
+      this.player.src('rtmp://172.16.19.150:1935/live/25ec1f598bf4815b');
       this.player.load();
       this.player.play();
     },
@@ -78,6 +78,8 @@ export default {
        this.socket.subscribe('/face/recognition', response => {
          const data = JSON.parse(response.body);
         //  if (this.recordList.some(item => item.personnelId === data.personnelId)) return;
+         if (data.equipmentId !== '86af24e5b7904dbd8ad1493b085c5aa2') return;
+         if (data.confidence < 73) return;
          if (this.recordList.length > 3) {
              this.recordList.shift();
          }

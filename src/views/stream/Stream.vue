@@ -114,7 +114,7 @@
        compareList: [], // compare data list
        isSubscribed: false,
        cameraOption: [],
-       cameraMonitorUrl: '66de5e6295334dc9ac556242abab5a45',
+       cameraMonitorUrl: 'e96cab391b384884b20c478b38ab40b4',
        personDetail: {}, // 个人详情
        dialogPersonDetail: false, // 详情框是否显示
        recognitionDetailTag: true, // 滚动的tag
@@ -152,10 +152,10 @@
           this.fetchNewestCompareData();
           if (this.selectedStreaming && this.selectedStreaming !== '') {
             // this.cameraMonitorUrl = this.selectedStreaming;
-             this.cameraMonitorUrl = '66de5e6295334dc9ac556242abab5a45';
+             this.cameraMonitorUrl = 'e96cab391b384884b20c478b38ab40b4';
           } else if (this.cameraOption && this.cameraOption.length > 0) {
             // this.cameraMonitorUrl = this.cameraOption[0].equipmentId;
-            this.cameraMonitorUrl = '66de5e6295334dc9ac556242abab5a45';
+            this.cameraMonitorUrl = 'e96cab391b384884b20c478b38ab40b4';
           }
           this.switchCamera(this.cameraMonitorUrl);
           this.detailScroll();
@@ -176,7 +176,7 @@
          this.changePlayerSrc(data.rtmp);
        } else if (Number(response.data.code) === 400) {
         //  this.cameraMonitorUrl = '';
-         this.cameraMonitorUrl = '66de5e6295334dc9ac556242abab5a45';
+         this.cameraMonitorUrl = 'e96cab391b384884b20c478b38ab40b4';
          this.$message({ type: 'error', message: response.data.msg });
        } else {
          this.$message({ type: 'error', message: response.data.msg });
@@ -331,10 +331,10 @@
      this.fetchNewestCompareData();
     //  if (this.selectedStreaming && this.selectedStreaming !== '') {
     //   //  this.cameraMonitorUrl = this.selectedStreaming;
-    //    this.cameraMonitorUrl = '66de5e6295334dc9ac556242abab5a45';
+    //    this.cameraMonitorUrl = 'e96cab391b384884b20c478b38ab40b4';
     //  } else if (this.cameraOption && this.cameraOption.length > 0) {
     //   //  this.cameraMonitorUrl = this.cameraOption[0].equipmentId;
-    //   this.cameraMonitorUrl = '66de5e6295334dc9ac556242abab5a45';
+    //   this.cameraMonitorUrl = 'e96cab391b384884b20c478b38ab40b4';
     //  }
     // //  if (!this.cameraOption.some(item => item.equipmentId === this.cameraMonitorUrl)) {
     //   //  this.cameraMonitorUrl = '';

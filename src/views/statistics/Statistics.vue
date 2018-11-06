@@ -100,7 +100,7 @@ export default {
   font-size: 16px;
   background: url(../../assets/image/statistics-bg.png) no-repeat center;
   background-size: 100% 100%;
-  margin: 20px 30px;
+  margin: 10px 30px;
   // left
   .statistics-left,
   .statistics-right {
@@ -149,7 +149,7 @@ export default {
     height: 950px;
     overflow: hidden;
     float: left;
-    margin: 80px 0 20px 10px;
+    margin: 80px 0 20px 20px;
   }
   .statistics-center-map {
     width: 98%;

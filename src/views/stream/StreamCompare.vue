@@ -83,7 +83,7 @@ export default {
      background-size: 100% 100%;
    }
    .stream-compare-info {
-     width: 350px;
+     width: 340px;
      height: 125px;
      position: relative;
      float: left;
