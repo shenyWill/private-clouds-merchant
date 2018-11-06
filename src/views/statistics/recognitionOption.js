@@ -8,7 +8,7 @@ export default {
       trigger: 'axis'
     },
     legend: {
-      data: ['摄像头', '门禁', '警务终端', '认证机'], // 导航栏字样，与数据对应
+      data: ['摄像头', '门禁', '警务终端', '人证机'], // 导航栏字样，与数据对应
       textStyle: {
         color: '#fff'
       },
@@ -123,7 +123,7 @@ export default {
         data: [4126, 2623, 3216, 4562, 4750, 4952, 5100, 4236, 4256, 3756, 4888, 5321]
       },
       {
-        name: '认证机',
+        name: '人证机',
         type: 'line',
         symbol: 'none',
         smooth: true,

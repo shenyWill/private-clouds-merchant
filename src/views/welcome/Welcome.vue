@@ -12,7 +12,7 @@
                                 <span class="record-detail-age">{{item.age}}岁</span>
                             </p>
                             <p class="record-detail-describe">{{item.describe}}</p>
-                            <p class="record-detail-rime">比对时间：{{item.recognitionTime}}</p>
+                            <p class="record-detail-rime">比对时间：{{ item.recognitionTime.split(' ')[1]}}</p>
                         </div>
                     </div>
                 </div>
@@ -24,10 +24,10 @@
             <!-- 欢迎标语 -->
             <div class="welcome-left">
                 <div class="welcome-snap">
-                    <div class="welcome-snap-info" v-for="item in snapList" :key="item.id">
+                    <div :class="['welcome-snap-info', 'animated', snapAnimate ? 'zoomInRight' : '']" v-for="item in snapList" :key="item.id">
+                        <img class="welcome-snap-img" :src="item.url + item.imageUrl2" alt="">
                         <p class="welcome-snap-name">{{item.personnelName}} | {{item.sex == 0 ? '女' : '男'}} {{item.age}}岁</p>
                         <p class="welcome-snap-describe">{{item.describe}}</p>
-                        <img class="welcome-snap-img" :src="item.url + item.imageUrl2" alt="">
                     </div>
                 </div>
                 <div class="welcome-slogan" v-if="snapList.length">亲爱的贵宾，欢迎光临深圳华付！</div>
@@ -41,6 +41,7 @@
 <script>
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
+import '../../assets/css/animate.css';
 import config from '@/config';
 import Socket from '@/api/Socket';
 export default {
@@ -49,7 +50,8 @@ export default {
         recordList: [],
         snapList: [],
         clearSnapList: null,
-        sleepImg: require('@/assets/image/welcome-sleep-bg.gif')
+        sleepImg: require('@/assets/image/welcome-sleep-bg.gif'),
+        snapAnimate: true
     };
   },
   methods: {
@@ -79,11 +81,14 @@ export default {
          if (this.recordList.length > 3) {
              this.recordList.shift();
          }
-         this.recordList.push(data);
+         this.recordList.unshift(data);
 
          if (this.snapList.some(item => item.personnelId === data.personnelId)) return;
          if (this.snapList.length > 2) {
              this.snapList.shift();
+             this.snapAnimate = false;
+         } else {
+            this.snapAnimate = true;
          }
          this.snapList.push(data);
          if (this.clearSnapList) clearTimeout(this.clearSnapList);
@@ -101,6 +106,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import url('../../assets/css/animate.css');
 .welcome {
   position: relative;
   overflow: hidden;
@@ -188,7 +194,7 @@ export default {
     background-size: 100% 100%;
   }
   .welcome-snap {
-      width: 1150px;
+      width: 1180px;
       height: 430px;
       margin: 100px auto;
       overflow: hidden;
@@ -202,17 +208,23 @@ export default {
       background-size: 100% 100%;
       margin: 0 20px;
       text-align: left;
-      padding: 20px 25px;
+      padding: 0px 6px;
       box-sizing: border-box;
       text-indent: 20px;
   }
   .welcome-snap-name {
-      margin: 0px auto 5px auto;
-      font-size: 22px;
+      margin: 10px auto 5px 20px;
+      font-size: 24px;
+      font-weight: bold;
+  }
+  .welcome-snap-describe {
+      margin: 15px auto 5px 20px;
+      font-size: 16px;
   }
   .welcome-snap-img {
-      width: 271px;
-      height: 276px;
+      width: 270px;
+      height: 266px;
+      border-radius: 30px 30px 0 0;
   }
   .welcome-slogan {
       font-size: 60px;
