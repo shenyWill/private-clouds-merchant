@@ -4,7 +4,7 @@
       <img :src="item.url + item.imageUrl1" alt="">
       <div class="img-bg"></div>
     </div>
-    <p class="stream-equipmentName">{{item.personnelName}} | {{item.sex == 0 ? '女' : '男'}} &nbsp;&nbsp; {{item.age}}岁</p>
+    <p class="stream-equipmentName">{{item.equipmentName}} | {{item.sex == 0 ? '女' : '男'}} {{item.age}}岁</p>
     <p class="stream-info">
       <span class="info-equipment">{{ config.deviceType2String[item.equipmentType] }}</span>
       <span class="info-time">{{ item.recognitionTime.split(' ')[1]}}</span>

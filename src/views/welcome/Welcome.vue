@@ -78,7 +78,7 @@ export default {
        this.socket.subscribe('/face/recognition', response => {
          const data = JSON.parse(response.body);
         //  if (this.recordList.some(item => item.personnelId === data.personnelId)) return;
-         if (data.equipmentId !== '86af24e5b7904dbd8ad1493b085c5aa2') return;
+         if (data.equipmentId !== 'd9642a9836ba40b59b5da5744e037b41') return;
          if (data.confidence < 73) return;
          if (this.recordList.length > 3) {
              this.recordList.shift();
