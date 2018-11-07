@@ -24,7 +24,7 @@
             <!-- 欢迎标语 -->
             <div class="welcome-left">
                 <div class="welcome-snap">
-                    <div :class="['welcome-snap-info', 'animated', snapAnimate ? 'zoomInRight' : '']" v-for="item in snapList" :key="item.id">
+                    <div :class="['welcome-snap-info', 'animated', snapAnimate ? 'zoomIn' : '']" v-for="item in snapList" :key="item.id">
                         <img class="welcome-snap-img" :src="item.url + item.imageUrl2" alt="">
                         <p class="welcome-snap-name">{{item.personnelName}} | {{item.sex == 0 ? '女' : '男'}} {{item.age}}岁</p>
                         <p class="welcome-snap-describe">{{item.describe}}</p>
