@@ -14,7 +14,8 @@ module.exports = {
       '/': {
         // target: 'http://172.16.33.125:29080',
         // target: 'http://172.16.33.26:29080',
-        target: 'http://172.16.19.150:59080',
+        // target: 'http://172.16.19.150:59080',
+        target: 'http://192.168.251.16:59080',
         pathRewrite: {
         }
       }

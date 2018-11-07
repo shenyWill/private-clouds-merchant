@@ -26,7 +26,7 @@
                 <div class="welcome-snap">
                     <div :class="['welcome-snap-info', 'animated', snapAnimate ? 'zoomIn' : '']" v-for="item in snapList" :key="item.id">
                         <img class="welcome-snap-img" :src="item.url + item.imageUrl2" alt="">
-                        <p class="welcome-snap-name">{{item.personnelName}} | {{item.sex == 0 ? '女' : '男'}} {{item.age}}岁</p>
+                        <p class="welcome-snap-name">{{item.personnelName}}</p>
                         <p class="welcome-snap-describe">{{item.describe}}</p>
                     </div>
                 </div>
@@ -204,29 +204,29 @@ export default {
   }
   .welcome-snap-info {
       display: inline-block;
-      width: 340px;
+      width: 300px;
       height: 400px;
-      background: #07081b url(../../assets/image/snap-bg.png) no-repeat center;
       background-size: 100% 100%;
+      background-color: rgb(48, 61, 123);
+      border-radius: 30px;
       margin: 0 20px;
-      text-align: left;
-      padding: 0px 6px;
+      text-align: center;
       box-sizing: border-box;
-      text-indent: 20px;
+      padding-top: 50px;
   }
   .welcome-snap-name {
-      margin: 10px auto 5px 20px;
+      margin: 30px auto 5px auto;
       font-size: 24px;
       font-weight: bold;
   }
   .welcome-snap-describe {
-      margin: 15px auto 5px 20px;
+      margin: 15px auto 5px auto;
       font-size: 16px;
   }
   .welcome-snap-img {
-      width: 270px;
-      height: 266px;
-      border-radius: 30px 30px 0 0;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
   }
   .welcome-slogan {
       font-size: 60px;
