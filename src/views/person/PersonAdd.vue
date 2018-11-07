@@ -366,10 +366,16 @@
            if (newVal.personnelImgList.length > 0) {
              newVal.personnelImgList.forEach((item, index) => {
                this.$set(this.addPersonForm, `image${index + 1}`, item);
-               this[`image${index + 1}`] = newVal.url + item;
+               item && (this[`image${index + 1}`] = newVal.url + item);
                this.imageList.push(item);
              });
-             this.showImageUrl = newVal.url + newVal.personnelImgList[0];
+             if (newVal.personnelImgList[0]) {
+               this.showImageUrl = newVal.url + newVal.personnelImgList[0];
+             } else if (newVal.personnelImgList[1]) {
+               this.showImageUrl = newVal.url + newVal.personnelImgList[1];
+             } else {
+               this.showImageUrl = newVal.url + newVal.personnelImgList[2];
+             }
            };
            let startTime = newVal.disStartTime ? new Date(newVal.disStartTime.replace(new RegExp(/-/gm), '/')) : new Date();
            let endTime = newVal.disEndTime ? new Date(newVal.disEndTime.replace(new RegExp(/-/gm), '/')) : new Date();

@@ -60,7 +60,7 @@
             <i class="el-icon-more"></i>
           </el-tooltip>
           <div class="list-content">
-            <img :src="item.personnelImgList[0] && (item.url + item.personnelImgList[0])" class="person-image">
+            <img :src="item.personnelImgList[0] ? (item.url + item.personnelImgList[0]) : (item.personnelImgList[1] ? (item.url + item.personnelImgList[1]) : (item.url + item.personnelImgList[2]))" class="person-image">
             <p class="person-name">{{ item.personnelName }}</p>
             <p class="person-position">{{ item.personnelDescribe }}</p>
             <p class="person-company">{{ item.groupName }}</p>

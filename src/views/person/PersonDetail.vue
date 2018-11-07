@@ -2,7 +2,7 @@
     <div class="people-detail">
         <div class="show-people-detail" v-if="Object.keys(personDetail).length">
             <div class="people-detail-image">
-                <img :src="((personDetail.personnelImgList && personDetail.personnelImgList[0]) ? (personDetail.url + personDetail.personnelImgList[0]) : '')" alt="">
+                <img :src="((personDetail.personnelImgList && personDetail.personnelImgList[0]) ? (personDetail.url + personDetail.personnelImgList[0]) : (personDetail.personnelImgList[1] ? (personDetail.url + personDetail.personnelImgList[1]) : (personDetail.url + personDetail.personnelImgList[2])))" alt="">
                 <img :src="((personDetail.personnelImgList && personDetail.personnelImgList[0]) ? (personDetail.url + personDetail.personnelImgList[0]) : '')" alt="">
                 <img :src="((personDetail.personnelImgList && personDetail.personnelImgList[1]) ? (personDetail.url + personDetail.personnelImgList[1]) : '')" alt="">
                 <img :src="((personDetail.personnelImgList && personDetail.personnelImgList[2]) ? (personDetail.url + personDetail.personnelImgList[2]) : '')" alt="">
