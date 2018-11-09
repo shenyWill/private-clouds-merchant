@@ -48,7 +48,8 @@
           <div class="add-content" @click="addPerson">
             <i class="el-icon-plus"></i>
           </div>
-          <p class="add-text">添加新人员</p>
+          <p class="add-text" @click="addPerson">添加新人员</p>
+          <p class="add-text" @click="addMorePerson">批量添加人员</p>
           <div class="delete-all-people-card" v-if="deleteAllOperationTag"></div>
         </el-card>
       <!-- 人员列表 -->
@@ -126,6 +127,11 @@
         ref="person-add">
       </PersonAdd>
     </el-dialog>
+
+    <!-- 批量添加人员 -->
+    <el-dialog :visible.sync="dialogPersonMoreAdd" title="批量入库" custom-class="person-detail-add" width="25%" :close-on-click-modal="false">
+      <PersonAddMore ref="person-add-more" :databaseID="databaseID" :deviceList="deviceList" @closeAddMorePerson="closeAddMorePerson"></PersonAddMore>
+    </el-dialog>
   </div>
 </template>
 
@@ -133,6 +139,7 @@
  import Search from '@/views/search/Search';
  import PersonDetail from '@/views/person/PersonDetail';
  import PersonAdd from '@/views/person/PersonAdd';
+ import PersonAddMore from '@/views/person/PersonAddMore';
  import api from '@/api';
  import config from '@/config';
  import { scollTop } from '@/utils';
@@ -157,18 +164,21 @@
        currentPage: 1, // 当前页
        addOrEdit: 0, // 0--> 增加， 1--> 编辑
        editObj: {}, // 编辑人员的对象
-       emptyImg: require('@/assets/image/empty.png') // 搜索为空时显示
+       emptyImg: require('@/assets/image/empty.png'), // 搜索为空时显示
+       dialogPersonMoreAdd: false // 批量添加人员弹出框
      };
    },
    components: {
      Search,
      PersonDetail,
-     PersonAdd
+     PersonAdd,
+     PersonAddMore
    },
    computed: {
      ...mapGetters([
        'selectedPersonDatabase',
-       'user'
+       'user',
+       'morePersonTranstion'
      ])
    },
    methods: {
@@ -320,6 +330,20 @@
            this.$router.push('/person/database');
          });
        }
+     },
+     addMorePerson () {
+      //  if (this.morePersonTranstion) {
+      //    this.$message({
+      //      type: 'warning',
+      //      message: '正在批量入库中！'
+      //    });
+      //    return;
+      //  }
+       this.dialogPersonMoreAdd = true;
+       this.$refs['person-add-more'] && this.$refs['person-add-more'].clear();
+     },
+     closeAddMorePerson () {
+       this.dialogPersonMoreAdd = false;
      }
    },
    async mounted () {

@@ -5,6 +5,7 @@ const app = {
     blacklistSound: false, // blacklist alert sound
     sidebarToggle: false,
     parameterValue: null,
+    morePersonTranstion: false,
     selectedRegion: '',
     selectedPersonDatabase: '',
     selectedStreaming: '' // Stream module user selected streaming option
@@ -27,6 +28,9 @@ const app = {
     },
     SET_PARAMETER_VALUE (state, value) {
       state.parameterValue = value;
+    },
+    SET_PERSON_TRANSTION (state, value) {
+      state.morePersonTranstion = value;
     },
     SET_BLACKLIST_SOUND (state, value) {
       state.blacklistSound = value;
@@ -57,6 +61,9 @@ const app = {
     setParameterValue ({ commit }, value) {
       commit('SET_PARAMETER_VALUE', value);
     },
+    setPersonTranstion ({ commit }, value) {
+      commit('SET_PERSON_TRANSTION', value);
+    },
     setBlacklistSound ({ commit }, value) {
       commit('SET_BLACKLIST_SOUND', value);
     },
@@ -74,6 +81,7 @@ const app = {
     blacklistAlert: state => state.blacklistAlert,
     blacklistSound: state => state.blacklistSound,
     parameterValue: state => state.parameterValue,
+    morePersonTranstion: state => state.morePersonTranstion,
     selectedStreaming: state => state.selectedStreaming,
     selectedPersonDatabase: state => state.selectedPersonDatabase
   }

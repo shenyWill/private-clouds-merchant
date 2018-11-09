@@ -14,7 +14,7 @@
             class="avatar-uploader-first"
             action=""
             :auto-upload="false"
-            :show-file-list="false"
+            :show-file-list="true"
             :on-change="handleFirstImageChange">
             <img
               :src="image1"
