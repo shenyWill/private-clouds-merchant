@@ -332,13 +332,13 @@
        }
      },
      addMorePerson () {
-      //  if (this.morePersonTranstion) {
-      //    this.$message({
-      //      type: 'warning',
-      //      message: '正在批量入库中！'
-      //    });
-      //    return;
-      //  }
+       if (this.morePersonTranstion) {
+         this.$message({
+           type: 'warning',
+           message: '正在批量入库中！'
+         });
+         return;
+       }
        this.dialogPersonMoreAdd = true;
        this.$refs['person-add-more'] && this.$refs['person-add-more'].clear();
      },

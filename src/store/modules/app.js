@@ -6,6 +6,7 @@ const app = {
     sidebarToggle: false,
     parameterValue: null,
     morePersonTranstion: false,
+    tempBatchNo: 0,
     selectedRegion: '',
     selectedPersonDatabase: '',
     selectedStreaming: '' // Stream module user selected streaming option
@@ -31,6 +32,9 @@ const app = {
     },
     SET_PERSON_TRANSTION (state, value) {
       state.morePersonTranstion = value;
+    },
+    SET_TEMP_BATCH_NO (state, value) {
+      state.tempBatchNo = value;
     },
     SET_BLACKLIST_SOUND (state, value) {
       state.blacklistSound = value;
@@ -64,6 +68,9 @@ const app = {
     setPersonTranstion ({ commit }, value) {
       commit('SET_PERSON_TRANSTION', value);
     },
+    setTempBatchNo ({ commit }, value) {
+      commit('SET_TEMP_BATCH_NO', value);
+    },
     setBlacklistSound ({ commit }, value) {
       commit('SET_BLACKLIST_SOUND', value);
     },
@@ -82,6 +89,7 @@ const app = {
     blacklistSound: state => state.blacklistSound,
     parameterValue: state => state.parameterValue,
     morePersonTranstion: state => state.morePersonTranstion,
+    tempBatchNo: state => state.tempBatchNo,
     selectedStreaming: state => state.selectedStreaming,
     selectedPersonDatabase: state => state.selectedPersonDatabase
   }

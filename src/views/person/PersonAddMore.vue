@@ -45,22 +45,23 @@ export default {
     },
     methods: {
         ...mapActions([
-        'setPersonTranstion'
+        'setPersonTranstion',
+        'setTempBatchNo'
         ]),
         handlePersonMoreChange (file, fileList) {
             this.personMoreAddInfo = file.name;
             this.uploadChange = true;
-            // const newZip = new JSZip();
-            // console.log(file)
-            // newZip.loadAsync(file).then(file => {
-            //     console.log(file)
-            //     newZip.file('testTXT.txt').async('string').then(content => {
-            //         console.log(content);
-            //     });
-            // });
         },
         uploadSectionFile (param) {
+            // console.log(param)
             this.addMorePersonForm.file = param.file;
+            // const newZip = new JSZip();
+            // newZip.loadAsync(param.file).then(file => {
+                // console.log(file);
+                // newZip.file('testTXT.txt').async('string').then(content => {
+                //     console.log(content);
+                // });
+            // });
         },
         async addSubmit () {
             if (this.personMoreAddInfo === '请选择上传路径') {
@@ -82,7 +83,8 @@ export default {
             formFile.append('equipmentList', this.addMorePersonForm.equipmentList);
             formFile.append('libraryId', this.databaseID);
             const responseAPI = await api.post(config.person.addMorePerson, formFile, {'headers': {'Content-Type': 'multipart/form-data'}});
-            if (Number(responseAPI.data.code) === 200) {
+            if (Number(responseAPI.data.code) !== 200) {
+                this.setTempBatchNo(responseAPI.data.data.tempBatchNo);
                 this.setPersonTranstion(true);
             } else {
                 this.$message({

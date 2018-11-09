@@ -12,10 +12,10 @@ module.exports = {
     
     proxyTable: {
       '/': {
-        // target: 'http://172.16.33.125:49082', // 李兵兵
+        target: 'http://172.16.33.125:49082', // 李兵兵
         // target: 'http://172.16.33.26:29080',  // 李斌
         // target: 'http://192.168.251.16:59080', // 黑盒子
-        target: 'http://172.16.19.150:49082',
+        // target: 'http://172.16.19.150:49082',
         pathRewrite: {
         }
       }

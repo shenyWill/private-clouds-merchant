@@ -34,8 +34,8 @@ class Socket {
     this.socket.disconnect(callback);
   }
 
-  unsubscribe () {
-    this.socket.unsubscribe();
+  unsubscribe (url) {
+    this.socket.unsubscribe(url);
   }
 
   isConnected () {

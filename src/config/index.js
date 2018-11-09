@@ -27,7 +27,8 @@ export default {
     checkImage: '/libraryPersonnel/checkPersonnelImage',
     updateImage: '/libraryPersonnel/modifyPersonnelImg',
     totalNum: '/library/personnelTotalCount',
-    addMorePerson: '/libraryPersonnel/batchAddPersonnel'
+    addMorePerson: '/libraryPersonnel/batchAddPersonnel',
+    stopMorePerson: '/libraryPersonnel/stopBatchAddPersonnel'
   },
   recognition: {
     list: '/distinguishRecord/info/list',
