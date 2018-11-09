@@ -82,7 +82,14 @@ export default {
             formFile.append('equipmentList', this.addMorePersonForm.equipmentList);
             formFile.append('libraryId', this.databaseID);
             const responseAPI = await api.post(config.person.addMorePerson, formFile, {'headers': {'Content-Type': 'multipart/form-data'}});
-            this.setPersonTranstion(true);
+            if (Number(responseAPI.data.code) === 200) {
+                this.setPersonTranstion(true);
+            } else {
+                this.$message({
+                    type: 'error',
+                    message: responseAPI.data.msg
+                });
+            }
             this.$emit('closeAddMorePerson');
         },
         clear () {
