@@ -9,7 +9,7 @@
                         <div class="record-detail">
                             <p class="record-detail-info">
                                 <span class="record-detail-name">{{item.personnelName}} | {{item.sex == 0 ? '女' : '男'}}</span>
-                                <span class="record-detail-age">{{item.age}}岁</span>
+                                <!-- <span class="record-detail-age">{{item.age}}岁</span> -->
                             </p>
                             <p class="record-detail-describe">{{item.describe}}</p>
                             <p class="record-detail-rime">比对时间：{{ item.recognitionTime.split(' ')[1]}}</p>
