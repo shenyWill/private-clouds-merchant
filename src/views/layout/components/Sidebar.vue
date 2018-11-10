@@ -317,9 +317,14 @@
      text-overflow:ellipsis;
      white-space: nowrap;
    }
-   .error-person-fileName {
+   .error-person-fileName,.error-person-message {
      width: 200px;
      display: inline-block;
+     overflow: hidden;
+     margin-right: 20px;
+   }
+   .error-person-message {
+     width: 300px;
    }
  }
 </style>
