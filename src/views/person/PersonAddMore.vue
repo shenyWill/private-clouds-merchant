@@ -1,5 +1,5 @@
 <template>
-    <div class="person-more-add">
+    <div class="person-more-add" v-loading="addMorePersonLoad">
         <p class="more-add-info">
             1.给jpg格式图片命名，
             <br/>&nbsp;&nbsp;&nbsp;命名规则“姓名” + “-” + “人员描述”， 如下图：
@@ -40,7 +40,8 @@ export default {
         return {
             personMoreAddInfo: '请选择上传路径',
             uploadChange: false, // 是否上传了压缩包到客户端
-            addMorePersonForm: {file: {}, equipmentList: []}
+            addMorePersonForm: {file: {}, equipmentList: []},
+            addMorePersonLoad: false
         };
     },
     methods: {
@@ -78,12 +79,13 @@ export default {
                 });
                 return;
             }
+            this.addMorePersonLoad = true;
             var formFile = new FormData();
             formFile.append('file', this.addMorePersonForm.file);
             formFile.append('equipmentList', this.addMorePersonForm.equipmentList);
             formFile.append('libraryId', this.databaseID);
             const responseAPI = await api.post(config.person.addMorePerson, formFile, {'headers': {'Content-Type': 'multipart/form-data'}});
-            if (Number(responseAPI.data.code) !== 200) {
+            if (Number(responseAPI.data.code) === 200) {
                 this.setTempBatchNo(responseAPI.data.data.tempBatchNo);
                 this.setPersonTranstion(true);
             } else {
@@ -92,6 +94,7 @@ export default {
                     message: responseAPI.data.msg
                 });
             }
+            this.addMorePersonLoad = false;
             this.$emit('closeAddMorePerson');
         },
         clear () {
