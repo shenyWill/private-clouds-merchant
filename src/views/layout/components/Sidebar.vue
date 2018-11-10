@@ -326,5 +326,11 @@
    .error-person-message {
      width: 300px;
    }
+   .success-info {
+     text-align: center;
+     font-size: 18px;
+     color: #ff0000;
+     font-weight: bold;
+   }
  }
 </style>
