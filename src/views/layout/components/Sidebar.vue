@@ -19,7 +19,7 @@
       <span class="person-global-info">{{personAddInfo}}</span>
       <span class="person-global-percent">{{personAddPercent}}%</span>
     </div>
-    <i class="iconfont icon-guanbipiliang-xuanting" v-if="morePersonTranstion" @click="dialogStopAddPerson = true"></i>
+    <i class="iconfont icon-guanbipiliang-xuanting" v-if="morePersonTranstion && stopAddPersonTag" @click="dialogStopAddPerson = true"></i>
     <!-- 终止上传 -->
     <el-dialog :visible.sync="dialogStopAddPerson" title="提示" :append-to-body="true" width="25%" :close-on-click-modal="false" custom-class="stop-person-add">
       <p class="stop-info">您确定要停止批量入库操作吗？</p>
@@ -70,7 +70,8 @@
        dialogStopAddPerson: false, // 停止上传弹出框
        socket: null,
        dialogErrorShow: false, // 上传结束弹出框
-       errorBatchList: []
+       errorBatchList: [],
+       stopAddPersonTag: true // 停止上传按钮是否显示
      };
    },
    computed: {
@@ -78,7 +79,8 @@
        'isCollapse',
        'morePersonTranstion',
        'tempBatchNo',
-       'socketConnected'
+       'socketConnected',
+       'user'
      ]),
      routes () {
        return menu;
@@ -93,8 +95,13 @@
        this.socket = Socket.init(url);
         this.socket.subscribe('/face/batchPersonnel', response => {
          const data = JSON.parse(response.body);
+         if (this.user.username !== data.username) return;
          this.personScribe = response.headers.subscription;
          this.personAddPercent = parseInt(data.fileNumber * 100 / data.fileTotal) || 0;
+         // 传输百分之九十以后
+         if (Number(this.personAddPercent) > 89) {
+           this.stopAddPersonTag = false;
+         }
          // 传输全部完成之后
          if (Number(data.operationType) === 0) {
             this.cancelAdd();
@@ -112,6 +119,7 @@
         // 设置该订阅的id
         this.setTempBatchNo(0);
         this.personAddPercent = 0;
+        this.stopAddPersonTag = true;
      },
      subscribeSocket () {
        if (this.socketConnected) {

@@ -374,6 +374,15 @@
             this.deviceList = newVal.equipmentList;
         },
         deep: true
+    },
+    morePersonTranstion: {
+      handler (newVal) {
+        if (!newVal) {
+          this.currentPage = 1;
+          this.responseAPI({page: this.currentPage});
+        }
+      },
+      deep: true
     }
    }
  };
