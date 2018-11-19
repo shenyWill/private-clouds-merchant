@@ -28,6 +28,20 @@
         <div class="recognition-statistics">
             <RecognitionStatistics @drawMap="drawMap"></RecognitionStatistics>
         </div>
+        <!-- 统计表格 -->
+        <div class="statistics-table">
+            <ul class="table-title-nav">
+                <li v-for="item in tableTitleList" :key="item" class="table-title-list">{{item}}</li>
+            </ul>
+            <ul class="table-info-nav" v-for="(item, index) in tableList" :key="item.id">
+                <li class="table-info-list">{{index}}</li>
+                <li class="table-info-list">{{item.equipmentName}}</li>
+                <li class="table-info-list">{{item.personnelName}}</li>
+                <li class="table-info-list">{{item.personnelName}}</li>
+                <li class="table-info-list">{{item.personnelName}}</li>
+                <li class="table-info-list">{{item.personnelName}}</li>
+            </ul>
+        </div>
     </div>
 </template>
 
@@ -35,6 +49,8 @@
 import { mapGetters } from 'vuex';
 import menu from './config';
 import dataMap from './dataMap.js';
+import api from '@/api';
+import config from '@/config';
 import EquipmentStatistics from './EquipmentStatistics.vue';
 import RecognitionStatistics from './RecognitionStatistics.vue';
 let echarts = require('echarts/lib/echarts');
@@ -49,7 +65,10 @@ export default {
     return {
       screenObj: {}, // 数据统计的筛选条件
       deviceList: [],
-      timeActiveList: [true, false, false, false, false]
+      tableTitleList: ['序号', '摄像头名称', '黑名单', '白名单', '访客', '其他'],
+      timeActiveList: [true, false, false, false, false],
+      tableList: [], // 列表中的统计数据
+      count: 0
     };
   },
   computed: {
@@ -69,11 +88,20 @@ export default {
     drawMap (element, data) {
       let myChart = echarts.init(document.getElementById(element));
       myChart.setOption(data);
+    },
+    // 列表展示
+    async responseAPI (data = {}) {
+        const response = await api.post(config.witness.list, data);
+        if (Number(response.data.code) === 200) {
+            this.count = response.data.data.total;
+            this.tableList = response.data.data.rows;
+        }
     }
   },
   mounted () {
     this.user && (this.deviceList = [...this.user.equipmentList]);
     this.drawMap('data-map', dataMap.option);
+    this.responseAPI();
   },
   watch: {
     user: {
@@ -91,7 +119,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.data-statistics,.equipment-statistics,.recognition-statistics {
+.data-statistics,.equipment-statistics,.recognition-statistics,.statistics-table {
   background-color: #fff;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   text-align: left;
@@ -158,6 +186,49 @@ export default {
     height: 500px;
     width: 768px;
     float: left;
+}
+// 统计表格
+.statistics-table {
+    margin: 40px 50px 10px 50px;
+    min-width: 900px;
+    padding: 50px 40px;
+    ul,li {
+        list-style: none;
+    }
+    .table-title-nav,.table-info-nav {
+        height: 60px;
+        width: 100%;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f8f8;
+        border: 1px solid #e5e5e5;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .table-title-list,.table-info-list {
+        height: 60px;
+        line-height: 60px;
+        float: left;
+        text-align: center;
+        border-right: 1px solid #e5e5e5;
+        width: 275px;
+        cursor: pointer;
+        &:first-child {
+            width: 80px;
+        }
+        &:last-child {
+            border-right: 0;
+        }
+    }
+    .table-info-nav {
+        background-color: #fff;
+        border-top: 0;
+        font-weight: normal;
+        &:nth-child(2n + 1) {
+            background-color: #f8f8f8;
+        }
+    }
 }
 </style>
 

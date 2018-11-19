@@ -51,9 +51,9 @@ export default {
     }
 }
 .recognition-statistics-draw {
+    margin-top: 100px;
     height: 400px;
     width: 100%;
-    margin-top: 30px;
 }
 .recognition-map {
     height: 400px;

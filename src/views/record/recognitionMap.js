@@ -49,7 +49,7 @@ export default {
             value: totalNum,
             label: noLabel,
             itemStyle: {
-                color: '#ccc'
+                color: '#eee'
             }
           },
           {
@@ -74,7 +74,7 @@ export default {
             value: 26,
             label: noLabel,
             itemStyle: {
-                color: '#ccc'
+                color: '#eee'
             }
           },
           {
@@ -99,7 +99,7 @@ export default {
             value: 65,
             label: noLabel,
             itemStyle: {
-                color: '#ccc'
+                color: '#eee'
             }
           },
           {
@@ -123,7 +123,7 @@ export default {
             value: 70,
             label: noLabel,
             itemStyle: {
-                color: '#ccc'
+                color: '#eee'
             }
           },
           {
