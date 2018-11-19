@@ -56,7 +56,7 @@
        this.socket = Socket.init(url);
        this.socket.connect('guest', 'guest', frame => {
          this.connectSocket();
-         this.socket.subscribe('/face/blacklist', response => {
+         this.socket.subscribe('/user/' + this.user.userId + '/topic/face/blacklist', response => {
            const data = JSON.parse(response.body);
            if (this.blacklistAlert && this.parameterValue < data.confidence) {
              this.showAlert = true;
@@ -64,7 +64,7 @@
            }
          });
          // 内存不足提示
-         this.socket.subscribe('/face/memoryWarn', response => {
+         this.socket.subscribe('/user/' + this.user.userId + '/topic/face/memoryWarn', response => {
            const data = JSON.parse(response.body);
            this.memoryData = data;
            this.showMemory = true;

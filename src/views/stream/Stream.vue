@@ -202,7 +202,7 @@
      // subscribe /face/recognition
      initSocket (url) {
        this.socket = Socket.init(url);
-       this.socket.subscribe('/face/recognition', response => {
+       this.socket.subscribe('/user/' + this.user.userId + '/topic/face/recognition', response => {
          const data = JSON.parse(response.body);
          this.captureList.unshift(data);
          if (data.timeType === '1' && Number(data.confidence) > this.parameterValue) this.compareList.unshift(data);

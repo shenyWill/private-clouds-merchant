@@ -93,7 +93,7 @@
       ]),
      initSocket (url) {
        this.socket = Socket.init(url);
-        this.socket.subscribe('/face/batchPersonnel', response => {
+        this.socket.subscribe('/user/' + this.user.userId + '/topic/face/batchPersonnel', response => {
          const data = JSON.parse(response.body);
          if (this.user.username !== data.username) return;
          this.personScribe = response.headers.subscription;
