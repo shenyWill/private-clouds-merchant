@@ -26,7 +26,7 @@
         </div>
         <!-- 识别数 -->
         <div class="recognition-statistics">
-            <RecognitionStatistics></RecognitionStatistics>
+            <RecognitionStatistics @drawMap="drawMap"></RecognitionStatistics>
         </div>
     </div>
 </template>
@@ -40,6 +40,7 @@ import RecognitionStatistics from './RecognitionStatistics.vue';
 let echarts = require('echarts/lib/echarts');
 require('echarts/lib/chart/line');
 require('echarts/lib/chart/bar');
+require('echarts/lib/chart/pie');
 require('echarts/lib/component/legend');
 require('echarts/lib/component/tooltip');
 require('echarts/lib/component/title');

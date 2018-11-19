@@ -75,6 +75,7 @@ export default {
         name: '摄像头',
         type: 'bar',
         stack: '总量',
+        barWidth: 50,
         itemStyle: {
           normal: {
             label: {
@@ -90,6 +91,7 @@ export default {
         name: '人脸门禁',
         type: 'bar',
         stack: '总量',
+        barWidth: 50,
         itemStyle: {
           normal: {
             label: {
@@ -105,6 +107,7 @@ export default {
         name: '人脸考勤机',
         type: 'bar',
         stack: '总量',
+        barWidth: 50,
         itemStyle: {
           normal: {
             label: {
@@ -120,6 +123,7 @@ export default {
         name: '移动考勤机',
         type: 'bar',
         stack: '总量',
+        barWidth: 50,
         itemStyle: {
           normal: {
             label: {
