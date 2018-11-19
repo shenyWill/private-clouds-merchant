@@ -36,6 +36,9 @@ import Account from '@/views/account/Account';
 // 人证比对
 import Witness from '@/views/witness/Witness';
 
+// 数据 统计‘
+import Record from '@/views/record/Record';
+
 Vue.use(Router);
 
 export default new Router({
@@ -153,6 +156,15 @@ export default new Router({
       component: Witness,
       name: 'Witness',
       meta: { title: '人证比对', icon: '', cache: false }
+    }]
+  }, {
+    path: '/record',
+    component: Layout,
+    children: [{
+      path: '/record/index',
+      component: Record,
+      name: 'Record',
+      meta: { title: '识别数据', icon: '', cache: false }
     }]
   }]
 });

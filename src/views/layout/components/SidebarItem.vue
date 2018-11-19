@@ -15,7 +15,7 @@
         <template v-for="child in route.children">
           <router-link class="sidebar-item__container" :to="child.path" :key="child.name">
             <el-menu-item :index="child.path">
-              <span slot="title">{{ child.name }}</span>
+              <span slot="title" class="children-router">{{ child.name }}</span>
             </el-menu-item>
           </router-link>
         </template>
@@ -68,6 +68,10 @@ export default {
      font-size: 28px;
      color: white;
      margin-right: 20px;
+   }
+   .children-router {
+     text-indent: 49px;
+     display: inline-block;
    }
  }
  .sidebar-item__container {
