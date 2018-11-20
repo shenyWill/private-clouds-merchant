@@ -1,7 +1,7 @@
  <template>
   <div class="stream">
     <img :src="bgTopImage" alt="" class="bg-image">
-    <div class="stream__video-wrapper">
+    <div class="stream__video-wrapper" @click="onPlay">
       <div class="camera-title">
         <el-select
           @change="switchCamera"
@@ -16,7 +16,7 @@
         <i class="iconfont icon-zhankaiquanping-lan stream__fullscreen" @click="toggleFullscreen"></i>
       </div>
       <div class="video-box">
-        <video
+        <!-- <video
         id="player"
         class="video-js vjs-default-skin vjs-fluid"
         preload
@@ -24,7 +24,8 @@
         width="1280"
         height="720"
         data-setup="{}">
-      </video>
+      </video> -->
+      <!-- <object id="OnPlay" classid="clsid:B5AAF466-763D-4E09-879B-06069F67FCE7" class="video-js"> </object> -->
       </div>
     </div>
 
@@ -319,11 +320,25 @@
            this.showRecognitionDetail(this.recognitionDetailId);
          }
        };
+     },
+     // 抓拍播放
+     onPlay () {
+       var elemtPlay = document.getElementById('OnPlay');
+       var opPlay = elemtPlay.OnPlay();
+     },
+     // 创建object
+     createObj () {
+       let obj = document.createElement('OBJECT');
+       obj.setAttribute('id', 'OnPlay');
+       obj.setAttribute('classid', 'clsid:B5AAF466-763D-4E09-879B-06069F67FCE7');
+       obj.className = 'ocx-js';
+       document.getElementsByClassName('video-box')[0].appendChild(obj);
      }
    },
    async mounted () {
-     this.initPlayer({ techOrder: ['flash', 'html5'] });
-     this.switchCamera(this.cameraMonitorUrl);
+    //  this.initPlayer({ techOrder: ['flash', 'html5'] });
+    //  this.switchCamera(this.cameraMonitorUrl);
+      this.createObj();
      if (!this.user) return;
      this.cameraOption = this.user.equipmentList;
      if (!this.cameraOption.length) return;
@@ -409,6 +424,12 @@
     //  position: absolute;
     //  left: 40px;
     //  top: 80px;
+   }
+   .ocx-js {
+     width: 1280px;
+     height:720px;
+     top: 0;
+     left: 0;
    }
    .stream__compare {
      position: absolute;
