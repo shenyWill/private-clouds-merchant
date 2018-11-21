@@ -238,11 +238,11 @@
      },
      // change video player src
      changePlayerSrc (url) {
-       if (!this.player) return;
-       this.player.pause();
-       this.player.reset();
-       this.player.src(url);
-       this.player.load();
+      //  if (!this.player) return;
+      //  this.player.pause();
+      //  this.player.reset();
+      //  this.player.src(url);
+      //  this.player.load();
        this.playPlayer();
      },
      toggleFullscreen () {
@@ -250,7 +250,7 @@
      },
      // play video player
      playPlayer () {
-       this.player.play();
+      //  this.player.play();
        if (!this.isSubscribed) {
          this.subscribeSocket();
        }
@@ -324,7 +324,11 @@
      // 抓拍播放
      onPlay () {
        var elemtPlay = document.getElementById('OnPlay');
-       var opPlay = elemtPlay.OnPlay();
+       elemtPlay.OnPlay();
+     },
+     onStop () {
+       var elemtPlay = document.getElementById('OnPlay');
+       elemtPlay.OnStop();
      },
      // 创建object
      createObj () {
@@ -337,8 +341,10 @@
    },
    async mounted () {
     //  this.initPlayer({ techOrder: ['flash', 'html5'] });
-    //  this.switchCamera(this.cameraMonitorUrl);
+     this.switchCamera(this.cameraMonitorUrl);
+    setTimeout(() => {
       this.createObj();
+    }, 5000);
      if (!this.user) return;
      this.cameraOption = this.user.equipmentList;
      if (!this.cameraOption.length) return;
@@ -366,6 +372,7 @@
    },
    destroyed () {
      this.destroyPlayer();
+     this.onStop();
    }
  };
 </script>
@@ -426,8 +433,8 @@
     //  top: 80px;
    }
    .ocx-js {
-     width: 1280px;
-     height:720px;
+     width: 970px;
+     height:570px;
      top: 0;
      left: 0;
    }
