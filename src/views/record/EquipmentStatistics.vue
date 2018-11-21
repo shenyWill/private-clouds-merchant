@@ -27,7 +27,7 @@ export default {
     border-bottom: 1px solid #e5e5e5;
     overflow: hidden;
     position: relative;
-    color: #000;
+    color: #000000;
     .icon-shebei-lan {
         position: absolute;
         top: 12px;
