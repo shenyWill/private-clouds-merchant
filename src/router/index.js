@@ -36,8 +36,9 @@ import Account from '@/views/account/Account';
 // 人证比对
 import Witness from '@/views/witness/Witness';
 
-// 数据 统计‘
+// 数据统计
 import Record from '@/views/record/Record';
+import FlowRecord from '@/views/record/FlowRecord';
 
 Vue.use(Router);
 
@@ -165,6 +166,11 @@ export default new Router({
       component: Record,
       name: 'Record',
       meta: { title: '识别数据', icon: '', cache: false }
+    }, {
+      path: '/record/flow',
+      component: FlowRecord,
+      name: 'FlowRecord',
+      meta: { title: '流量统计', icon: '', cache: false }
     }]
   }]
 });

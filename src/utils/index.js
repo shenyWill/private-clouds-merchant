@@ -72,3 +72,9 @@ export function isImage (name) {
   }
   return false;
 }
+
+export function numToPercent (num) {
+  if (!num) return 0;
+  const percent = Math.floor(num * 10000);
+  return percent / 100;
+}

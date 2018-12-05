@@ -62,6 +62,10 @@ export default {
   witness: {
     list: 'equipment/comparisonRecord/list'
   },
+  record: {
+    equipNum: 'equipment/info/getEquipmentTotal',
+    libraryNum: 'distinguishRecordTotal/listByLibraryType'
+  },
   deviceType: [{
     value: '1',
     label: '人证比对机'

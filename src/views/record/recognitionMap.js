@@ -21,7 +21,6 @@ const noLine = {
         show: false
     }
 };
-const totalNum = 100000;
 export default {
   option: {
     toolbox: {
@@ -46,7 +45,7 @@ export default {
         x: '0%', // for funnel
         data: [{
             name: 'other',
-            value: totalNum,
+            value: 0,
             label: noLabel,
             itemStyle: {
                 color: '#eee'
@@ -54,8 +53,8 @@ export default {
           },
           {
             name: '白名单',
-            value: 762362,
-            totle: 50,
+            value: 0,
+            totle: 0,
             label: centerLabel,
             itemStyle: {
                 color: '#20c8cb'
@@ -71,7 +70,7 @@ export default {
         x: '20%', // for funnel
         data: [{
             name: 'other',
-            value: 26,
+            value: 0,
             label: noLabel,
             itemStyle: {
                 color: '#eee'
@@ -79,8 +78,8 @@ export default {
           },
           {
             name: '黑名单',
-            value: 54,
-            totle: 50,
+            value: 0,
+            totle: 0,
             label: centerLabel,
             itemStyle: {
                 color: '#d87a80'
@@ -96,7 +95,7 @@ export default {
         x: '40%', // for funnel
         data: [{
             name: 'other',
-            value: 65,
+            value: 0,
             label: noLabel,
             itemStyle: {
                 color: '#eee'
@@ -104,7 +103,8 @@ export default {
           },
           {
             name: '访客',
-            value: 35,
+            value: 0,
+            totle: 0,
             label: centerLabel,
             itemStyle: {
                 color: '#ffb980'
@@ -120,7 +120,7 @@ export default {
         x: '60%', // for funnel
         data: [{
             name: 'other',
-            value: 70,
+            value: 0,
             label: noLabel,
             itemStyle: {
                 color: '#eee'
@@ -128,7 +128,8 @@ export default {
           },
           {
             name: '其他',
-            value: 30,
+            value: 0,
+            totle: 0,
             label: centerLabel,
             itemStyle: {
                 color: '#b6a2de'

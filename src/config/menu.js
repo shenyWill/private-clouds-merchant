@@ -29,7 +29,7 @@ export default [{
   children: [
     {
       name: '流量统计',
-      path: '/account/index',
+      path: '/record/flow',
       icon: 'iconfont icon-qita-lan',
       jurisdiction: 0
     },

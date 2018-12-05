@@ -13,9 +13,23 @@
 
 <script>
 import recognitionMap from './recognitionMap.js';
+import api from '@/api';
+import config from '@/config';
+import { numToPercent } from '@/utils';
 export default {
-    mounted () {
-        this.$emit('drawMap', 'recognition-map', recognitionMap.option);
+    async mounted () {
+        const response = await api.post(config.record.libraryNum, {});
+        if (Number(response.data.code) === 200) {
+            let dataArr = recognitionMap.option.series;
+            let total = 0;
+            response.data.data.forEach(item => (total += item.totalSuccess));
+            response.data.data.forEach(item => {
+                dataArr[item.libraryTypeId - 1].data[0].value = total - item.totalSuccess;
+                dataArr[item.libraryTypeId - 1].data[1].value = item.totalSuccess;
+                dataArr[item.libraryTypeId - 1].data[1].totle = numToPercent(item.totalSuccess / total);
+            });
+            this.$emit('drawMap', 'recognition-map', recognitionMap.option);
+        }
     }
 };
 </script>

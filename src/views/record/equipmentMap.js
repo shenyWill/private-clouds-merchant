@@ -7,7 +7,7 @@ export default {
       }
     },
     legend: {
-      data: ['摄像头', '人脸门禁', '人脸考勤机', '移动考勤机', '认证机']
+      data: ['人证比对机', '摄像头', '人脸识别门禁平板', '闸机', '门']
     },
     color: ['#20c8cb', '#b6a2de', '#d87a80', '#ffb980', '#5ab1ef'],
     toolbox: {
@@ -72,6 +72,22 @@ export default {
       }
     }],
     series: [{
+        name: '人证比对机',
+        type: 'bar',
+        stack: '总量',
+        barWidth: 50,
+        itemStyle: {
+          normal: {
+            label: {
+              show: true,
+              position: 'insideRight'
+            },
+            barBorderRadius: [6, 6, 6, 6]
+          }
+        },
+        data: [0]
+      },
+      {
         name: '摄像头',
         type: 'bar',
         stack: '总量',
@@ -85,10 +101,10 @@ export default {
             barBorderRadius: [6, 6, 6, 6]
           }
         },
-        data: [320]
+        data: [0]
       },
       {
-        name: '人脸门禁',
+        name: '人脸识别门禁平板',
         type: 'bar',
         stack: '总量',
         barWidth: 50,
@@ -101,10 +117,10 @@ export default {
             barBorderRadius: [6, 6, 6, 6]
           }
         },
-        data: [120]
+        data: [0]
       },
       {
-        name: '人脸考勤机',
+        name: '闸机',
         type: 'bar',
         stack: '总量',
         barWidth: 50,
@@ -117,10 +133,10 @@ export default {
             barBorderRadius: [6, 6, 6, 6]
           }
         },
-        data: [220]
+        data: [0]
       },
       {
-        name: '移动考勤机',
+        name: '门',
         type: 'bar',
         stack: '总量',
         barWidth: 50,
@@ -133,23 +149,7 @@ export default {
             barBorderRadius: [6, 6, 6, 6]
           }
         },
-        data: [150]
-      },
-      {
-        name: '认证机',
-        type: 'bar',
-        stack: '总量',
-        barWidth: 50,
-        itemStyle: {
-          normal: {
-            label: {
-              show: true,
-              position: 'insideRight'
-            },
-            barBorderRadius: [6, 6, 6, 6]
-          }
-        },
-        data: [820]
+        data: [0]
       }
     ],
     grid: {

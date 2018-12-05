@@ -11,7 +11,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="统计时间">
-                        <el-date-picker v-model="screenObj.date" type="daterange" range-separator="至" start-placeholde="开始时间" end-placeholde="结束时间"></el-date-picker>
+                        <el-date-picker  v-model="screenObj.date" type="daterange" range-separator="至" start-placeholde="开始时间" end-placeholde="结束时间"></el-date-picker>
                     </el-form-item>
                 </el-form>
                 <span v-for="(item, index) in timeList" :key="item.id" :class="['screen-time-list', timeActiveList[index] ? 'active' : '']" @click="changeRecordTime(item, index)">{{item.label}}</span>
@@ -34,7 +34,7 @@
                 <li v-for="item in tableTitleList" :key="item" class="table-title-list">{{item}}</li>
             </ul>
             <ul :class="['table-info-nav', childActiveList[index] ? 'active' : '']" v-for="(item, index) in tableList" :key="item.id">
-                <li class="table-info-list" @click="openChildTable(item, index)">{{index}}</li>
+                <li class="table-info-list" @click="openChildTable(item, index)">{{index}} &nbsp;&nbsp;<i class="el-icon-arrow-down"></i></li>
                 <li class="table-info-list" @click="openChildTable(item, index)">{{item.equipmentName}}</li>
                 <li class="table-info-list" @click="openChildTable(item, index)">{{item.personnelName}}</li>
                 <li class="table-info-list" @click="openChildTable(item, index)">{{item.personnelName}}</li>
@@ -279,6 +279,17 @@ export default {
         &:last-child {
             border-right: 0;
         }
+        .el-icon-arrow-down {
+            display: none;
+        }
+    }
+    .table-info-nav:hover {
+        .el-icon-arrow-down {
+            display: inline-block;
+        }
+        background: #cce8ff !important;
+        color: #008aff;
+        border: 1px solid #008aff;
     }
     .table-info-nav,.child-table-info-nav {
         background-color: #fff;

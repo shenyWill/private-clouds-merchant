@@ -13,9 +13,16 @@
 
 <script>
 import equipmentMap from './equipmentMap.js';
+import api from '@/api';
+import config from '@/config';
 export default {
-    mounted () {
-        this.$emit('drawMap', 'equipment-map', equipmentMap.option);
+    async mounted () {
+        const response = await api.post(config.record.equipNum, {});
+        if (Number(response.data.code) === 200) {
+            let dataArr = equipmentMap.option.series;
+            response.data.data.forEach(item => (dataArr[item.equipmentType - 1].data[0] = item.total));
+            this.$emit('drawMap', 'equipment-map', equipmentMap.option);
+        }
     }
 };
 </script>
