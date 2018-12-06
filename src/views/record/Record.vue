@@ -119,6 +119,24 @@ export default {
       let myChart = echarts.init(document.getElementById(element));
       myChart.setOption(data);
     },
+    // 折线展示
+    async lineResponseAPI (data = {}) {
+        const response = await api.post(config.record.list, data);
+        dataMap.option.xAxis[0].data = [];
+        dataMap.option.series.forEach(item => (item.data = []));
+        if (Number(response.data.code) === 200) {
+            response.data.data.forEach(item => {
+                dataMap.option.xAxis[0].data.unshift(item.date.substring(5));
+                let numArr = [0, 0, 0, 0];
+                item.value.forEach(num => {
+                    numArr[num.libraryTypeId - 1] += num.total;
+                });
+                numArr = numArr.slice(0, 4);
+                numArr.forEach((item, index) => dataMap.option.series[index].data.unshift(item));
+            });
+            this.drawMap('data-map', dataMap.option);
+        }
+    },
     // 列表展示
     async responseAPI (data = {}) {
         const response = await api.post(config.witness.list, data);
@@ -159,7 +177,7 @@ export default {
   },
   mounted () {
     this.user && (this.deviceList = [...this.user.equipmentList]);
-    this.drawMap('data-map', dataMap.option);
+    this.lineResponseAPI();
     this.responseAPI();
   },
   watch: {

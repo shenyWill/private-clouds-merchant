@@ -64,7 +64,8 @@ export default {
   },
   record: {
     equipNum: 'equipment/info/getEquipmentTotal',
-    libraryNum: 'distinguishRecordTotal/listByLibraryType'
+    libraryNum: 'distinguishRecordTotal/listByLibraryType',
+    list: 'distinguishRecordTotal/list'
   },
   deviceType: [{
     value: '1',

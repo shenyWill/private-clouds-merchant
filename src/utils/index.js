@@ -7,13 +7,13 @@ export function param2Obj (url) {
   return JSON.parse('{"' + decodeURIComponent(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
 };
 
-export function img2Base64 (image) {
+export function img2Base64 (image, mimeType = 'png') {
   let canvas = document.createElement('canvas');
   canvas.width = image.width;
   canvas.height = image.height;
   let context = canvas.getContext('2d');
   context.drawImage(image, 0, 0, image.width, image.height);
-  const ext = image.src.substring(image.src.lastIndexOf('.') + 1).toLowerCase();
+  const ext = mimeType === 'png' ? 'png' : 'jpeg';
   return canvas.toDataURL(`image/${ext}`);
 }
 

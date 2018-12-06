@@ -8,7 +8,7 @@ export default {
       trigger: 'axis'
     },
     legend: {
-      data: ['黑名单', '门禁', '警务终端', '人证机'], // 导航栏字样，与数据对应
+      data: ['白名单', '黑名单', '访客', '其他'], // 导航栏字样，与数据对应
       textStyle: {
         color: '#000'
       },
@@ -42,7 +42,7 @@ export default {
     xAxis: [{
       type: 'category',
       boundaryGap: false,
-      data: ['2017-11', '2017-12', '2018-01', '2018-02', '2018-03', '2018-04', '2018-05', '2018-06', '2018-07', '2018-08', '2018-09', '2018-10'],
+      data: [],
       axisLine: {
         lineStyle: {
           color: '#008aff', // x轴颜色
@@ -104,6 +104,20 @@ export default {
       }
     }],
     series: [{
+        name: '白名单',
+        type: 'line',
+        symbol: 'none',
+        smooth: true,
+        itemStyle: {
+          normal: {
+            areaStyle: {
+              type: 'default'
+            }
+          }
+        },
+        data: []
+      },
+      {
         name: '黑名单',
         type: 'line',
         symbol: 'none',
@@ -115,10 +129,10 @@ export default {
             }
           }
         },
-        data: [8600, 8726, 9101, 9001, 9576, 9438, 9915, 11002, 10386, 10012, 10002, 11563]
+        data: []
       },
       {
-        name: '门禁',
+        name: '访客',
         type: 'line',
         symbol: 'none',
         smooth: true,
@@ -129,10 +143,10 @@ export default {
             }
           }
         },
-        data: [7236, 8002, 7526, 8523, 7102, 7523, 10203, 8212, 7546, 7777, 8550, 8926]
+        data: []
       },
       {
-        name: '警务终端',
+        name: '其他',
         type: 'line',
         symbol: 'none',
         smooth: true,
@@ -143,21 +157,7 @@ export default {
             }
           }
         },
-        data: [4126, 2623, 3216, 4562, 4750, 4952, 5100, 4236, 4256, 3756, 4888, 5321]
-      },
-      {
-        name: '人证机',
-        type: 'line',
-        symbol: 'none',
-        smooth: true,
-        itemStyle: {
-          normal: {
-            areaStyle: {
-              type: 'default'
-            }
-          }
-        },
-        data: [5120, 4620, 4824, 6210, 7210, 5521, 5623, 6523, 6102, 7212, 8256, 7023]
+        data: []
       }
     ],
     grid: {
