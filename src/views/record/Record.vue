@@ -2,16 +2,21 @@
     <div class="record">
         <!-- 数据统计 -->
         <div class="data-statistics">
-            <h2 class="data-statistics-title">数据统计</h2>
+            <h2 class="data-statistics-title">人员类型统计</h2>
             <div class="data-statistics-screen">
-                <el-form :inline="true" :model="screenObj" class="screen-form">
+                <el-form :inline="true" :model="searchObj" class="screen-form">
                     <el-form-item label="摄像头">
-                        <el-select v-model="screenObj.equipmentList" placeholder="全部" multiple size="mini">
+                        <el-select v-model="searchObj.equipmentId" placeholder="全部" multiple size="mini">
                             <el-option v-for="item in deviceList" :key="item.equipmentId" :value="item.equipmentId" :label="item.equipmentName"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="统计时间">
-                        <el-date-picker  v-model="screenObj.date" type="daterange" range-separator="至" start-placeholde="开始时间" end-placeholde="结束时间"></el-date-picker>
+                        <el-date-picker  v-model="searchObj.date" type="daterange" range-separator="至" start-placeholde="开始时间" end-placeholde="结束时间"></el-date-picker>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button class="dialog-confirm-button" @click="search">
+                            数据搜索
+                        </el-button>
                     </el-form-item>
                 </el-form>
                 <span v-for="(item, index) in timeList" :key="item.id" :class="['screen-time-list', timeActiveList[index] ? 'active' : '']" @click="changeRecordTime(item, index)">{{item.label}}</span>
@@ -36,22 +41,50 @@
             <ul :class="['table-info-nav', childActiveList[index] ? 'active' : '']" v-for="(item, index) in tableList" :key="item.id">
                 <li class="table-info-list" @click="openChildTable(item, index)">{{index}} &nbsp;&nbsp;<i class="el-icon-arrow-down"></i></li>
                 <li class="table-info-list" @click="openChildTable(item, index)">{{item.equipmentName}}</li>
-                <li class="table-info-list" @click="openChildTable(item, index)">{{item.personnelName}}</li>
-                <li class="table-info-list" @click="openChildTable(item, index)">{{item.personnelName}}</li>
-                <li class="table-info-list" @click="openChildTable(item, index)">{{item.personnelName}}</li>
-                <li class="table-info-list" @click="openChildTable(item, index)">{{item.personnelName}}</li>
+                <li class="table-info-list" @click="openChildTable(item, index)">{{item.blacklist || 0}}</li>
+                <li class="table-info-list" @click="openChildTable(item, index)">{{item.whitelist || 0}}</li>
+                <li class="table-info-list" @click="openChildTable(item, index)">{{item.visitor || 0}}</li>
+                <li class="table-info-list" @click="openChildTable(item, index)">{{item.other || 0}}</li>
                 <!-- 子表格 -->
                 <div class="child-table" v-if="childActiveList[index]">
                     <ul class="child-table-title-nav">
                         <li v-for="item in childTableTitleList" :key="item" class="child-table-title-list">{{item}}</li>
                     </ul>
-                    <ul class="child-table-info-nav" v-for="childItem in childTableList" :key="childItem && childItem.id">
-                        <li class="child-table-info-list">{{childItem && childItem.recognitionTime && childItem.recognitionTime.split(' ')[1]}}</li>
-                        <li class="child-table-info-list">{{childItem && childItem.personnelName}}</li>
-                        <li class="child-table-info-list">{{childItem && childItem.personnelName}}</li>
-                        <li class="child-table-info-list">{{childItem && childItem.personnelName}}</li>
-                        <li class="child-table-info-list">{{childItem && childItem.personnelName}}</li>
+                    <ul class="child-table-info-nav" v-for="(childItem, index) in childTableList" :key="childItem.date">
+                        <li class="child-table-info-list">{{childItem.date}} </li>
+                        <li class="child-table-info-list">
+                            {{childItem.blacklist || 0}}
+                            <i :class="['iconfont', index === 0 ? 'first' : '', ((childItem.blacklist || 0) - (index < 1 ? 0 : (childTableList[index-1].blacklist || 0))) > 0 ? 'icon-shangsheng' : 'icon-xiajiang']">
+                            {{index === 0 ? '--' : Math.abs((childItem.blacklist || 0) - (childTableList[index-1].blacklist || 0))}}</i>
+                        </li>
+                        <li class="child-table-info-list">
+                            {{childItem.whitelist || 0}}
+                            <i :class="['iconfont', index === 0 ? 'first' : '', ((childItem.whitelist || 0) - (index < 1 ? 0 : (childTableList[index-1].whitelist || 0))) > 0 ? 'icon-shangsheng' : 'icon-xiajiang']">
+                            {{index === 0 ? '--' : Math.abs((childItem.whitelist || 0) - (childTableList[index-1].whitelist || 0))}}</i>
+                        </li>
+                        <li class="child-table-info-list">
+                            {{childItem.visitor || 0}}
+                            <i :class="['iconfont', index === 0 ? 'first' : '', ((childItem.visitor || 0) - (index < 1 ? 0 : (childTableList[index-1].visitor || 0))) > 0 ? 'icon-shangsheng' : 'icon-xiajiang']">
+                            {{index === 0 ? '--' : Math.abs((childItem.visitor || 0) - (childTableList[index-1].visitor || 0))}}</i>
+                        </li>
+                        <li class="child-table-info-list">
+                            {{childItem.other || 0}}
+                            <i :class="['iconfont', index === 0 ? 'first' : '', ((childItem.other || 0) - (index < 1 ? 0 : (childTableList[index-1].other || 0))) > 0 ? 'icon-shangsheng' : 'icon-xiajiang']">
+                            {{index === 0 ? '--' : Math.abs((childItem.other || 0) - (childTableList[index-1].other || 0))}}</i>
+                        </li>
                     </ul>
+                    <!-- 分页 -->
+                    <el-pagination
+                    background
+                    layout="prev, pager, next"
+                    v-if="childCount > 9"
+                    :total="childCount"
+                    :current-page.sync="currentChildPage"
+                    class="paging"
+                    @current-change="handleChildCurrentChange"
+                    prev-text="上一页"
+                    next-text="下一页"
+                    ></el-pagination>
                 </div>
             </ul>
             <!-- 分页 -->
@@ -60,6 +93,7 @@
             layout="prev, pager, next"
             v-if="count > 9"
             :total="count"
+            :page-size="1"
             :current-page.sync="currentPage"
             class="paging"
             @current-change="handleCurrentChange"
@@ -78,6 +112,7 @@ import api from '@/api';
 import config from '@/config';
 import EquipmentStatistics from './EquipmentStatistics.vue';
 import RecognitionStatistics from './RecognitionStatistics.vue';
+import { parseTime } from '@/utils';
 let echarts = require('echarts/lib/echarts');
 require('echarts/lib/chart/line');
 require('echarts/lib/chart/bar');
@@ -88,7 +123,8 @@ require('echarts/lib/component/title');
 export default {
   data () {
     return {
-      screenObj: {}, // 数据统计的筛选条件
+      searchObj: {}, // 数据统计的筛选条件
+      filterObj: {},
       deviceList: [],
       tableTitleList: ['序号', '摄像头名称', '黑名单', '白名单', '访客', '其他'],
       childTableTitleList: ['日期', '黑名单', '白名单', '访客', '其他'],
@@ -96,8 +132,10 @@ export default {
       childActiveList: [], // 是否展开子表格
       tableList: [], // 列表中的统计数据
       childTableList: [], // 子表格中的统计数据
+      childEquipmentId: '', // 子表格的equipmentId
       count: 0,
       childCount: 0,
+      currentChildPage: 1,
       currentPage: 1
     };
   },
@@ -108,12 +146,6 @@ export default {
     }
   },
   methods: {
-    // 切换筛选时间段
-    changeRecordTime (val, count) {
-      this.timeActiveList.forEach((item, index) =>
-        this.$set(this.timeActiveList, index, index === count)
-      );
-    },
     // 画图
     drawMap (element, data) {
       let myChart = echarts.init(document.getElementById(element));
@@ -139,44 +171,102 @@ export default {
     },
     // 列表展示
     async responseAPI (data = {}) {
-        const response = await api.post(config.witness.list, data);
+        const response = await api.post(config.record.tableList, data);
         if (Number(response.data.code) === 200) {
-            this.count = response.data.data.total;
-            this.tableList = response.data.data.rows;
+            this.count = response.data.total;
+            this.tableList = [];
+            response.data.data.forEach(item => {
+                const tableObj = {};
+                const typeArr = ['whitelist', 'blacklist', 'visitor', 'other'];
+                this.deviceList.forEach(equip => {
+                    if (equip.equipmentId === item.equipmentId) tableObj.equipmentName = equip.equipmentName;
+                });
+                tableObj.equipmentId = item.equipmentId;
+                item.value.forEach(childItem => (tableObj[typeArr[childItem.libraryTypeId - 1]] = childItem.totalSuccess));
+                this.tableList.push(tableObj);
+            });
         }
     },
     // 子表格展示
     async childResponseAPI (data = {}) {
-        const response = await api.post(config.witness.list, data);
+        const response = await api.post(config.record.childTableList, data);
         if (Number(response.data.code) === 200) {
-            this.childCount = response.data.data.total;
-            this.childTableList = response.data.data.rows;
+            this.childCount = response.data.total;
+            this.childTableList = [];
+            response.data.data.forEach(item => {
+                const childTableObj = {};
+                const childTypeArr = ['whitelist', 'blacklist', 'visitor', 'other'];
+                childTableObj.date = item.date;
+                item.value.forEach(childItem => (childTableObj[childTypeArr[childItem.libraryTypeId - 1]] = childItem.totalSuccess));
+                this.childTableList.push(childTableObj);
+            });
         }
     },
     // 展开子表格
     async openChildTable (item, index) {
-        this.childActiveList.forEach((item, allindex) => (index !== allindex && (this.childActiveList[allindex] = false)));
-        this.$set(this.childActiveList, index, !this.childActiveList[index]);
-        if (this.childActiveList[index]) {
-            this.childResponseAPI();
+        if (!this.childActiveList[index]) {
+            let obj = {...this.filterObj};
+            this.childEquipmentId = obj.equipmentId = item.equipmentId;
+            await this.childResponseAPI(obj);
         } else {
             this.childCount = 0;
             this.childTableList = [];
+            this.currentChildPage = 1;
         }
+        this.childActiveList.forEach((item, allindex) => (index !== allindex && (this.childActiveList[allindex] = false)));
+        this.$set(this.childActiveList, index, !this.childActiveList[index]);
     },
     // 关闭子表格
     async closeChildTable () {
         this.childActiveList = this.childTableList = [];
         this.childCount = 0;
+        this.currentChildPage = 1;
     },
     // 分页
     handleCurrentChange (val) {
-        this.responseAPI({offset: val * 10});
+        this.responseAPI({...this.filterObj, offset: (val - 1) * 10});
         this.closeChildTable();
+    },
+    // 子表格分页
+    handleChildCurrentChange (val) {
+        this.childResponseAPI({...this.filterObj, offset: (val - 1) * 10, equipmentId: this.childEquipmentId});
+    },
+    // 搜索
+    search () {
+        // 将搜索数据装载到筛选数据中
+        this.filterObj = {};
+        this.searchObj.equipmentId.length && (this.filterObj.equipmentId = [...this.searchObj.equipmentId]);
+        this.searchObj.date && (this.filterObj.startTime = parseTime(this.searchObj.date[0]));
+        this.searchObj.date && (this.filterObj.endTime = parseTime(this.searchObj.date[1]));
+        // 设置快捷搜索如近一月等按钮为初始状态
+        this.timeActiveList.forEach((item, index) =>
+            this.$set(this.timeActiveList, index, false)
+        );
+        this.reset();
+    },
+    // 切换筛选时间段
+    changeRecordTime (val, count) {
+      this.timeActiveList.forEach((item, index) =>
+        this.$set(this.timeActiveList, index, index === count)
+      );
+      this.filterObj = {};
+      this.searchObj.equipmentId.length && (this.filterObj.equipmentId = [...this.searchObj.equipmentId]);
+      this.filterObj.dateType = val.id;
+      this.reset();
+    },
+    // 重置折线图和表格以及子表格
+    reset () {
+      // 关闭子表格
+      this.closeChildTable();
+      this.currentPage = 1;
+      // 重新展示折线图
+      this.lineResponseAPI(this.filterObj);
+      // 重现展示表格
+      this.responseAPI(this.filterObj);
     }
   },
-  mounted () {
-    this.user && (this.deviceList = [...this.user.equipmentList]);
+  async mounted () {
+    await this.user && (this.deviceList = [...this.user.equipmentList]);
     this.lineResponseAPI();
     this.responseAPI();
   },
@@ -319,7 +409,7 @@ export default {
             background-color: #f8f8f8;
         }
         &.active {
-            height: 782px;
+            height: 882px;
             background: #cce8ff;
             color: #008aff;
             border: 1px solid #008aff;
@@ -332,7 +422,7 @@ export default {
 }
 // 子表格
 .child-table {
-    height: 720px;
+    height: 820px;
     min-width: 900px;
     transition: all 2s;
     width: 100%;
@@ -355,8 +445,22 @@ export default {
         border: 0;
         width: 20%;
         color: #666;
+        position: relative;
         &:first-child {
             width: 20%;
+        }
+        .first.iconfont {
+            opacity: 0;
+        }
+        .iconfont {
+            position: absolute;
+            left: 180px;
+        }
+        .icon-shangsheng {
+            color: #ff0000;
+        }
+        .icon-xiajiang {
+            color: #20c8cb;
         }
     }
 }
@@ -391,6 +495,14 @@ export default {
     .btn-next,.btn-prev {
         width: 80px;
         font-weight: bold;
+    }
+}
+.data-statistics-screen {
+    .el-button {
+        background-color: #008aff;
+        color: #fff;
+        width: 150px;
+        border-radius: 8px;
     }
 }
 </style>
