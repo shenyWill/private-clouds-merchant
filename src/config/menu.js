@@ -27,12 +27,12 @@ export default [{
   icon: 'iconfont icon-shujutongji',
   path: '/account/index',
   children: [
-    {
-      name: '流量统计',
-      path: '/record/flow',
-      icon: 'iconfont icon-qita-lan',
-      jurisdiction: 0
-    },
+    // {
+    //   name: '流量统计',
+    //   path: '/record/flow',
+    //   icon: 'iconfont icon-qita-lan',
+    //   jurisdiction: 0
+    // },
     {
       name: '识别数据',
       path: '/record/index',

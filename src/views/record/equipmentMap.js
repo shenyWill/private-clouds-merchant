@@ -80,7 +80,7 @@ export default {
           normal: {
             label: {
               show: true,
-              position: 'insideRight'
+              position: 'insideLeft'
             },
             barBorderRadius: [6, 6, 6, 6]
           }
@@ -96,7 +96,7 @@ export default {
           normal: {
             label: {
               show: true,
-              position: 'insideRight'
+              position: 'insideLeft'
             },
             barBorderRadius: [6, 6, 6, 6]
           }
@@ -112,7 +112,7 @@ export default {
           normal: {
             label: {
               show: true,
-              position: 'insideRight'
+              position: 'insideLeft'
             },
             barBorderRadius: [6, 6, 6, 6]
           }
@@ -128,7 +128,7 @@ export default {
           normal: {
             label: {
               show: true,
-              position: 'insideRight'
+              position: 'insideLeft'
             },
             barBorderRadius: [6, 6, 6, 6]
           }
@@ -144,7 +144,7 @@ export default {
           normal: {
             label: {
               show: true,
-              position: 'insideRight'
+              position: 'insideLeft'
             },
             barBorderRadius: [6, 6, 6, 6]
           }
