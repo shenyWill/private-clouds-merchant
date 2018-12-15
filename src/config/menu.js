@@ -53,4 +53,10 @@ export default [{
   icon: 'iconfont icon-zhanghaoguanli',
   children: [],
   jurisdiction: 1
+}, {
+  name: '设备维护',
+  path: '/maintain/index',
+  icon: 'iconfont icon-zhanghaoguanli',
+  children: [],
+  jurisdiction: 0
 }];

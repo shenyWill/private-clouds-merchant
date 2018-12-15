@@ -40,6 +40,9 @@ import Witness from '@/views/witness/Witness';
 import Record from '@/views/record/Record';
 import FlowRecord from '@/views/record/FlowRecord';
 
+// 设备维护
+import Maintain from '@/views/maintain/Maintain';
+
 Vue.use(Router);
 
 export default new Router({
@@ -171,6 +174,15 @@ export default new Router({
       component: FlowRecord,
       name: 'FlowRecord',
       meta: { title: '流量统计', icon: '', cache: false }
+    }]
+  }, {
+    path: '/maintain',
+    component: Layout,
+    children: [{
+      path: '/maintain/index',
+      component: Maintain,
+      name: 'Maintain',
+      meta: { title: '设备维护', icon: '', cache: false }
     }]
   }]
 });

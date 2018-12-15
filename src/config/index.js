@@ -69,6 +69,10 @@ export default {
     tableList: 'distinguishRecordTotal/listByEquipment',
     childTableList: 'distinguishRecordTotal/detailListByEquipment'
   },
+  maintain: {
+    list: '/deviceMaintain/getSysMonitorInfo',
+    sysVersion: '/deviceMaintain/getSysVersion'
+  },
   deviceType: [{
     value: '1',
     label: '人证比对机'

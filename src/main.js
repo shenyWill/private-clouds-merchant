@@ -13,6 +13,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import 'nprogress/nprogress.css';
 import './assets/css/reset.css';
 import './assets/iconfont/iconfont.css';
+import './assets/iconfont/iconfont.js';
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
