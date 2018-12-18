@@ -43,6 +43,9 @@ import FlowRecord from '@/views/record/FlowRecord';
 // 设备维护
 import Maintain from '@/views/maintain/Maintain';
 
+// 设备维护
+import Guard from '@/views/guard/Guard';
+
 Vue.use(Router);
 
 export default new Router({
@@ -183,6 +186,15 @@ export default new Router({
       component: Maintain,
       name: 'Maintain',
       meta: { title: '设备维护', icon: '', cache: false }
+    }]
+  }, {
+    path: '/guard',
+    component: Layout,
+    children: [{
+      path: '/guard/config',
+      component: Guard,
+      name: 'Guard',
+      meta: { title: '门禁配置', icon: '', cache: false }
     }]
   }]
 });

@@ -39,6 +39,15 @@
         <div class="algorithm">
             <Algorithm></Algorithm>
         </div>
+
+        <!-- 导入导出设备参数 -->
+        <div class="importExport">
+            <ImportExport></ImportExport>
+        </div>
+        <!-- 网络配置 -->
+        <div class="internet">
+            <InternetConfig></InternetConfig>
+        </div>
     </div>
 </template>
 
@@ -47,6 +56,8 @@ import api from '@/api';
 import config from '@/config';
 import SystemUpgrade from './SystemUpgrade';
 import Algorithm from './Algorithm';
+import ImportExport from './ImportExport';
+import InternetConfig from './InternetConfig';
 export default {
     data () {
         return {
@@ -65,7 +76,9 @@ export default {
     },
     components: {
         SystemUpgrade,
-        Algorithm
+        Algorithm,
+        ImportExport,
+        InternetConfig
     }
 };
 </script>
@@ -110,7 +123,7 @@ export default {
         font-size: 36px;
         color: #008aff;
     }
-    .system,.algorithm {
+    .system,.algorithm,.importExport,.internet {
         margin-top: 20px;
         width: 100%;
         // height: 300px;

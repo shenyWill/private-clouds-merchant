@@ -71,7 +71,15 @@ export default {
   },
   maintain: {
     list: '/deviceMaintain/getSysMonitorInfo',
-    sysVersion: '/deviceMaintain/getSysVersion'
+    sysVersion: '/deviceMaintain/getSysVersion',
+    editDevice: '/deviceMaintain/modifyPAiCloudDevice',
+    sysUpdate: '/deviceMaintain/sysUpdate',
+    aiVersion: '/deviceMaintain/getGoModelVersion'
+  },
+  guard: {
+    list: '/equipment/info/accessControlList',
+    updateRoute: '/equipment/equipmentRoute/updateEquipmentRoute',
+    testRoute: '/equipment/equipmentRoute/equipmentRouteTest'
   },
   deviceType: [{
     value: '1',

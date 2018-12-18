@@ -1,11 +1,8 @@
 <template>
-    <div class="algorithm-upgrade">
-        <h2 class="algorithm-title">算法模型升级</h2>
-        <p class="version-explain">
-            <span>当前模型版本：{{aiVersion.currentModelVersion}}</span>
-            <span>最新模型版本：{{aiVersion.updateModelVersion}}</span>
-        </p>
-        <div class="algorithm-upload">
+    <div class="import-export" v-loading="updateLoad">
+        <h2 class="import-export-title">导入/导出设备参数</h2>
+        <div class="import-card">
+            <span class="import-card-title">导入</span>
             <el-upload
                 class="avatar-uploader"
                 action=""
@@ -15,22 +12,22 @@
                 <span class="add-info">{{addInfo}}</span>
                 <span class="add-btn">浏览</span>
             </el-upload>
-            <span :class="addInfo ? 'submit-btn-active': 'submit-btn'" @click="upgrade">升级</span>
+            <span :class="addInfo ? 'submit-btn-active': 'submit-btn'" @click="upgrade">导入</span>
         </div>
-        <p class="algorithm-explain">说明: 升级可能需要点时间，选择在不使用设备的情况下更新，请不要关闭电源耐心等待。</p>
-        <div :class="['loading-click', updateLoad ? 'active' : '']" v-loading="updateLoad"></div>
+        <div class="export-card">
+            <span class="import-card-title">导出</span>
+            <a href="https://code.jquery.com/jquery-3.3.1.min.js" download="" class="export-card-down">导出</a>
+            <span class="export-card-explain">把设备参数导出到本地</span>
+        </div>
     </div>
 </template>
 
 <script>
-import api from '@/api';
-import config from '@/config';
 export default {
     data () {
         return {
             addInfo: '',
             file: '',
-            aiVersion: {},
             updateLoad: false
         };
     },
@@ -47,22 +44,17 @@ export default {
            formFile.append('file', this.file);
            this.updateLoad = true;
         }
-    },
-    async mounted () {
-        const response = await api.post(config.maintain.aiVersion, {});
-        if (Number(response.data.code) === 200) {
-            this.aiVersion = {...response.data.data};
-        }
     }
 };
 </script>
 
 <style lang="scss" scoped>
-.algorithm-upgrade {
+.import-export{
     overflow: hidden;
     text-align: left;
     text-indent: 41px;
-    .algorithm-title {
+    background-color: #fff;
+    .import-export-title {
         height: 60px;
         line-height: 60px;
         margin: 0;
@@ -71,15 +63,22 @@ export default {
         text-align: left;
         border-bottom: 1px solid #dcdcdc;
     }
-    .version-explain {
-        font-size: 16px;
-        margin: 46px auto;
-        span {
-            padding-right: 124px;
-        }
-    }
-    .algorithm-upload {
+    .import-card,.export-card {
+        height: 150px;
+        border-radius: 10px;
+        background-color: #eeeeee;
+        width: 46%;
+        float: left;
+        margin: 40px 0px 40px 40px;
         overflow: hidden;
+    }
+    .import-card-title {
+        display: block;
+        font-size: 18px;
+        color: #333;
+        font-weight: bold;
+        margin-top: 30px;
+        margin-bottom: 20px;
     }
     .avatar-uploader {
         text-indent: 0;
@@ -94,8 +93,8 @@ export default {
         font-size: 16px;
         text-indent: 50px;
         color: #008aff;
-        width: 600px;
-        background-color: #eeeeee;
+        width: 340px;
+        background-color: #fff;
         border-radius: 5px;
         border: 1px solid #dcdcdc;
         float: left;
@@ -123,23 +122,27 @@ export default {
         background-color: #dcdcdc;
         border-color: #dcdcdc;
     }
-    .algorithm-explain {
+    .export-card-down{
+        text-decoration: none;
+        color: #fff;
+        display: inline-block;
         font-size: 16px;
-        width: 100%;
-        color: #666666;
-    }
-    .loading-click {
-        position: fixed;
-        left: 0;
-        top: 0;
-        z-index: 999;
-        height: 100%;
-        width: 100%;
-        background-color: rgba(255, 255, 255, 0.2);
-        display: none;
-        &.active {
-            display: block;
+        width: 120px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        cursor: pointer;
+        background-color: #008aff;
+        margin-left: 40px;
+        border-radius: 5px;
+        text-indent: 0;
+        &:visited {
+            color: #fff;
         }
+    }
+    .export-card-explain {
+        font-size: 18px;
+        color: #666;
     }
 }
 </style>

@@ -23,6 +23,19 @@ export default [{
   children: [],
   jurisdiction: 0
 }, {
+  name: '门禁管理',
+  icon: 'iconfont icon-shujutongji',
+  path: '/guard/index',
+  children: [
+    {
+      name: '门禁配置',
+      path: '/guard/config',
+      icon: 'iconfont icon-qita-lan',
+      jurisdiction: 0
+    }
+  ],
+  jurisdiction: 0
+}, {
   name: '数据统计',
   icon: 'iconfont icon-shujutongji',
   path: '/account/index',
