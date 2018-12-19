@@ -18,7 +18,7 @@
                 </div>
                 <div class="guard-list-power">
                     <i class="iconfont icon-shijian1 detail-iconfont"></i>
-                    <span class="list-attr-status-detail">门禁权限：{{item.updateTime}}</span>
+                    <span class="list-attr-status-detail">门禁权限：<span :class="item.disabled ? 'active' : ''" @click="checkLimit(item.equipmentId)">{{item.updateTime}}</span></span>
                 </div>
                 <i class="iconfont icon-bianji-lan edit-iconfont" @click="editStatus(item, index)" v-if="!item.disabled"></i>
                 <i class="iconfont icon-qingkongsousuolanicon-lan edit-iconfont" v-if="!item.disabled"></i>
@@ -26,24 +26,34 @@
                 <span class="status-submit-btn" v-if="item.disabled" @click="saveEdit(item, index)">保存</span>
             </li>
         </ul>
+        <!-- 权限设置弹出框 -->
+        <el-dialog title="访问权限设置" :visible.sync="dialogLimit">
+            <LimitCheck :equipmentId="limitId" ref="limit-check"></LimitCheck>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import api from '@/api';
 import config from '@/config';
- import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
+import LimitCheck from '@/views/guard/LimitCheck';
 export default {
     data () {
         return {
             guardList: [],
-            deviceList: [] // 设备列表
+            deviceList: [], // 设备列表
+            dialogLimit: false, // 权限设置dialog
+            limitId: ''
         };
     },
     computed: {
      ...mapGetters([
        'user'
      ])
+   },
+   components: {
+       LimitCheck
    },
     methods: {
         async responesAPI (data = {}) {
@@ -81,6 +91,11 @@ export default {
             } else {
                 this.$message({message: response.data.msg, type: 'error'});
             }
+        },
+        checkLimit (id) {
+            this.limitId = id;
+            this.dialogLimit = true;
+            this.$refs['limit-check'] && this.$refs['limit-check'].responseAPI({equipmentId: id});
         }
     },
     mounted () {
@@ -146,6 +161,15 @@ export default {
         box-sizing: border-box;
         padding-left: 30px;
         overflow: hidden;
+    }
+    .list-attr-status-detail {
+        .active {
+            background-color: #ededed;
+            padding: 5px;
+            cursor: pointer;
+            border: 1px solid #dcdcdc;
+            border-radius: 5px;
+        }
     }
     .guard-list-time {
         width: 300px;
@@ -228,6 +252,25 @@ export default {
         .el-input__suffix {
             display: none;
         }
+    }
+}
+.guard {
+    .el-dialog {
+        border-radius: 10px;
+        text-align: left;
+    }
+    .el-dialog__header {
+        height: 60px;
+        line-height: 60px;
+        margin:0;
+        padding:0 20px;
+        border-bottom: 1px solid #dcdcdc;
+        color: #333;
+        font-weight: bold;
+    }
+    .el-dialog__body {
+        padding-top: 10px;
+        padding-left: 35px;
     }
 }
 </style>

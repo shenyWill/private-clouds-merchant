@@ -79,7 +79,8 @@ export default {
   guard: {
     list: '/equipment/info/accessControlList',
     updateRoute: '/equipment/equipmentRoute/updateEquipmentRoute',
-    testRoute: '/equipment/equipmentRoute/equipmentRouteTest'
+    testRoute: '/equipment/equipmentRoute/equipmentRouteTest',
+    checkList: '/libraryPersonnel/queryChoosePersonnel'
   },
   deviceType: [{
     value: '1',

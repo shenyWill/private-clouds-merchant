@@ -2,7 +2,7 @@
     <div class="dialog-person-add" v-loading.fullscreen.lock="fullscreenLoading">
       <el-form
         class="dialog-person-form"
-        v-show="showForm"
+        v-show="showForm && !showVideo"
         ref="add-person-form"
         :rules="rules"
         :model="addPersonForm"
@@ -16,13 +16,22 @@
             :auto-upload="false"
             :show-file-list="true"
             :on-change="handleFirstImageChange">
-            <img
-              :src="image1"
-              class="avatar"
-              v-if="image1"
-              @click.stop="showImage(image1)"
-              @dblclick.self="inputFile($event)">
-            <i class="el-icon-plus avatar-uploader-icon"></i>
+              <el-popover
+              placement="right"
+              class="pop-upload"
+              trigger="hover">
+              <span class="local-upload" @click.self="inputFile('avatar-uploader-first')">本地上传</span>
+              <span class="photo-upload" @click.self="getMedia('image1')">拍照上传</span>
+              <div slot="reference">
+                <img
+                :src="image1"
+                class="avatar"
+                v-if="image1"
+                @click.stop="showImage(image1)"
+                 >
+                <i class="el-icon-plus avatar-uploader-icon"></i>
+              </div>
+              </el-popover>
           </el-upload>
           <el-upload
             class="avatar-uploader-second"
@@ -30,13 +39,22 @@
             :auto-upload="false"
             :show-file-list="false"
             :on-change="handleSecondImageChange">
-            <img
-              :src="image2"
-              class="avatar"
-              v-if="image2"
-              @click.stop="showImage(image2)"
-              @dblclick.self="inputFile($event)">
-            <i class="el-icon-plus avatar-uploader-icon"></i>
+            <el-popover
+              placement="right"
+              class="pop-upload"
+              trigger="hover">
+              <span class="local-upload" @click.self="inputFile('avatar-uploader-second')">本地上传</span>
+              <span class="photo-upload">拍照上传</span>
+              <div slot="reference">
+                <img
+                :src="image2"
+                class="avatar"
+                v-if="image2"
+                @click.stop="showImage(image2)"
+                 >
+                <i class="el-icon-plus avatar-uploader-icon"></i>
+              </div>
+              </el-popover>
           </el-upload>
           <el-upload
             class="avatar-uploader-third"
@@ -44,13 +62,22 @@
             :auto-upload="false"
             :show-file-list="false"
             :on-change="handleThirdImageChange">
-            <img
-              :src="image3"
-              class="avatar"
-              v-if="image3"
-              @click.stop="showImage(image3)"
-              @dblclick.self="inputFile($event)">
-            <i class="el-icon-plus avatar-uploader-icon"></i>
+            <el-popover
+              placement="right"
+              class="pop-upload"
+              trigger="hover">
+              <span class="local-upload" @click.self="inputFile('avatar-uploader-third')">本地上传</span>
+              <span class="photo-upload" @click.self="getMedia">拍照上传</span>
+              <div slot="reference">
+                <img
+                :src="image3"
+                class="avatar"
+                v-if="image3"
+                @click.stop="showImage(image3)"
+                 >
+                <i class="el-icon-plus avatar-uploader-icon"></i>
+              </div>
+              </el-popover>
           </el-upload>
         </div>
         <el-form-item label="人员姓名" prop="personnelName">
@@ -131,6 +158,10 @@
           <el-button type="primary" @click="checkImage">选择图片</el-button>
         </p>
       </div>
+      <!-- 拍照上传 -->
+      <div class="cream-video" v-show="showVideo">
+        <video height="120px" autoplay="autoplay"></video><hr />
+      </div>
     </div>
 </template>
 
@@ -149,6 +180,10 @@
        image3: '',
        fullscreenLoading: false,
        showForm: true, // 展示增加框还是图片选择框
+       showVideo: false,
+       exArray: [],
+       video: '',
+       mediaStreamTrack: '',
        moreFaceObj: {}, // 多张人脸对象
        mainImg: '', // 主图
        checkImageUrl: '', // 选择的图片url
@@ -183,6 +218,9 @@
        }
      };
    },
+  //  components: {
+  //    VueWebcam
+  //  },
    props: ['personTypeList', 'deviceList', 'addOrEdit', 'editObj'],
    methods: {
      checkEquipmentList (rule, value, callback) {
@@ -286,8 +324,8 @@
      showImage (imgUrl) {
        this.showImageUrl = imgUrl;
      },
-     inputFile ($event) {
-       $event.target.parentNode.children[2].click();
+     inputFile (elName) {
+      document.getElementsByClassName(elName)[0].children[0].children[1].click();
      },
      onSubmit (formName) {
        if (this.image1 === '' && this.image2 === '' && this.image3 === '') {
@@ -343,7 +381,38 @@
          }
       //  }
        this.showForm = true;
-     }
+     },
+     // 开启摄像头
+     getMedia (val) {
+       this.video = document.querySelector('video');
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
+            navigator.msGetUserMedia;
+        window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+        if (navigator.getUserMedia) {
+                navigator.getUserMedia({
+                    'video': {
+                        'optional': [{
+                            'sourceId': this.exArray[1]
+                        }]
+                    },
+                    'audio': false
+                }, this.successFunc, this.errorFunc);
+            } else {
+                alert('Native device media streaming (getUserMedia) not supported in this browser.');
+            }
+     },
+     successFunc (stream) {
+       this.showVideo = true;
+        if (this.video.mozSrcObject !== undefined) {
+                this.video.mozSrcObject = stream;
+            } else {
+                this.video.src = window.URL && (window.URL.createObjectURL(stream) || stream);
+            }
+            this.mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[0];
+     },
+     errorFunc (e) {
+        alert('Error！' + e);
+      }
    },
    mounted () {
      // this.$refs['add-person-form'].clearValidate();
@@ -425,14 +494,34 @@
     // font-size: 16px;
     border-radius: 5px;
     background-color: #eeeeee;
+    position: relative;
     overflow: hidden;
     float: right;
     margin-bottom: 4px;
     img {
       width: 40px;
       height: 40px;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
   }
+}
+.pop-upload {
+  width: 40px;
+}
+.local-upload,.photo-upload {
+  display: block;
+  cursor: pointer;
+  color: #333;
+  text-align: center;
+  line-height: 30px;
+  &:hover {
+    color: #008aff;
+  }
+}
+.local-upload {
+  border-bottom: 1px solid #e5e5e5;
 }
 .more-face {
     overflow: hidden;
@@ -479,6 +568,9 @@
 }
 .checked-image {
     border: 2px solid #008aff;
+}
+.canvas1 {
+  display: none;
 }
 </style>
 
