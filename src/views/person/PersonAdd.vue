@@ -199,7 +199,7 @@
        let image = new Image();
        image.src = url;
        image.onload = async () => {
-         const data = img2Base64(image);
+         const data = img2Base64(image, file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase());
          if (base64Length(data)) {
            var response = await api.post(config.person.checkImage, {
              image: data.split(',')[1]

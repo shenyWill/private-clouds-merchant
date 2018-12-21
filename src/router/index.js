@@ -36,8 +36,17 @@ import Account from '@/views/account/Account';
 // 人证比对
 import Witness from '@/views/witness/Witness';
 
-// 数据 统计‘
+// 数据统计
 import Record from '@/views/record/Record';
+import FlowRecord from '@/views/record/FlowRecord';
+
+// 设备维护
+import Maintain from '@/views/maintain/Maintain';
+
+// 门禁
+import Guard from '@/views/guard/Guard';
+import GuardSet from '@/views/guard/GuardSet';
+import Holiday from '@/views/guard/Holiday';
 
 Vue.use(Router);
 
@@ -165,6 +174,39 @@ export default new Router({
       component: Record,
       name: 'Record',
       meta: { title: '识别数据', icon: '', cache: false }
+    }, {
+      path: '/record/flow',
+      component: FlowRecord,
+      name: 'FlowRecord',
+      meta: { title: '流量统计', icon: '', cache: false }
+    }]
+  }, {
+    path: '/maintain',
+    component: Layout,
+    children: [{
+      path: '/maintain/index',
+      component: Maintain,
+      name: 'Maintain',
+      meta: { title: '设备维护', icon: '', cache: false }
+    }]
+  }, {
+    path: '/guard',
+    component: Layout,
+    children: [{
+      path: '/guard/config',
+      component: Guard,
+      name: 'Guard',
+      meta: { title: '门禁配置', icon: '', cache: false }
+    }, {
+      path: '/guard/set',
+      component: GuardSet,
+      name: 'GuardSet',
+      meta: { title: '门禁设置', icon: '', cache: false }
+    }, {
+      path: '/guard/holiday',
+      component: Holiday,
+      name: 'Holiday',
+      meta: { title: '假期设置', icon: '', cache: false }
     }]
   }]
 });

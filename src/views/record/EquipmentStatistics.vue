@@ -3,7 +3,7 @@
         <div class="equipment-statistics-title">
             <i class="iconfont icon-shebei-lan"></i>
             <span class="equipment-statistics-title-info">设备数</span>
-            <span class="equipment-statistics-title-number">100</span>
+            <span class="equipment-statistics-title-number">{{totalNum}}</span>
         </div>
         <div class="equipment-statistics-draw">
             <div id="equipment-map" class="equipment-map"></div>
@@ -13,9 +13,24 @@
 
 <script>
 import equipmentMap from './equipmentMap.js';
+import api from '@/api';
+import config from '@/config';
 export default {
-    mounted () {
-        this.$emit('drawMap', 'equipment-map', equipmentMap.option);
+    data () {
+        return {
+            totalNum: 0
+        };
+    },
+    async mounted () {
+        const response = await api.post(config.record.equipNum, {});
+        if (Number(response.data.code) === 200) {
+            let dataArr = equipmentMap.option.series;
+            response.data.data.forEach(item => {
+                dataArr[item.equipmentType - 1].data[0] = item.total;
+                this.totalNum += item.total;
+            });
+            this.$emit('drawMap', 'equipment-map', equipmentMap.option);
+        }
     }
 };
 </script>

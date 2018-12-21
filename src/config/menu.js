@@ -23,16 +23,41 @@ export default [{
   children: [],
   jurisdiction: 0
 }, {
+  name: '门禁管理',
+  icon: 'iconfont icon-shujutongji',
+  path: '/guard/index',
+  children: [
+    {
+      name: '门禁配置',
+      path: '/guard/config',
+      icon: 'iconfont icon-qita-lan',
+      jurisdiction: 0
+    },
+    {
+      name: '门禁设置',
+      path: '/guard/set',
+      icon: 'iconfont icon-qita-lan',
+      jurisdiction: 0
+    },
+    {
+      name: '假期设置',
+      path: '/guard/holiday',
+      icon: 'iconfont icon-qita-lan',
+      jurisdiction: 0
+    }
+  ],
+  jurisdiction: 0
+}, {
   name: '数据统计',
   icon: 'iconfont icon-shujutongji',
   path: '/account/index',
   children: [
-    {
-      name: '流量统计',
-      path: '/account/index',
-      icon: 'iconfont icon-qita-lan',
-      jurisdiction: 0
-    },
+    // {
+    //   name: '流量统计',
+    //   path: '/record/flow',
+    //   icon: 'iconfont icon-qita-lan',
+    //   jurisdiction: 0
+    // },
     {
       name: '识别数据',
       path: '/record/index',
@@ -53,4 +78,10 @@ export default [{
   icon: 'iconfont icon-zhanghaoguanli',
   children: [],
   jurisdiction: 1
+}, {
+  name: '设备维护',
+  path: '/maintain/index',
+  icon: 'iconfont icon-zhanghaoguanli',
+  children: [],
+  jurisdiction: 0
 }];

@@ -13,8 +13,9 @@ module.exports = {
     proxyTable: {
       '/': {
         // target: 'http://172.16.33.125:49082', // 李兵兵
-        // target: 'http://172.16.33.26:29080',  // 李斌
+        // target: 'http://172.16.40.23:29080',  // 李斌
         // target: 'http://192.168.251.16:59080', // 黑盒子
+        // target: 'http://172.16.19.34:29080',
         target: 'http://172.16.19.150:29080',
         pathRewrite: {
         }
@@ -22,7 +23,7 @@ module.exports = {
     },
 
     // Various Dev Server
-    host: '172.16.40.17', // can be overwritten by process.env.HOST
+    host: '172.16.40.21', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

@@ -3,7 +3,7 @@
         <div class="recognition-statistics-title">
             <i class="iconfont icon-renyuanguanli-lan"></i>
             <span class="recognition-statistics-title-info">识别数</span>
-            <span class="recognition-statistics-title-number">2343224</span>
+            <span class="recognition-statistics-title-number">{{totalNum}}</span>
         </div>
         <div class="recognition-statistics-draw">
             <div id="recognition-map" class="recognition-map"></div>
@@ -13,9 +13,28 @@
 
 <script>
 import recognitionMap from './recognitionMap.js';
+import api from '@/api';
+import config from '@/config';
+import { numToPercent } from '@/utils';
 export default {
-    mounted () {
-        this.$emit('drawMap', 'recognition-map', recognitionMap.option);
+    data () {
+        return {
+            totalNum: 0
+        };
+    },
+    async mounted () {
+        const response = await api.post(config.record.libraryNum, {});
+        if (Number(response.data.code) === 200) {
+            let dataArr = recognitionMap.option.series;
+            this.totalNum = 0;
+            response.data.data.forEach(item => (this.totalNum += item.totalSuccess));
+            response.data.data.forEach(item => {
+                dataArr[item.libraryTypeId - 1].data[0].value = this.totalNum - item.totalSuccess;
+                dataArr[item.libraryTypeId - 1].data[1].value = item.totalSuccess;
+                dataArr[item.libraryTypeId - 1].data[1].totle = numToPercent(item.totalSuccess / this.totalNum);
+            });
+            this.$emit('drawMap', 'recognition-map', recognitionMap.option);
+        }
     }
 };
 </script>

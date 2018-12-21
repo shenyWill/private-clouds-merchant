@@ -1,21 +1,9 @@
 export default {
   option: {
-    title: {
-      // text: '某楼盘销售情况',
-      // subtext: '纯属虚构'
-    },
     tooltip: {
       trigger: 'axis'
     },
-    legend: {
-      data: ['白名单', '黑名单', '访客', '其他'], // 导航栏字样，与数据对应
-      textStyle: {
-        color: '#000'
-      },
-      x: 'right',
-      icon: 'line'
-    },
-    color: ['rgba(32,200,203,0.3)', 'rgba(182,162,222,0.3)', 'rgba(255,0,255,0.6)', 'rgba(0,255,136,0.6)'], // 图和线条颜色
+    color: ['rgba(32,200,203,0.3)'], // 图和线条颜色
     toolbox: {
       show: true,
       feature: {
@@ -42,7 +30,7 @@ export default {
     xAxis: [{
       type: 'category',
       boundaryGap: false,
-      data: [],
+      data: ['2017-11', '2017-12', '2018-01', '2018-02', '2018-03', '2018-04', '2018-05', '2018-06', '2018-07', '2018-08', '2018-09', '2018-10'],
       axisLine: {
         lineStyle: {
           color: '#008aff', // x轴颜色
@@ -104,20 +92,6 @@ export default {
       }
     }],
     series: [{
-        name: '白名单',
-        type: 'line',
-        symbol: 'none',
-        smooth: true,
-        itemStyle: {
-          normal: {
-            areaStyle: {
-              type: 'default'
-            }
-          }
-        },
-        data: []
-      },
-      {
         name: '黑名单',
         type: 'line',
         symbol: 'none',
@@ -129,35 +103,7 @@ export default {
             }
           }
         },
-        data: []
-      },
-      {
-        name: '访客',
-        type: 'line',
-        symbol: 'none',
-        smooth: true,
-        itemStyle: {
-          normal: {
-            areaStyle: {
-              type: 'default'
-            }
-          }
-        },
-        data: []
-      },
-      {
-        name: '其他',
-        type: 'line',
-        symbol: 'none',
-        smooth: true,
-        itemStyle: {
-          normal: {
-            areaStyle: {
-              type: 'default'
-            }
-          }
-        },
-        data: []
+        data: [8600, 8726, 9101, 9001, 9576, 9438, 9915, 11002, 10386, 10012, 10002, 11563]
       }
     ],
     grid: {
