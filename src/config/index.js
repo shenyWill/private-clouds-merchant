@@ -74,13 +74,19 @@ export default {
     sysVersion: '/deviceMaintain/getSysVersion',
     editDevice: '/deviceMaintain/modifyPAiCloudDevice',
     sysUpdate: '/deviceMaintain/sysUpdate',
-    aiVersion: '/deviceMaintain/getGoModelVersion'
+    aiVersion: '/deviceMaintain/getGoModelVersion',
+    sysUpload: '/equipment/info/upload'
   },
   guard: {
     list: '/equipment/info/accessControlList',
     updateRoute: '/equipment/equipmentRoute/updateEquipmentRoute',
     testRoute: '/equipment/equipmentRoute/equipmentRouteTest',
-    checkList: '/libraryPersonnel/queryChoosePersonnel'
+    checkList: '/libraryPersonnel/queryChoosePersonnel',
+    saveList: '/libraryPersonnel/savePersonnelForEquipment',
+    setList: '/equipment/equipmentCloseDate/config',
+    updateTime: '/equipment/equipmentCloseDate/updateTime',
+    holidayList: '/equipment/equipmentCloseDate/list',
+    updateHoliday: '/equipment/equipmentCloseDate/save'
   },
   deviceType: [{
     value: '1',

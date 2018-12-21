@@ -16,13 +16,15 @@
         </div>
         <div class="export-card">
             <span class="import-card-title">导出</span>
-            <a href="https://code.jquery.com/jquery-3.3.1.min.js" download="" class="export-card-down">导出</a>
+            <a href="/equipment/info/exportflowContents" download="" class="export-card-down">导出</a>
             <span class="export-card-explain">把设备参数导出到本地</span>
         </div>
     </div>
 </template>
 
 <script>
+import api from '@/api';
+import config from '@/config';
 export default {
     data () {
         return {
@@ -38,11 +40,15 @@ export default {
         handleChange (file, fileList) {
             this.addInfo = file.name;
         },
-        upgrade () {
+        async upgrade () {
            if (!this.addInfo) return;
            var formFile = new FormData();
            formFile.append('file', this.file);
            this.updateLoad = true;
+           const response = await api.post(config.maintain.sysUpload, formFile, {'headers': {'Content-Type': 'multipart/form-data'}});
+           if (Number(response.data.code) === 200) {
+               this.updateLoad = false;
+           }
         }
     }
 };

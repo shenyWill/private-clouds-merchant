@@ -156,3 +156,17 @@ export function deepClone (parent) {
   };
   return _clone(parent);
 }
+export function getWeekArr (y) {
+  var weekArr = [];
+  for (let m = 1; m <= 12; m++) {
+    var tempTime = new Date(y, m - 1, 0);
+    for (var i = 1; i <= tempTime.getDate(); i++) {
+        var time = new Date(y, m - 1, i);
+        var day = time.getDay();
+        if (day === 6 || day === 0) {
+          weekArr.push(`${y}-${m > 9 ? m : ('0' + m)}-${i > 9 ? i : ('0' + i)}`);
+        }
+    }
+  }
+  return weekArr;
+}

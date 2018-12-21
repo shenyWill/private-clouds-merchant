@@ -43,8 +43,10 @@ import FlowRecord from '@/views/record/FlowRecord';
 // 设备维护
 import Maintain from '@/views/maintain/Maintain';
 
-// 设备维护
+// 门禁
 import Guard from '@/views/guard/Guard';
+import GuardSet from '@/views/guard/GuardSet';
+import Holiday from '@/views/guard/Holiday';
 
 Vue.use(Router);
 
@@ -195,6 +197,16 @@ export default new Router({
       component: Guard,
       name: 'Guard',
       meta: { title: '门禁配置', icon: '', cache: false }
+    }, {
+      path: '/guard/set',
+      component: GuardSet,
+      name: 'GuardSet',
+      meta: { title: '门禁设置', icon: '', cache: false }
+    }, {
+      path: '/guard/holiday',
+      component: Holiday,
+      name: 'Holiday',
+      meta: { title: '假期设置', icon: '', cache: false }
     }]
   }]
 });

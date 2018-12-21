@@ -19,7 +19,7 @@
         </div>
         <p class="limit-check-filter">
             <span class="limit-check-filter-explain">已允许的员工才可以访问，请在下方选择可以访问的员工</span>
-            <input type="text" class="limit-check-filter-input">
+            <input type="text" class="limit-check-filter-input" v-model="filter">
         </p>
         <div class="limit-check-list-title">
             <span class="limit-check-list-choosed-explain">已选择人员（2人）</span>
@@ -28,32 +28,38 @@
         <div class="limit-check-list">
             <div class="limit-check-list-choosed">
                 <div class="limit-check-list-choosed-library" v-for="(item, index) in choosedList" :key="index" v-if="item.personnel.length">
-                    <p class="library-title">
+                    <p class="library-title" v-show="!filter">
                         <span class="library-explain">{{item.libraryName}}</span>
-                        <span class="library-check" @click="uncheckLibrary(item, index)">全选 <i :class="['iconfont', item.active ? 'icon-fuxuankuang' : 'icon-checked']"></i> </span>
+                        <span class="library-check" @click="uncheckLibrary(item, index)">全选 <i :class="['iconfont', item.active ? 'icon-gouxuan' : 'icon-fangkuang']"></i> </span>
                     </p>
-                    <div class="library-list" v-for="(childItem, childIndex) in item.personnel" :key="childIndex" v-if="childItem">
+                    <div class="library-list" v-for="(childItem, childIndex) in item.personnel" :key="childIndex" v-if="childItem" v-show="childItem.personnelName.includes(filter)">
+                        <img :src="item.url + childItem.imageUrl1" alt="" class="library-list-img">
                         <span class="library-list-name">{{childItem.personnelName}} |</span>
                         <span class="library-list-desc">{{childItem.personnelDesc}}</span>
-                        <i @click="unchildCheckLibrary(item, index, childItem, childIndex)" :class="['iconfont', childItem.active ? 'icon-fuxuankuang' : 'icon-checked']"></i>
+                        <i @click="unchildCheckLibrary(item, index, childItem, childIndex)" :class="['iconfont', childItem.active ? 'icon-gouxuan' : 'icon-fangkuang']"></i>
                     </div>
                 </div>
             </div>
             <div class="limit-check-list-free">
                 <div class="limit-check-list-choosed-library" v-for="(item, index) in freeChooseList" :key="index" v-if="item.personnel.length">
-                    <p class="library-title">
+                    <p class="library-title" v-show="!filter">
                         <span class="library-explain">{{item.libraryName}}</span>
-                        <span class="library-check" @click="unfreeLibrary(item, index)">全选 <i :class="['iconfont', item.active ? 'icon-fuxuankuang' : 'icon-checked']"></i> </span>
+                        <span class="library-check" @click="unfreeLibrary(item, index)">全选 <i :class="['iconfont', item.active ? 'icon-gouxuan' : 'icon-fangkuang']"></i> </span>
                     </p>
-                    <div class="library-list" v-for="(childItem, childIndex) in item.personnel" :key="childIndex">
+                    <div class="library-list" v-for="(childItem, childIndex) in item.personnel" :key="childIndex" v-show="childItem.personnelName.includes(filter)">
+                        <img :src="item.url + childItem.imageUrl1" alt="" class="library-list-img">
                         <span class="library-list-name">{{childItem.personnelName}} |</span>
                         <span class="library-list-desc">{{childItem.personnelDesc}}</span>
-                        <i @click="unchildFreeLibrary(item, index, childItem, childIndex)" :class="['iconfont', childItem.active ? 'icon-fuxuankuang' : 'icon-checked']"></i>
+                        <i @click="unchildFreeLibrary(item, index, childItem, childIndex)" :class="['iconfont', childItem.active ? 'icon-gouxuan' : 'icon-fangkuang']"></i>
                     </div>
                 </div>
             </div>
-            <i class="iconfont icon-jiantoul operate-iconfont" @click="addCheck"></i>
-            <i class="iconfont icon-jiantou-copy operate-iconfont" @click="removeCheck"></i>
+            <i class="iconfont icon-xiangzuo-hui1 operate-iconfont" @click="addCheck"></i>
+            <i class="iconfont icon-xiangyou-lan2 operate-iconfont" @click="removeCheck"></i>
+        </div>
+        <div class="limit-btn">
+            <span class="limit-btn-cancel" @click="cancel">取消</span>
+            <span class="limit-btn-submit" @click="saveList">确定</span>
         </div>
     </div>
 </template>
@@ -74,7 +80,8 @@ export default {
             choosedList: {},
             freeChooseList: {},
             transList: [],
-            untransList: []
+            untransList: [],
+            filter: ''
         };
     },
     methods: {
@@ -227,6 +234,19 @@ export default {
                 });
             });
             this.transList = [];
+        },
+        cancel () {
+            this.$emit('closeLimit');
+        },
+        async saveList () {
+            const obj = {equipmentId: this.equipmentId, choosedList: {libraryPersonnel: this.choosedList}};
+            const response = await api.post(config.guard.saveList, obj);
+            if (Number(response.data.code) === 200) {
+                this.$message({type: 'success', message: response.data.msg});
+                this.$emit('closeLimit');
+            } else {
+                this.$message({type: 'error', message: response.data.msg});
+            }
         }
     }
 };
@@ -301,33 +321,47 @@ export default {
             width: 49%;
         }
     }
+    .limit-check-list-free-explain {
+        text-indent: 30px;
+    }
     .limit-check-list {
         height: 300px;
-        border: 1px solid #dcdcdc;
-        background-color: #eeeeee;
         margin-top: 5px;
         overflow: hidden;
         position: relative;
     }
     .operate-iconfont {
         position: absolute;
-        left: 410px;
-        color: #304156;
-        font-size: 55px;
-        top: 100px;
+        display: block;
+        width: 43px;
+        height: 43px;
+        line-height: 43px;
+        text-align: center;
+        color: #0066ff;
+        left: 425px;
+        font-size: 45px;
+        top: 90px;
         cursor: pointer;
     }
-    .icon-jiantou-copy {
+    .icon-xiangyou-lan2 {
         top: 150px;
     }
+    .icon-gouxuan {
+        color: #0066ff;
+    }
     .limit-check-list-choosed,.limit-check-list-free {
-        width: 49%;
+        width: 47%;
         float: left;
+        background-color: #eeeeee;
         height: 100%;
         box-sizing: border-box;
-        border-right: 1px solid #dcdcdc;
+        border: 1px solid #dcdcdc;
         overflow: auto;
         padding-right: 10px;
+        border-radius: 5px;
+    }
+    .limit-check-list-free {
+        float: right;
     }
     .library-title {
         height: 30px;
@@ -347,13 +381,61 @@ export default {
     }
     .library-list {
         margin: 15px 15px;
+        line-height: 30px;
         height: 30px;
+        padding-left: 30px;
+        position: relative;
         .iconfont {
             float: right;
         }
     }
+    .library-list-img {
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        left: -5px;
+        border-radius: 2px;
+    }
     .library-list-name {
         display: inline-block;
+        color: #000;
     }
+    .limit-btn {
+        margin-top: 40px;
+        float: right;
+        span {
+            width: 120px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            font-size: 16px;
+            display: inline-block;
+            border-radius: 5px;
+            border: 1px solid #008aff;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+        .limit-btn-cancel {
+            color: #008aff;
+        }
+        .limit-btn-submit {
+            color: #fff;
+            background-color: #008aff;
+        }
+    }
+}
+.limit-check-list-choosed::-webkit-scrollbar,.limit-check-list-free::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+.limit-check-list-choosed::-webkit-scrollbar-thumb,.limit-check-list-free::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+}
+.limit-check-list-choosed::-webkit-scrollbar-track,.limit-check-list-free::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
 }
 </style>

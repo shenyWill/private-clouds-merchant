@@ -18,18 +18,29 @@
                 </div>
                 <div class="guard-list-power">
                     <i class="iconfont icon-shijian1 detail-iconfont"></i>
-                    <span class="list-attr-status-detail">门禁权限：<span :class="item.disabled ? 'active' : ''" @click="checkLimit(item.equipmentId)">{{item.updateTime}}</span></span>
+                    <span class="list-attr-status-detail">门禁权限：<span :class="item.disabled ? 'active' : ''" @click="checkLimit(item, index)">{{item.updateTime}}</span></span>
                 </div>
                 <i class="iconfont icon-bianji-lan edit-iconfont" @click="editStatus(item, index)" v-if="!item.disabled"></i>
-                <i class="iconfont icon-qingkongsousuolanicon-lan edit-iconfont" v-if="!item.disabled"></i>
                 <span class="status-edit-btn" @click="cancelEdit(item, index)" v-if="item.disabled">取消</span>
                 <span class="status-submit-btn" v-if="item.disabled" @click="saveEdit(item, index)">保存</span>
             </li>
         </ul>
         <!-- 权限设置弹出框 -->
         <el-dialog title="访问权限设置" :visible.sync="dialogLimit">
-            <LimitCheck :equipmentId="limitId" ref="limit-check"></LimitCheck>
+            <LimitCheck :equipmentId="limitId" ref="limit-check" @closeLimit="closeLimit"></LimitCheck>
         </el-dialog>
+        <!-- 分页 -->
+        <el-pagination
+            background
+            layout="prev, pager, next"
+            v-if="count > 9"
+            :total="count"
+            class="paging"
+            :current-page.sync="currentPage"
+            @current-change="handleCurrentChange"
+            prev-text="上一页"
+            next-text="下一页"
+        ></el-pagination>
     </div>
 </template>
 
@@ -44,7 +55,11 @@ export default {
             guardList: [],
             deviceList: [], // 设备列表
             dialogLimit: false, // 权限设置dialog
-            limitId: ''
+            limitId: '',
+            dialogRemove: false, // 删除dialog
+            removeId: '',
+            count: 0,
+            currentPage: 1
         };
     },
     computed: {
@@ -58,7 +73,10 @@ export default {
     methods: {
         async responesAPI (data = {}) {
             const response = await api.post(config.guard.list, data);
-            this.guardList = [...response.data.data.rows];
+            if (Number(response.data.code) === 200) {
+                this.guardList = [...response.data.data.rows];
+                this.count = response.data.data.total;
+            }
         },
         // 编辑门禁
         editStatus (item, index) {
@@ -69,7 +87,7 @@ export default {
         cancelEdit (item, index) {
             delete (item.disabled);
             this.$set(this.guardList, index, {...item});
-            this.responesAPI();
+            this.responesAPI({offset: (this.currentPage - 1) * 10});
         },
         // 保存门禁
         async saveEdit (item, index) {
@@ -78,7 +96,7 @@ export default {
                 delete (item.disabled);
                 this.$set(this.guardList, index, {...item});
                 this.$message({message: response.data.msg, type: 'success'});
-                this.responesAPI();
+                this.responesAPI({offset: (this.currentPage - 1) * 10});
             } else {
                 this.$message({message: response.data.msg, type: 'error'});
             }
@@ -92,10 +110,19 @@ export default {
                 this.$message({message: response.data.msg, type: 'error'});
             }
         },
-        checkLimit (id) {
-            this.limitId = id;
+        checkLimit (item, index) {
+            if (!item.disabled) return;
+            this.limitId = item.equipmentId;
             this.dialogLimit = true;
-            this.$refs['limit-check'] && this.$refs['limit-check'].responseAPI({equipmentId: id});
+            this.cancelEdit(item, index);
+            this.$refs['limit-check'] && this.$refs['limit-check'].responseAPI({equipmentId: item.equipmentId});
+        },
+        closeLimit () {
+            this.dialogLimit = false;
+        },
+        handleCurrentChange (val) {
+            this.currentPage = val;
+            this.responesAPI({offset: (val - 1) * 10});
         }
     },
     mounted () {
@@ -194,12 +221,9 @@ export default {
         font-size: 30px;
         color: #008aff;
         position: absolute;
-        right: 130px;
+        right: 50px;
         top: 50px;
         cursor: pointer;
-    }
-    .icon-qingkongsousuolanicon-lan {
-        right: 60px;
     }
     .status-edit-btn,.status-submit-btn {
         display: inline-block;
@@ -271,6 +295,26 @@ export default {
     .el-dialog__body {
         padding-top: 10px;
         padding-left: 35px;
+    }
+}
+
+.guard {
+    .paging {
+        margin: 40px auto;
+    }
+    .paging .number,.paging .btn-next,.paging .btn-prev,.paging .more {
+        box-shadow: 3px 3px 2px 0 rgba(0, 0, 0, 0.2);
+        height: 40px;
+        border-radius: 4px;
+        background-color: #fff;
+    }
+    .paging .number,.paging .more {
+        width: 40px;
+        line-height: 40px;
+    }
+    .btn-next,.btn-prev {
+        width: 80px;
+        font-weight: bold;
     }
 }
 </style>

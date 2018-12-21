@@ -6,6 +6,15 @@
                  <span>网卡类型</span>
                  <input type="text" v-model="ipvObj.ipvType">
              </p>
+             <p class="ipv-check">
+                 <el-checkbox v-model="ipvcheck">自动获取</el-checkbox>
+             </p>
+             <p class="ipv-addr">
+                 <span>设置IPv4地址</span>
+                 <input type="text" v-model="ipvObj.addr">
+                 <span class="test-btn">测试</span>
+             </p>
+             <p class="ipv-"></p>
          </div>
     </div>
 </template>
@@ -14,7 +23,8 @@
 export default {
     data () {
         return {
-            ipvObj: {}
+            ipvObj: {},
+            ipvcheck: false
         };
     }
 };
@@ -35,7 +45,7 @@ export default {
         text-align: left;
         border-bottom: 1px solid #dcdcdc;
     }
-    .ipv-paragraph {
+    .config-ipv {
         height: 500px;
         width: 500px;
     }

@@ -32,6 +32,18 @@ export default [{
       path: '/guard/config',
       icon: 'iconfont icon-qita-lan',
       jurisdiction: 0
+    },
+    {
+      name: '门禁设置',
+      path: '/guard/set',
+      icon: 'iconfont icon-qita-lan',
+      jurisdiction: 0
+    },
+    {
+      name: '假期设置',
+      path: '/guard/holiday',
+      icon: 'iconfont icon-qita-lan',
+      jurisdiction: 0
     }
   ],
   jurisdiction: 0
